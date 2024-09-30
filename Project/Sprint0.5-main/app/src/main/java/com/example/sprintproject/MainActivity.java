@@ -1,4 +1,4 @@
-package com.example.sprintproject.views;
+package com.example.sprintproject.sprintproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
