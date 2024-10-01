@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="@android:color/white">
+
+
+        <!-- Title TextView -->
+        <TextView
+            android:id="@+id/loginTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"/>
+
+
+        <!-- Username and Password Form Layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="32dp">
+
+
+            <!-- Username Label -->
+            <TextView
+                android:id="@+id/usernameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+            <EditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:hint="@string/username_hint"
+                android:inputType="text"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                />
+
+
+            <!-- Password Label -->
+            <TextView
+                android:id="@+id/passwordLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:autofillHints="password"
+                />
+        </LinearLayout>
+
+
+        <!-- Login -->
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:layout_marginBottom="16dp"/>
+
+
+        <!-- Create Account -->
+        <Button
+            android:id="@+id/createAccountButton"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:text="@string/create_account_button"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
