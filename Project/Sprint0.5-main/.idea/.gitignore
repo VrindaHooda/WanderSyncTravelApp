@@ -3,11 +3,11 @@
 /workspace.xml
 
 # Gradle files
-.gradle/
-build/
+../../.gradle/
+../../app/build/
 
 # Local configuration file (sdk path, etc)
-local.properties
+../local.properties
 
 # Log/OS Files
 *.log
@@ -18,13 +18,6 @@ captures/
 .cxx/
 *.apk
 output.json
-
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
 
 # Keystore files
 *.jks
