@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SprintProject</string>
+    <!-- for login / create account -->
+    <string name="login_title">Log In</string>
+    <string name="login_button">Login</string>
+    <string name="create_account_button">Create an Account</string>
+    <string name="username">Username: </string>
+    <string name="username_hint">Enter Username: </string>
+    <string name="password_hint">Enter Password: </string>
+    <string name="password">Password: </string>
+    <!-- for create account -->
+    <string name="register">Register</string>
 </resources>
