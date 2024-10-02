@@ -10,7 +10,13 @@
     <string name="password">Password: </string>
     <!-- for create account -->
     <string name="register">Register</string>
-    <!-- for basic screen headers -->
+    <!-- for main feature screens headers -->
     <string name="dining_establishments">Dining Establishments</string>
     <string name="placeholder">Placeholder</string>
+    <string name="logistics">Logistics</string>
+    <string name="destination">Destination</string>
+    <string name="accommodation">Accommodation</string>
+    <string name="transportation">Transportation</string>
+    <string name="travel_community">Travel Community</string>
+
 </resources>
