@@ -9,7 +9,7 @@
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dining Establishments"
+        android:text="@string/dining_establishments"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginTop="32dp"
@@ -21,9 +21,9 @@
     <!-- Placeholder for future content -->
     <TextView
         android:id="@+id/placeholder"
-        android:layout_width="380dp"
-        android:layout_height="45dp"
-        android:text="Placeholder"
+        android:layout_width="98dp"
+        android:layout_height="31dp"
+        android:text="@string/placeholder"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
