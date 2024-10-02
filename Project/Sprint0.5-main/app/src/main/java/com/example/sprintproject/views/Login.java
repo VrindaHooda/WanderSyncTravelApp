@@ -8,18 +8,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.AuthViewModel;
+import com.example.sprintproject.viewmodels.ValidateViewModel;
 
 public class Login extends AppCompatActivity {
 
-    private AuthViewModel authViewModel;
+    private ValidateViewModel validateViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        authViewModel = new AuthViewModel();
+        validateViewModel = new ValidateViewModel();
 
         EditText usernameEditText = findViewById(R.id.usernameEditText);
         EditText passwordEditText = findViewById(R.id.passwordEditText);
@@ -33,7 +33,7 @@ public class Login extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (authViewModel.validateLogin(username, password)) {
+                if (validateViewModel.validateLogin(username, password)) {
                     // Proceed to login logic (e.g., navigate to another activity)
                     Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
                 } else {

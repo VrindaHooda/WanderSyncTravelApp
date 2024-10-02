@@ -12,5 +12,16 @@ public class UserRepository {
         this.reference = database.getReference("message");
     }
 
-    public createAccount(String username,)
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+    public void setUsername(FirebaseDatabase database) {
+        this.database = database;
+    }
+    public DatabaseReference getReference() {
+        return reference;
+    }
+    public void setReference(DatabaseReference reference) {
+        this.reference = reference;
+    }
 }
