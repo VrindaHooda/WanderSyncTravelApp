@@ -10,4 +10,7 @@
     <string name="password">Password: </string>
     <!-- for create account -->
     <string name="register">Register</string>
+    <!-- for basic screen headers -->
+    <string name="dining_establishments">Dining Establishments</string>
+    <string name="placeholder">Placeholder</string>
 </resources>
