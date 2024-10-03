@@ -1,6 +1,11 @@
 package com.example.sprintproject.viewmodels;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import com.example.sprintproject.model.AuthRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
