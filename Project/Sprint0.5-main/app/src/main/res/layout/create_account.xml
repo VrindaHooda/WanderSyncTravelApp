@@ -9,7 +9,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@android:color/holo_orange_light"
+    >
 
 
     <!-- Title TextView -->
@@ -21,7 +22,8 @@
         android:textSize="36sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="32dp"
+        />
 
 
     <!-- Username and Password Form Layout -->
@@ -76,7 +78,7 @@
     </LinearLayout>
 
 
-    <!-- Login -->
+    <!-- Register -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="320dp"
@@ -87,7 +89,7 @@
 
     <!-- Create Account -->
     <Button
-        android:id="@+id/createAccountButton"
+        android:id="@+id/loginButton"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="@string/login_button"/>
