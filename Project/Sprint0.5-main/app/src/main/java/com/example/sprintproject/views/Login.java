@@ -29,6 +29,18 @@ public class Login extends AppCompatActivity {
         Button loginButton = findViewById(R.id.loginButton);
         Button createAccountButton = findViewById(R.id.createAccountButton);
 
+        // Observe authentication status from ViewModel
+        authViewModel.getAuthenticationStatus().observe(this, isAuthenticated -> {
+            if (isAuthenticated) {
+                // Navigate to LogisticsActivity if login is successful
+                Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                startActivity(intent);
+            } else {
+                // Show error message if login failed
+                Toast.makeText(Login.this, "Login failed. Incorrect credentials.", Toast.LENGTH_SHORT).show();
+            }
+        });
         // Login button action
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,15 +48,15 @@ public class Login extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
+                // Validate login input
                 if (validateViewModel.validateLogin(username, password)) {
                     authViewModel.checkCurrentUser();
-                    authViewModel.signIn(username,password);
-                    Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                    authViewModel.signIn(username, password);
                 } else {
                     Toast.makeText(Login.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
                 }
-            }}
-        );
+            }
+        });
 
         // Create Account button action
         createAccountButton.setOnClickListener(new View.OnClickListener() {

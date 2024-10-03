@@ -2,7 +2,8 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
 
@@ -11,17 +12,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Set the layout for the splash screen
+        setContentView(R.layout.activity_homescreen);
 
-        // Handler to introduce a delay before transitioning to the HomeScreen
-        new Handler().postDelayed(new Runnable() {
+        Button startButton = findViewById(R.id.start_button);
+
+        // Set OnClickListener for Start button
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                // Intent to start the HomeScreen activity after the delay
-                Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+            public void onClick(View view) {
+                // Move to Login activity
+                Intent intent = new Intent(MainActivity.this, Login.class);
                 startActivity(intent);
-                finish(); // Close the MainActivity so it won't appear again when pressing back
             }
-        }, 3000); // 3 seconds delay for the splash screen
+        });
     }
 }
+
+
