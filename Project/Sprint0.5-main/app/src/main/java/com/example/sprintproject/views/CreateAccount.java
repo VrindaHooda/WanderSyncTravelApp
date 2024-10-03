@@ -7,17 +7,20 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
+import com.example.sprintproject.viewmodels.NewAccountViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 
 public class CreateAccount extends AppCompatActivity {
 
     private ValidateViewModel validateViewModel;
+    private NewAccountViewModel newAccountViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account);
 
+        newAccountViewModel = new NewAccountViewModel();
         validateViewModel = new ValidateViewModel();
 
         EditText usernameEditText = findViewById(R.id.usernameEditText);
@@ -32,7 +35,8 @@ public class CreateAccount extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
 
                 if (validateViewModel.validateRegistration(username, password)) {
-                    // Proceed to account creation logic
+                    String userId = newAccountViewModel.getUserId();
+                    newAccountViewModel.writeNewUser(userId, username, password);
                     Toast.makeText(CreateAccount.this, "Account created!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
