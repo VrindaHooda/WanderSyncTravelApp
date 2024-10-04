@@ -14,6 +14,15 @@ public class NewAccountViewModel {
     public NewAccountViewModel() {
         this.authViewModel = new AuthViewModel();
     }
+    public String getUserId() {
+        FirebaseUser currentUser = authViewModel.getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            Log.w(TAG, "No user is currently signed in.");
+            return null; // No user signed in
+        }
+    }
 
     public interface UserCreationCallback {
         void onSuccess(); // Called when user creation is successful
@@ -21,18 +30,16 @@ public class NewAccountViewModel {
     }
 
     // Method to create a new user
-    public void writeNewUser(String userId, String username, String password, UserCreationCallback callback {
+    public void writeNewUser(String userId, String username, String password, UserCreationCallback callback) {
         authViewModel.createUser(username, password, new AuthViewModel.Callback() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                // User created successfully
                 Log.d(TAG, "User created: " + userId);
                 callback.onSuccess();
             }
 
             @Override
             public void onFailure(String error) {
-                // Handle user creation failure
                 Log.e(TAG, "User creation failed: " + error);
                 callback.onFailure(error);
             }

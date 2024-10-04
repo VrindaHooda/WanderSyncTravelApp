@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
@@ -48,10 +49,28 @@ public class Login extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                // Validate login input
                 if (validateViewModel.validateLogin(username, password)) {
                     authViewModel.checkCurrentUser();
-                    authViewModel.signIn(username, password);
+
+                    // Use a callback to handle the result of the signIn method
+                    authViewModel.signIn(username, password, new AuthViewModel.Callback() {
+                        @Override
+                        public void onSuccess(FirebaseUser user) {
+                            // Handle successful sign-in
+                            Toast.makeText(Login.this, "Login successful! User ID: " + user.getUid(), Toast.LENGTH_SHORT).show();
+
+                            // Navigate to the next activity or perform any other actions upon success
+                            Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                            startActivity(intent);
+                            finish(); // Close the Login activity
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            // Handle failed sign-in
+                            Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     Toast.makeText(Login.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
                 }
