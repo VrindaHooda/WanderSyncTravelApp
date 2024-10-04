@@ -23,37 +23,43 @@
                     android:id="@+id/travel"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/travel" />
+                    android:src="@drawable/travel"
+                    android:onClick="buttonClick" />
 
                 <ImageButton
                     android:id="@+id/transportation"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/transportation" />
+                    android:src="@drawable/transportation"
+                    android:onClick="buttonClick" />
 
                 <ImageButton
                     android:id="@+id/logistics"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/logistics" />
+                    android:src="@drawable/logistics"
+                    android:onClick="buttonClick" />
 
                 <ImageButton
                     android:id="@+id/dining"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/dining" />
+                    android:src="@drawable/dining"
+                    android:onClick="buttonClick" />
 
                 <ImageButton
                     android:id="@+id/accommodations"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/accommodations" />
+                    android:src="@drawable/accommodations"
+                    android:onClick="buttonClick" />
 
                 <ImageButton
                     android:id="@+id/destination"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/destination" />
+                    android:src="@drawable/destination"
+                    android:onClick="buttonClick" />
 
             </LinearLayout>
 

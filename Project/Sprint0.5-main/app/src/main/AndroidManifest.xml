@@ -31,5 +31,12 @@
             android:exported="true">
         </activity>
 
+        <activity android:name=".views.LogisticsActivity" />
+        <activity android:name=".views.AccomodationActivity" />
+        <activity android:name=".views.DestinationActivity" />
+        <activity android:name=".views.TransportationActivity" />
+        <activity android:name=".views.TravelCommunityActivity" />
+        <activity android:name=".views.DiningActivity" />
+
     </application>
 </manifest>
