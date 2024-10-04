@@ -24,6 +24,10 @@ public class AuthViewModel {
     public LiveData<Boolean> getAuthenticationStatus() {
         return isAuthenticated;
     }
+    public interface Callback {
+        void onSuccess(FirebaseUser user);
+        void onFailure(String error);
+    }
     public void checkCurrentUser() {
         FirebaseUser currentUser = MY_FIREBASEAUTH.getCurrentUser();
         if (currentUser != null) {
@@ -33,35 +37,40 @@ public class AuthViewModel {
             isAuthenticated.setValue(false);
         }
     }
+    public FirebaseUser getCurrentUser() {
+        return MY_FIREBASEAUTH.getCurrentUser();
+    }
 
-    public void createUser(String username, String password) {
+    public void createUser(String username, String password, Callback callback) {
         MY_FIREBASEAUTH.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "createUser:success");
                             FirebaseUser user = MY_FIREBASEAUTH.getCurrentUser();
-                            isAuthenticated.setValue(true);
+                            callback.onSuccess(user);
                         } else {
                             Log.w(TAG, "createUser:failure", task.getException());
-                            isAuthenticated.setValue(false);
+                            callback.onFailure(task.getException().getMessage());
                         }
                     }
                 });
     }
 
-    public boolean signIn (String username, String password) {
+    public void signIn(String username, String password, Callback callback) {
         MY_FIREBASEAUTH.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() { // Removed 'this'
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signIn:success");
+                            Log.d(TAG, "signIn: success");
                             FirebaseUser user = MY_FIREBASEAUTH.getCurrentUser();
+                            callback.onSuccess(user); // Use the callback to handle success
                             isAuthenticated.setValue(true);
                         } else {
-                            Log.w(TAG, "signIn:failure", task.getException());
+                            Log.w(TAG, "signIn: failure", task.getException());
+                            callback.onFailure(task.getException().getMessage()); // Use the callback to handle failure
                             isAuthenticated.setValue(false);
                         }
                     }
