@@ -1,5 +1,6 @@
 package com.example.sprintproject.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class CreateAccount extends AppCompatActivity {
         EditText usernameEditText = findViewById(R.id.usernameEditText);
         EditText passwordEditText = findViewById(R.id.passwordEditText);
         Button registerButton = findViewById(R.id.registerButton);
+        Button loginButton = findViewById(R.id.loginButton);
 
         // Register button action
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -36,11 +38,31 @@ public class CreateAccount extends AppCompatActivity {
 
                 if (validateViewModel.validateRegistration(username, password)) {
                     String userId = newAccountViewModel.getUserId();
-                    newAccountViewModel.writeNewUser(userId, username, password);
-                    Toast.makeText(CreateAccount.this, "Account created!", Toast.LENGTH_SHORT).show();
+                    newAccountViewModel.writeNewUser(userId, username, password, new NewAccountViewModel.UserCreationCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                            // Optionally navigate to another screen or perform further actions here
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            Toast.makeText(CreateAccount.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        // Login button action
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate to the Login activity
+                Intent intent = new Intent(CreateAccount.this, Login.class);
+                startActivity(intent);
+                finish(); // Close the CreateAccount activity
             }
         });
     }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.HomeScreen"
+    android:background="@android:color/holo_orange_dark"
+    tools:ignore="ExtraText">
+
+    <!-- Welcome Text -->
+    <TextView
+        android:id="@+id/welcome_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/carroisgothic_regular"
+        android:text="Welcome to WanderSync!"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="250dp" />
+
+    <!-- Start Button -->
+    <Button
+        android:id="@+id/start_button"
+        android:fontFamily="@font/carroisgothic_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:backgroundTint="@android:color/holo_purple"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/welcome_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp" />
+
+    <!-- Quit Button -->
+    <Button
+        android:id="@+id/quit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/carroisgothic_regular"
+        android:text="Quit"
+        android:backgroundTint="@android:color/holo_purple"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/start_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
