@@ -30,6 +30,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".views.Login"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
 
         <activity android:name=".views.LogisticsActivity" />
         <activity android:name=".views.AccomodationActivity" />
