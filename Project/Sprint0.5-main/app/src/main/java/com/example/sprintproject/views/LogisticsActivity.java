@@ -11,5 +11,11 @@ public class LogisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logistics_screen); // Load the logistics screen layout
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }
