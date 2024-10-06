@@ -16,50 +16,57 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:background="@android:color/holo_orange_dark"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/travel"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/travel"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/travel" />
 
                 <ImageButton
                     android:id="@+id/transportation"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/transportation"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/transportation" />
 
                 <ImageButton
                     android:id="@+id/logistics"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logistics"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/logistics" />
 
                 <ImageButton
                     android:id="@+id/dining"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/dining"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/dining" />
 
                 <ImageButton
                     android:id="@+id/accommodations"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/accommodations"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/accommodations" />
 
                 <ImageButton
                     android:id="@+id/destination"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/destination"
-                    android:onClick="buttonClick" />
+                    android:background="@android:color/holo_purple"
+                    android:onClick="buttonClick"
+                    android:src="@drawable/destination" />
 
             </LinearLayout>
 
