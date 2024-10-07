@@ -15,20 +15,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
-    private ValidateViewModel validateViewModel;
-    private AuthViewModel authViewModel;
+    private final ValidateViewModel validateViewModel = new ValidateViewModel();;
+    private final AuthViewModel authViewModel = new AuthViewModel();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        validateViewModel = new ValidateViewModel();
-        authViewModel = new AuthViewModel();
         EditText usernameEditText = findViewById(R.id.usernameEditText);
         EditText passwordEditText = findViewById(R.id.passwordEditText);
         Button loginButton = findViewById(R.id.loginButton);
@@ -46,7 +39,11 @@ public class Login extends AppCompatActivity {
                         public void onSuccess(FirebaseUser user) {
                             Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(username, password);
+                            intent.putExtras(bundle);
                             startActivity(intent);
+                            finish();
                         }
                         @Override
                         public void onFailure(String error) {
@@ -67,21 +64,20 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        authViewModel.getAuthenticationStatus().observe(this, isAuthenticated -> {
-            if (isAuthenticated) {
-                Toast.makeText(Login.this, "Already logged in!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Login.this, LogisticsActivity.class);
-                startActivity(intent);
-            }else {
-                Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        if (authViewModel.getAuthenticationStatus()) {
+            Toast.makeText(Login.this, "Already logged in!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Login.this, LogisticsActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            onStart();
+        }
     }
 
     @Override

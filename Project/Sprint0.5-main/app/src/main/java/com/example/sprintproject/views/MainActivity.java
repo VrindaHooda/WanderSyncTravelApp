@@ -8,7 +8,7 @@ import com.example.sprintproject.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SPLASH_SCREEN_DELAY = 3000; // 3 seconds
+    private static final int SPLASH_SCREEN_DELAY = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
