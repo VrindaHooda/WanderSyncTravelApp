@@ -10,5 +10,11 @@ public class AccommodationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accomodation_screen);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }
