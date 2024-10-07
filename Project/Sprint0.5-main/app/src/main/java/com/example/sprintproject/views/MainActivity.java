@@ -15,14 +15,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Delay the transition to the HomeScreen by 3 seconds
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Intent to navigate to HomeScreen after the delay
                 Intent intent = new Intent(MainActivity.this, HomeScreen.class);
                 startActivity(intent);
-                finish(); // Finish the splash screen activity so the user can't go back to it
+                finish();
             }
         }, SPLASH_SCREEN_DELAY);
     }

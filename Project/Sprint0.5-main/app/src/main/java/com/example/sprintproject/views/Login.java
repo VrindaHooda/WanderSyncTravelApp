@@ -1,5 +1,6 @@
 package com.example.sprintproject.views;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,53 +22,34 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         validateViewModel = new ValidateViewModel();
         authViewModel = new AuthViewModel();
-
         EditText usernameEditText = findViewById(R.id.usernameEditText);
         EditText passwordEditText = findViewById(R.id.passwordEditText);
         Button loginButton = findViewById(R.id.loginButton);
         Button createAccountButton = findViewById(R.id.createAccountButton);
 
-        // Observe authentication status from ViewModel
-        authViewModel.getAuthenticationStatus().observe(this, isAuthenticated -> {
-            if (isAuthenticated) {
-                // Navigate to LogisticsActivity if login is successful
-                Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Login.this, LogisticsActivity.class);
-                startActivity(intent);
-            } else {
-                // Show error message if login failed
-                Toast.makeText(Login.this, "Login failed. Incorrect credentials.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        // Login button action
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-
                 if (validateViewModel.validateLogin(username, password)) {
                     authViewModel.checkCurrentUser();
-
-                    // Use a callback to handle the result of the signIn method
                     authViewModel.signIn(username, password, new AuthViewModel.Callback() {
                         @Override
                         public void onSuccess(FirebaseUser user) {
-                            // Handle successful sign-in
-                            Toast.makeText(Login.this, "Login successful! User ID: " + user.getUid(), Toast.LENGTH_SHORT).show();
-
-                            // Navigate to the next activity or perform any other actions upon success
+                            Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Login.this, LogisticsActivity.class);
                             startActivity(intent);
-                            finish(); // Close the Login activity
                         }
-
                         @Override
                         public void onFailure(String error) {
-                            // Handle failed sign-in
                             Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -77,15 +59,35 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        // Create Account button action
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this, CreateAccount.class);
                 startActivity(intent);
+                finish();
             }
         });
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        authViewModel.getAuthenticationStatus().observe(this, isAuthenticated -> {
+            if (isAuthenticated) {
+                Toast.makeText(Login.this, "Already logged in!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                startActivity(intent);
+            }else {
+                Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        authViewModel.signOut();
     }
 }
 

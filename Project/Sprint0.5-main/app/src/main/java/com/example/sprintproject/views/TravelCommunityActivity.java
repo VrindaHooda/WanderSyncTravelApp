@@ -9,6 +9,12 @@ public class TravelCommunityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.travel_community_screen); // Load the travel community screen layout
+        setContentView(R.layout.travel_community_screen);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }

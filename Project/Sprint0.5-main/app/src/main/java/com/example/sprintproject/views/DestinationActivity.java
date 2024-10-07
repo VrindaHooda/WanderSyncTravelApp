@@ -10,5 +10,11 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen); // Load the destination screen layout
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }

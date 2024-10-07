@@ -29,7 +29,6 @@ public class CreateAccount extends AppCompatActivity {
         Button registerButton = findViewById(R.id.registerButton);
         Button loginButton = findViewById(R.id.loginButton);
 
-        // Register button action
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,9 +41,10 @@ public class CreateAccount extends AppCompatActivity {
                         @Override
                         public void onSuccess() {
                             Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-                            // Optionally navigate to another screen or perform further actions here
+                            Intent intent = new Intent(CreateAccount.this, Login.class);
+                            startActivity(intent);
+                            finish();
                         }
-
                         @Override
                         public void onFailure(String error) {
                             Toast.makeText(CreateAccount.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
@@ -55,14 +55,12 @@ public class CreateAccount extends AppCompatActivity {
                 }
             }
         });
-        // Login button action
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Navigate to the Login activity
                 Intent intent = new Intent(CreateAccount.this, Login.class);
                 startActivity(intent);
-                finish(); // Close the CreateAccount activity
             }
         });
     }
