@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.sprintproject.R;
 
@@ -63,7 +64,7 @@ public class NavigationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_button, container, false);
 
-        Button logisticsButton = view.findViewById(R.id.logistics);
+        ImageButton logisticsButton = view.findViewById(R.id.logistics);
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +73,7 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        Button transportationButton = view.findViewById(R.id.transportation);
+        ImageButton transportationButton = view.findViewById(R.id.transportation);
         transportationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +82,7 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        Button travelButton = view.findViewById(R.id.travel);
+        ImageButton travelButton = view.findViewById(R.id.travel);
         travelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +91,7 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        Button destinationButton = view.findViewById(R.id.destination);
+        ImageButton destinationButton = view.findViewById(R.id.destination);
         destinationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +100,7 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        Button accommodationsButton = view.findViewById(R.id.accommodations);
+        ImageButton accommodationsButton = view.findViewById(R.id.accommodations);
         accommodationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +109,7 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        Button diningButton = view.findViewById(R.id.dining);
+        ImageButton diningButton = view.findViewById(R.id.dining);
         diningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -9,7 +9,7 @@ public class DestinationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.destination_screen); // Load the destination screen layout
+        setContentView(R.layout.destination_screen);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)

@@ -10,7 +10,7 @@ public class DiningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dining_establishment_screen); // Load the transportation screen layout
+        setContentView(R.layout.dining_establishment_screen);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)

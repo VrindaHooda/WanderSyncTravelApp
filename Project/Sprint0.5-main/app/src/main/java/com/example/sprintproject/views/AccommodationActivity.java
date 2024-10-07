@@ -9,6 +9,6 @@ public class AccommodationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accomodation_screen); // Load the accommodation screen layout
+        setContentView(R.layout.accomodation_screen);
     }
 }
