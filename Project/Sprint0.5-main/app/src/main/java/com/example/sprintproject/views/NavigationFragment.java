@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.sprintproject.R;
@@ -62,14 +61,15 @@ public class NavigationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_button, container, false);
+        View view = inflater.inflate(R.layout.navigation_bar, container, false);
 
         ImageButton logisticsButton = view.findViewById(R.id.logistics);
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LogisticsActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
@@ -78,7 +78,8 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TransportationActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
@@ -87,7 +88,8 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TravelCommunityActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
@@ -96,7 +98,8 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DestinationActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
@@ -105,7 +108,8 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AccommodationActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
@@ -114,7 +118,8 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DiningActivity.class);
-                startActivity(intent);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
         return view;

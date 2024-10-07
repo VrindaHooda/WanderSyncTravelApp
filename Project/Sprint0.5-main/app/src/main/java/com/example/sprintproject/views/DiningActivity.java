@@ -14,7 +14,7 @@ public class DiningActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
     }

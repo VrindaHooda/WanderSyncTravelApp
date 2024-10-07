@@ -2,7 +2,6 @@ package com.example.sprintproject.views;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sprintproject.R;
 
 public class LogisticsActivity extends AppCompatActivity {
@@ -14,7 +13,7 @@ public class LogisticsActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
     }
