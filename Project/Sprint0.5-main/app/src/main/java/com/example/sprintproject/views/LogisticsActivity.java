@@ -10,7 +10,7 @@ public class LogisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.logistics_screen); // Load the logistics screen layout
+        setContentView(R.layout.logistics_screen);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)

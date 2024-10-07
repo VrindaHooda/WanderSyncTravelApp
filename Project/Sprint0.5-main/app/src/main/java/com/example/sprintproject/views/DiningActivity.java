@@ -11,5 +11,11 @@ public class DiningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dining_establishment_screen); // Load the transportation screen layout
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }

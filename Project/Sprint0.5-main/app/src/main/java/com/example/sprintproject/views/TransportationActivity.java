@@ -9,6 +9,12 @@ public class TransportationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.transportation_screen); // Load the transportation screen layout
+        setContentView(R.layout.transportation_screen);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigationView, NavigationFragment.class, null)
+                    .commit();
+        }
     }
 }

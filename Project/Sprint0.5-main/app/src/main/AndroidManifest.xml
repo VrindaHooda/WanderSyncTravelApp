@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!-- Splash/MainActivity (starts first) -->
         <activity
             android:name=".views.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -24,24 +23,59 @@
             </intent-filter>
         </activity>
 
-        <!-- HomeScreen Activity (after splash screen) -->
         <activity
             android:name=".views.HomeScreen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
+
         <activity
             android:name=".views.Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
 
-        <activity android:name=".views.LogisticsActivity" />
-        <activity android:name=".views.AccomodationActivity" />
-        <activity android:name=".views.DestinationActivity" />
-        <activity android:name=".views.TransportationActivity" />
-        <activity android:name=".views.TravelCommunityActivity" />
-        <activity android:name=".views.DiningActivity" />
+        <activity
+            android:name=".views.CreateAccount"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.LogisticsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.AccommodationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.DestinationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.TransportationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.TravelCommunityActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".views.DiningActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
 
     </application>
 </manifest>

@@ -3,9 +3,7 @@ package com.example.sprintproject.views;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +29,6 @@ public class NavigationFragment extends Fragment {
     private String mParam2;
 
     public NavigationFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -64,77 +61,57 @@ public class NavigationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_button, container, false);
 
-        // Find the button in the layout
         Button logisticsButton = view.findViewById(R.id.logistics);
-
-        // Set an onClickListener to the button
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the LogisticsActivity
                 Intent intent = new Intent(getActivity(), LogisticsActivity.class);
                 startActivity(intent);
             }
         });
 
         Button transportationButton = view.findViewById(R.id.transportation);
-
-        // Set an onClickListener to the button
         transportationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the TransportationActivity
                 Intent intent = new Intent(getActivity(), TransportationActivity.class);
                 startActivity(intent);
             }
         });
 
         Button travelButton = view.findViewById(R.id.travel);
-
-        // Set an onClickListener to the button
         travelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the TravelCommunityActivity
                 Intent intent = new Intent(getActivity(), TravelCommunityActivity.class);
                 startActivity(intent);
             }
         });
 
         Button destinationButton = view.findViewById(R.id.destination);
-
-        // Set an onClickListener to the button
         destinationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the DestinationActivity
                 Intent intent = new Intent(getActivity(), DestinationActivity.class);
                 startActivity(intent);
             }
         });
 
         Button accommodationsButton = view.findViewById(R.id.accommodations);
-
-        // Set an onClickListener to the button
         accommodationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the AccommodationsActivity
-                Intent intent = new Intent(getActivity(), AccomodationActivity.class);
+                Intent intent = new Intent(getActivity(), AccommodationActivity.class);
                 startActivity(intent);
             }
         });
 
         Button diningButton = view.findViewById(R.id.dining);
-
-        // Set an onClickListener to the button
         diningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to open the DiningActivity
                 Intent intent = new Intent(getActivity(), DiningActivity.class);
                 startActivity(intent);
             }
