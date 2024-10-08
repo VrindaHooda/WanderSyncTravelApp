@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +9,6 @@
     android:background="@android:color/holo_orange_dark"
     tools:ignore="ExtraText">
 
-    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcome_label"
         android:layout_width="wrap_content"
@@ -23,7 +23,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="250dp" />
 
-    <!-- Start Button -->
     <Button
         android:id="@+id/start_button"
         android:fontFamily="@font/carroisgothic_regular"
@@ -37,7 +36,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp" />
 
-    <!-- Quit Button -->
     <Button
         android:id="@+id/quit_button"
         android:layout_width="wrap_content"

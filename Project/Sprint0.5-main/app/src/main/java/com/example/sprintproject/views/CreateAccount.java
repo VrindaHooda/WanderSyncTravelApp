@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class CreateAccount extends AppCompatActivity {
 
-    private final ValidateViewModel VALIDATE_VIEW_MODEL = new ValidateViewModel();;
-    private final AuthViewModel AUTH_VIEW_MODEL = new AuthViewModel();
+    private final ValidateViewModel validateVIEWMODEL = new ValidateViewModel();
+    private final AuthViewModel authVIEWMODEL = new AuthViewModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,22 +34,28 @@ public class CreateAccount extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (VALIDATE_VIEW_MODEL.validateRegistration(username, password)) {
-                    AUTH_VIEW_MODEL.createUser(username, password, new AuthViewModel.Callback() {
+                if (validateVIEWMODEL.validateRegistration(username, password)) {
+                    authVIEWMODEL.createUser(username, password, new AuthViewModel.Callback() {
                         @Override
                         public void onSuccess(FirebaseUser user) {
-                            Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateAccount.this,
+                                    "Account created successfully!",
+                                    Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateAccount.this, Login.class);
                             startActivity(intent);
                             finish();
                         }
                         @Override
                         public void onFailure(String error) {
-                            Toast.makeText(CreateAccount.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateAccount.this,
+                                    "Account creation failed: " + error,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateAccount.this,
+                            "Invalid input. Can't be empty or contain whitespace",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -65,7 +71,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         setContentView(R.layout.create_account);
 
@@ -80,22 +86,28 @@ public class CreateAccount extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (VALIDATE_VIEW_MODEL.validateRegistration(username, password)) {
-                    AUTH_VIEW_MODEL.createUser(username, password, new AuthViewModel.Callback() {
+                if (validateVIEWMODEL.validateRegistration(username, password)) {
+                    authVIEWMODEL.createUser(username, password, new AuthViewModel.Callback() {
                         @Override
                         public void onSuccess(FirebaseUser user) {
-                            Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateAccount.this,
+                                    "Account created successfully!",
+                                    Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateAccount.this, Login.class);
                             startActivity(intent);
                             finish();
                         }
                         @Override
                         public void onFailure(String error) {
-                            Toast.makeText(CreateAccount.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateAccount.this,
+                                    "Account creation failed: " + error,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateAccount.this,
+                            "Invalid input. Can't be empty or contain whitespace",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

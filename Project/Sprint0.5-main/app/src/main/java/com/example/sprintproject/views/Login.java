@@ -1,6 +1,5 @@
 package com.example.sprintproject.views;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
-    private final ValidateViewModel validateViewModel = new ValidateViewModel();;
-    private final AuthViewModel authViewModel = new AuthViewModel();;
+    private final ValidateViewModel validateViewModel = new ValidateViewModel();
+    private final AuthViewModel authViewModel = new AuthViewModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +36,10 @@ public class Login extends AppCompatActivity {
                     authViewModel.signIn(username, password, new AuthViewModel.Callback() {
                         @Override
                         public void onSuccess(FirebaseUser user) {
-                            Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                            Toast.makeText(Login.this, "Login successful!",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this,
+                                    LogisticsActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putString(username, password);
                             intent.putExtras(bundle);
@@ -47,11 +48,14 @@ public class Login extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(String error) {
-                            Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Login failed: " + error,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Toast.makeText(Login.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this,
+                            "Invalid input. Can't be empty or contain whitespace",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -67,7 +71,7 @@ public class Login extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
         if (authViewModel.getAuthenticationStatus()) {
@@ -81,7 +85,7 @@ public class Login extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         authViewModel.signOut();
     }
