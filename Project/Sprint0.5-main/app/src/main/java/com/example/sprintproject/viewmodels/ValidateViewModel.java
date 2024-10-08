@@ -6,6 +6,7 @@ public class ValidateViewModel {
     }
 
     public boolean validateRegistration(String username, String password) {
-        return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password) && !username.contains(" ") && !password.contains(" ");
+        return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)
+                && !username.contains(" ") && !password.contains(" ");
     }
 }
