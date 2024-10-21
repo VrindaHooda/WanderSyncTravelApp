@@ -1,0 +1,35 @@
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repository code
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better 
+relevancy
+
+      # Set up Node.js to run the build (using Node 16 or 20 as 
+recommended)
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use '20' for the latest version
+
+      # Install dependencies
+      - run: npm install
+
+      # Run the build process
+      - run: npm run build
+
+      # Run SonarQube scan
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Uncomment the following if you want to enforce SonarQube's Quality 
+Gate
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
