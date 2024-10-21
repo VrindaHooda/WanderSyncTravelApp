@@ -1,0 +1,10 @@
+Participating Members: Vrinda Hooda, Aryan Chadha, Tanya Khurana, Afsheen Mohammad, Aditi Sharma
+Our system follows the following SOLID and GRASP principles:
+1) The Single Responsibility Principle (SOLID) is followed because BaseTask encapsulates only task-related properties and behaviors, while Project manages tasks and team members. This ensures that each class has one responsibility. For example, HighPriorityTask only handles notifications specific to high-priority tasks.
+2) The Open/Closed Principle (SOLID) is followed because BaseTask is open for extension but closed for modification. Specialized tasks like HighPriorityTask and RecurringTask can be created by extending BaseTask without altering the base class.
+3) The Liskov Substitution Principle (SOLID) is followed because objects of derived classes like HighPriorityTask and RecurringTask can be substituted for their base type, BaseTask, without altering the correct behavior of the program.
+4) The Interface Segregation Principle (SOLID) is followed because by using the Task interface, each task type implements only the methods necessary for a task, adhering to the principle that interfaces should only contain methods that are actually used.
+5) The Dependency Inversion Principle (SOLID) is followed because the system depends on abstractions (interfaces like Task) rather than concrete classes. This allows flexibility in substituting different types of tasks without modifying the core project logic.
+6) The Controller pattern (GRASP) is followed because Project is designed using it. It acts as the controller for managing tasks and team members, coordinating between them.
+7) Polymorphism (GRASP) is also utilized in the system to allow different types of tasks to
+be treated uniformly. For instance, HighPriorityTask and RecurringTask are both handled as Task types but have different behaviors based on their specific implementation.
