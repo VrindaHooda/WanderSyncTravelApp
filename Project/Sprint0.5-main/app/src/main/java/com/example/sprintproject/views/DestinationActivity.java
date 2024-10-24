@@ -18,24 +18,6 @@ public class DestinationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.destination_activity);
+        setContentView(R.layout.destination_screen);
 
-        userNameTextView = findViewById(R.id.userNameTextView);
-        userAgeTextView = findViewById(R.id.userAgeTextView);
-
-        destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
-
-        destinationViewModel.getUserLiveData().observe(this, user -> {
-            if (user != null) {
-                userNameTextView.setText(user.getName());
-                userAgeTextView.setText(String.valueOf(user.getAge()));
-            }
-        });
-
-        String userId = "123";
-        destinationViewModel.readUserData(userId);
-
-        User newUser = new User("Alice", 25);
-        destinationViewModel.writeUserData(userId, newUser);
-    }
 }
