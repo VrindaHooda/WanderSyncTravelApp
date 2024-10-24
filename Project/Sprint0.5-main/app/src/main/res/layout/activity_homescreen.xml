@@ -13,11 +13,11 @@
         android:id="@+id/welcome_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/carroisgothic_regular"
         android:text="Welcome to WanderSync!"
-        android:textSize="30sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/halloween_spookies"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,10 +25,11 @@
 
     <Button
         android:id="@+id/start_button"
-        android:fontFamily="@font/carroisgothic_regular"
+        android:fontFamily="@font/halloween_spookies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start"
+        android:textSize="24sp"
         android:backgroundTint="@android:color/holo_purple"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/welcome_label"
@@ -40,13 +41,14 @@
         android:id="@+id/quit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/carroisgothic_regular"
-        android:text="Quit"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@android:color/holo_purple"
+        android:fontFamily="@font/halloween_spookies"
+        android:text="Quit"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/start_button"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/start_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
