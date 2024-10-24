@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,15 +13,19 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/loginTitle"
+            android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
-            android:gravity="center"
-            android:text="@string/create_account_button"
+            android:text="Create Account"
+            android:fontFamily="@font/halloween_spookies"
             android:textColor="@android:color/white"
-            android:textSize="36sp"
-            android:textStyle="bold" />
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,10 +39,11 @@
                 android:id="@+id/usernameLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/username"
+                android:layout_marginBottom="16dp"
+                android:text="Username"
+                android:fontFamily="@font/halloween_spookies"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/usernameEditText"
@@ -56,10 +61,11 @@
                 android:id="@+id/passwordLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/password"
+                android:layout_marginBottom="16dp"
+                android:text="Password"
+                android:fontFamily="@font/halloween_spookies"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/passwordEditText"
@@ -79,7 +85,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@android:color/holo_purple"
-            android:text="@string/register"
+            android:text="Register"
+            android:textSize="24sp"
+            android:fontFamily="@font/halloween_spookies"
             android:textColor="@android:color/white" />
 
         <Button
@@ -87,7 +95,9 @@
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_purple"
-            android:text="@string/login_button"
+            android:text="Login"
+            android:textSize="24sp"
+            android:fontFamily="@font/halloween_spookies"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
