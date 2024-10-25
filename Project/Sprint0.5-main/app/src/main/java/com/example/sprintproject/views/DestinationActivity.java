@@ -1,9 +1,9 @@
 package com.example.sprintproject.views;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +25,9 @@ public class DestinationActivity extends AppCompatActivity {
     private DestinationViewModel destinationViewModel;
     private ValidateViewModel validateViewModel;
     private TextView destinationListTextView;
+
+    private Calendar startDate;
+    private Calendar endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,26 +70,34 @@ public class DestinationActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         EditText locationInput = dialogView.findViewById(R.id.locationInput);
-        DatePicker startDatePicker = dialogView.findViewById(R.id.startDatePicker);
-        DatePicker endDatePicker = dialogView.findViewById(R.id.endDatePicker);
+        Button openStartDatePicker = dialogView.findViewById(R.id.openStartDatePicker);
+        Button openEndDatePicker = dialogView.findViewById(R.id.openEndDatePicker);
+        TextView startDateText = dialogView.findViewById(R.id.startDateText);
+        TextView endDateText = dialogView.findViewById(R.id.endDateText);
         Button submitTravelLogButton = dialogView.findViewById(R.id.submitTravelLogButton);
 
         AlertDialog dialog = builder.create();
 
+        // Initialize Calendar instances for start and end dates
+        startDate = Calendar.getInstance();
+        endDate = Calendar.getInstance();
+
+        // Set up click listener for the start date picker button
+        openStartDatePicker.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText));
+
+        // Set up click listener for the end date picker button
+        openEndDatePicker.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText));
+
         submitTravelLogButton.setOnClickListener(v -> {
             String location = locationInput.getText().toString();
 
-            Calendar startDate = Calendar.getInstance();
-            startDate.set(startDatePicker.getYear(), startDatePicker.getMonth(), startDatePicker.getDayOfMonth());
-
-            Calendar endDate = Calendar.getInstance();
-            endDate.set(endDatePicker.getYear(), endDatePicker.getMonth(), endDatePicker.getDayOfMonth());
-
+            // Validate the dates
             if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
                 Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Create and add new destination entry
             DestinationEntry newEntry = new DestinationEntry(
                     destinationViewModel.generateDestinationId(location, startDate.getTime()),
                     location,
@@ -100,5 +111,21 @@ public class DestinationActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    // Method to open a DatePickerDialog and set the selected date in the TextView
+    private void openDatePickerDialog(Calendar date, TextView dateTextView) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    // Set the selected date in the Calendar object and update the TextView
+                    date.set(selectedYear, selectedMonth, selectedDay);
+                    dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                }, year, month, day);
+        datePickerDialog.show();
     }
 }
