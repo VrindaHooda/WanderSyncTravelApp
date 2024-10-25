@@ -23,6 +23,10 @@ public class DestinationViewModel extends ViewModel {
         return location + "_" + startDate.getTime();
     }
 
+    public void prepopulateDatabase() {
+        destinationDatabase.prepopulateDatabase();
+    }
+
     public void addDestination(DestinationEntry entry) {
         destinationDatabase.addEntry(entry.getDestinationId(), entry);
     }
