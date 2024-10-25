@@ -2,6 +2,7 @@ package com.example.sprintproject.model;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationEntry {
 
@@ -38,5 +39,11 @@ public class DestinationEntry {
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    // New method to calculate the duration in days
+    public long getDurationInDays() {
+        long diffInMillis = endDate.getTime() - startDate.getTime();
+        return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
     }
 }
