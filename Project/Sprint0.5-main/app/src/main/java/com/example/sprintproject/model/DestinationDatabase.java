@@ -14,7 +14,6 @@ public class DestinationDatabase {
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
 
-    // Interface for Firebase callbacks
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
     }
@@ -34,7 +33,6 @@ public class DestinationDatabase {
         databaseReference.child(destinationId).setValue(entry);
     }
 
-    // Read all entries from Firebase
     public void getAllEntries(final DataStatus dataStatus) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -44,12 +42,11 @@ public class DestinationDatabase {
                     DestinationEntry entry = snapshot.getValue(DestinationEntry.class);
                     entries.add(entry);
                 }
-                dataStatus.DataIsLoaded(entries); // Notify ViewModel when data is loaded
+                dataStatus.DataIsLoaded(entries);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle potential errors
             }
         });
     }

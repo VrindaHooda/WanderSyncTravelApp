@@ -1,6 +1,5 @@
 package com.example.sprintproject.model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class DestinationEntry {
@@ -10,7 +9,6 @@ public class DestinationEntry {
     private Date startDate;
     private Date endDate;
 
-    // Constructor
     public DestinationEntry(String destinationId, String location, Date startDate, Date endDate) {
         this.destinationId = destinationId;
         this.location = location;
@@ -18,7 +16,6 @@ public class DestinationEntry {
         this.endDate = endDate;
     }
 
-    // Getters
     public String getDestinationId() {
         return destinationId;
     }
