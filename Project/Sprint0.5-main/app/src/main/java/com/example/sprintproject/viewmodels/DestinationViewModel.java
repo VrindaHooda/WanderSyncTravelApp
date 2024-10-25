@@ -9,38 +9,43 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+import java.util.List;
+
 public class DestinationViewModel extends ViewModel {
 
-    private MutableLiveData<DestinationEntry> destinationEntryLiveData;
-    private DestinationDatabase databaseHelper;
+    private DestinationDatabase destinationDatabase;
+    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData;
 
-    public void DestinationViewModel() {
-        destinationEntryLiveData = new MutableLiveData<>();
-
-        databaseHelper = DestinationDatabase.getInstance();
+    public DestinationViewModel() {
+        // Get singleton instance of DestinationDatabase
+        destinationDatabase = DestinationDatabase.getInstance();
+        destinationEntriesLiveData = new MutableLiveData<>();
     }
 
-    public LiveData<DestinationEntry> getDestinationEntryLiveData() {
-        return destinationEntryLiveData;
+    // Method to generate a unique destination ID
+    public String generateDestinationId(String location, Date startDate) {
+        return location + "_" + startDate.getTime();
     }
 
-    public void writeDestinationEntryData(String destinationEntryId, DestinationEntry destinationEntry) {
-        databaseHelper.writeData("destinationEntries/" + destinationEntryId, destinationEntry);
+    // Add destination entry to Firebase using destinationId
+    public void addDestination(DestinationEntry entry) {
+        destinationDatabase.addEntry(entry.getDestinationId(), entry);
     }
 
-    public void readDestinationEntryData(String destinationEntryId) {
-        databaseHelper.readData("destinationEntries/" + destinationEntryId).addValueEventListener(new ValueEventListener() {
+    // Read all destination entries from Firebase
+    public void readEntries() {
+        destinationDatabase.getAllEntries(new DestinationDatabase.DataStatus() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DestinationEntry destinationEntry = dataSnapshot.getValue(DestinationEntry.class);
-
-                destinationEntryLiveData.postValue(destinationEntry);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle database error if needed
+            public void DataIsLoaded(List<DestinationEntry> entries) {
+                // Update LiveData when data is loaded from Firebase
+                destinationEntriesLiveData.setValue(entries);
             }
         });
+    }
+
+    // Return the LiveData to observe in the UI
+    public LiveData<List<DestinationEntry>> getDestinationEntries() {
+        return destinationEntriesLiveData;
     }
 }
