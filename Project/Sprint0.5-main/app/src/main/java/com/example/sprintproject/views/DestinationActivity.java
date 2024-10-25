@@ -2,6 +2,7 @@ package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,8 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
+
+        // Fragment transaction for bottom navigation
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
@@ -40,21 +43,38 @@ public class DestinationActivity extends AppCompatActivity {
                     .commit();
         }
 
-        destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
-        validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
+        try {
+            destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
+            validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
 
-        destinationListTextView = findViewById(R.id.destinationListTextView);
-        Button logTravelButton = findViewById(R.id.btn_log_travel);
+            destinationListTextView = findViewById(R.id.destinationListTextView);
+            Button logTravelButton = findViewById(R.id.btn_log_travel);
 
-        destinationViewModel.getDestinationEntries().observe(this, entries -> {
-            updateDestinationList(entries);
-        });
+            // Check if TextView and Button are null
+            if (destinationListTextView == null) {
+                Log.e("DestinationActivity", "destinationListTextView is null");
+            }
+            if (logTravelButton == null) {
+                Log.e("DestinationActivity", "logTravelButton is null");
+            }
 
-        destinationViewModel.readEntries();
-        destinationViewModel.prepopulateDatabase();
+            // Observer for destination entries
+            destinationViewModel.getDestinationEntries().observe(this, entries -> {
+                updateDestinationList(entries);
+            });
 
-        logTravelButton.setOnClickListener(v -> openLogTravelDialog());
+            // Prepopulate and read entries from the database
+            destinationViewModel.prepopulateDatabase();
+            destinationViewModel.readEntries();
+
+            // Set up button click listener
+            logTravelButton.setOnClickListener(v -> openLogTravelDialog());
+
+        } catch (Exception e) {
+            Log.e("DestinationActivity", "Error in onCreate", e);
+        }
     }
+
 
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
