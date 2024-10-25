@@ -51,6 +51,7 @@ public class DestinationActivity extends AppCompatActivity {
         });
 
         destinationViewModel.readEntries();
+        destinationViewModel.prepopulateDatabase();
 
         logTravelButton.setOnClickListener(v -> openLogTravelDialog());
     }
