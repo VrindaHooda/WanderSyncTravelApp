@@ -8,20 +8,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DestinationEntry;
-import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+
 import java.util.Calendar;
 import java.util.List;
 
 public class DestinationActivity extends AppCompatActivity {
 
     private DestinationViewModel destinationViewModel;
-    private ValidateViewModel validateViewModel;
     private TextView destinationListTextView;
     private Calendar startDate;
     private Calendar endDate;
@@ -30,48 +31,26 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
-                    .commit();
-        }
-        try {
-            destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
-            validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
 
-            destinationListTextView = findViewById(R.id.destinationListTextView);
-            Button logTravelButton = findViewById(R.id.btn_log_travel);
-            Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
+        // Set up ViewModel
+        destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
 
-            // Check if TextView and Button are null
-            if (destinationListTextView == null) {
-                Log.e("DestinationActivity", "destinationListTextView is null");
-            }
-            if (logTravelButton == null) {
-                Log.e("DestinationActivity", "logTravelButton is null");
-            }
+        // Initialize UI elements
+        destinationListTextView = findViewById(R.id.destinationListTextView);
+        Button logTravelButton = findViewById(R.id.btn_log_travel);
+        Button calculateVacationTimeButton = findViewById(R.id.btn_calculate_vacation);
 
-            // Observer for destination entries
-            destinationViewModel.getDestinationEntries().observe(this, entries -> {
-                updateDestinationList(entries);
-            });
+        // Set up button listeners
+        logTravelButton.setOnClickListener(v -> openLogTravelDialog());
+        calculateVacationTimeButton.setOnClickListener(v -> openCalculateVacationDialog());
 
-            // Prepopulate and read entries from the database
-            destinationViewModel.prepopulateDatabase();
-            destinationViewModel.readEntries();
+        // Observe database entries to display on screen
+        destinationViewModel.getDestinationEntries().observe(this, this::updateDestinationList);
 
-            // Set up button click listener
-            logTravelButton.setOnClickListener(v -> openLogTravelDialog());
-
-            calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog());
-
-
-        } catch (Exception e) {
-            Log.e("DestinationActivity", "Error in onCreate", e);
-        }
+        // Populate the database if empty
+        destinationViewModel.prepopulateDatabase();
+        destinationViewModel.readEntries();
     }
-
 
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
@@ -95,27 +74,20 @@ public class DestinationActivity extends AppCompatActivity {
         Button submitTravelLogButton = dialogView.findViewById(R.id.submitTravelLogButton);
 
         AlertDialog dialog = builder.create();
-
-        // Initialize Calendar instances for start and end dates
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
-        // Set up click listener for the start date picker button
         openStartDatePicker.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText));
-
-        // Set up click listener for the end date picker button
         openEndDatePicker.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText));
 
         submitTravelLogButton.setOnClickListener(v -> {
             String location = locationInput.getText().toString();
 
-            // Validate the dates
-            if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
-                Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
+            if (startDate == null || endDate == null || location.isEmpty()) {
+                Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Create and add new destination entry
             DestinationEntry newEntry = new DestinationEntry(
                     destinationViewModel.generateDestinationId(location, startDate.getTime()),
                     location,
@@ -136,72 +108,81 @@ public class DestinationActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.vacation_time_form, null);
         builder.setView(dialogView);
 
+        // Initialize UI components
         EditText vacationInput = dialogView.findViewById(R.id.vacationTimeInput);
-        Button openStartDatePicker2 = dialogView.findViewById(R.id.openStartDatePicker2);
-        Button openEndDatePicker2 = dialogView.findViewById(R.id.openEndDatePicker2);
-        TextView startDateText2 = dialogView.findViewById(R.id.startDateText2);
-        TextView endDateText2 = dialogView.findViewById(R.id.endDateText2);
+        Button openStartDatePicker = dialogView.findViewById(R.id.openStartDatePicker2);
+        Button openEndDatePicker = dialogView.findViewById(R.id.openEndDatePicker2);
+        TextView startDateText = dialogView.findViewById(R.id.startDateText2);
+        TextView endDateText = dialogView.findViewById(R.id.endDateText2);
         Button submitVacationTimeButton = dialogView.findViewById(R.id.submitVacationTimeButton);
+        Button displayCalculatedTimeButton = dialogView.findViewById(R.id.display_calculated_time_button);
 
         AlertDialog dialog = builder.create();
-
-        // Initialize Calendar instances for start and end dates
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
-        // Set up click listener for the start date picker button
-        openStartDatePicker2.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText2));
+        // Set up date pickers for start and end dates
+        openStartDatePicker.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText));
+        openEndDatePicker.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText));
 
-        // Set up click listener for the end date picker button
-        openEndDatePicker2.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText2));
-
-        submitVacationTimeButton.setOnClickListener(v -> {
-            // Retrieve the inputted duration (if provided)
-            String durationStr = vacationInput.getText().toString();
+        // Display Calculated Time Button Logic
+        displayCalculatedTimeButton.setOnClickListener(v -> {
+            String durationStr = vacationInput.getText().toString().trim();
             Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
 
-            // Variables to store the calculated result and the message for the result dialog
-            String calculatedResult = null;
-            String resultMessage = null;
-
-            // Check for each scenario in order:
-            if (!startDateText2.getText().toString().isEmpty() && durationInDays != null) {
-                calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
-                resultMessage = "Calculated End Date: " + calculatedResult;
-            } else if (!startDateText2.getText().toString().isEmpty() && !endDateText2.getText().toString().isEmpty()) {
-                calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
-                resultMessage = "Calculated Duration: " + calculatedResult + " days";
-            } else if (!endDateText2.getText().toString().isEmpty() && durationInDays != null) {
-                calculatedResult = destinationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
-                resultMessage = "Calculated Start Date: " + calculatedResult;
+            // Check which fields are set and calculate accordingly
+            if (startDateText.getText().toString().contains("Selected Date") && endDateText.getText().toString().contains("Selected Date")) {
+                // Both dates selected, calculate duration
+                String calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+                vacationInput.setText(calculatedResult); // Auto-fill the duration
+            } else if (startDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+                // Start date and duration provided, calculate end date
+                String calculatedEndDate = destinationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
+                endDateText.setText("Calculated End Date: " + calculatedEndDate);
+            } else if (endDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+                // End date and duration provided, calculate start date
+                String calculatedStartDate = destinationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
+                startDateText.setText("Calculated Start Date: " + calculatedStartDate);
             } else {
-                Toast.makeText(this, "Please provide at least two inputs", Toast.LENGTH_SHORT).show();
-                return;
+                Toast.makeText(this, "Please provide enough information to calculate.", Toast.LENGTH_SHORT).show();
             }
+        });
 
-            // Show the calculated result in a separate dialog box
-            AlertDialog.Builder resultDialogBuilder = new AlertDialog.Builder(this);
-            resultDialogBuilder.setTitle("Calculation Result");
-            resultDialogBuilder.setMessage(resultMessage);
-            resultDialogBuilder.setPositiveButton("OK", (resultDialogButton, which) -> resultDialogButton.dismiss());
+        // Submit Button Logic
+        submitVacationTimeButton.setOnClickListener(v -> {
+            String durationStr = vacationInput.getText().toString().trim();
+            Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
 
-            AlertDialog resultDialog = resultDialogBuilder.create();
-            resultDialog.show();
+            boolean isStartDateSet = startDateText.getText().toString().contains("Selected Date");
+            boolean isEndDateSet = endDateText.getText().toString().contains("Selected Date");
 
-            // Clear input fields after showing the result dialog
-            startDateText2.setText(""); // Clear start date text view
-            endDateText2.setText("");   // Clear end date text view
-            vacationInput.setText("");  // Clear duration input field
-
-            // Reset Calendar objects to today's date
-            startDate = Calendar.getInstance();
-            endDate = Calendar.getInstance();
+            if (isStartDateSet && isEndDateSet && durationInDays == null) {
+                // Calculate the missing duration
+                String calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+                vacationInput.setText(calculatedResult + " days");
+                Toast.makeText(this, "Calculated duration has been added.", Toast.LENGTH_SHORT).show();
+            } else if (isStartDateSet && durationInDays != null && !isEndDateSet) {
+                // Calculate the missing end date
+                String calculatedEndDate = destinationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
+                endDateText.setText("Calculated End Date: " + calculatedEndDate);
+                Toast.makeText(this, "Calculated end date has been added.", Toast.LENGTH_SHORT).show();
+            } else if (isEndDateSet && durationInDays != null && !isStartDateSet) {
+                // Calculate the missing start date
+                String calculatedStartDate = destinationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
+                startDateText.setText("Calculated Start Date: " + calculatedStartDate);
+                Toast.makeText(this, "Calculated start date has been added.", Toast.LENGTH_SHORT).show();
+            } else if (isStartDateSet && isEndDateSet && durationInDays != null) {
+                // If everything is complete, proceed with submission logic
+                Toast.makeText(this, "All fields are complete", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            } else {
+                Toast.makeText(this, "Please ensure all required fields are filled.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         dialog.show();
     }
 
-    // Method to open a DatePickerDialog and set the selected date in the TextView
     private void openDatePickerDialog(Calendar date, TextView dateTextView) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -210,7 +191,6 @@ public class DestinationActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Set the selected date in the Calendar object and update the TextView
                     date.set(selectedYear, selectedMonth, selectedDay);
                     dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
                 }, year, month, day);
