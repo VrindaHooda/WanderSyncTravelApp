@@ -94,4 +94,65 @@ public class DestinationDatabase {
             }
         });
     }
+
+    /**
+     * Adds a contributor to a specific trip's contributors list.
+     * @param destinationId The unique identifier for the trip.
+     * @param userId The ID of the user being added.
+     * @param email The email of the contributor.
+     */
+    public void addContributor(String destinationId, String userId, String email) {
+        databaseReference.child(destinationId).child("contributors").child(userId).setValue(email);
+    }
+
+    /**
+     * Adds or updates a destination in the trip's destinations list.
+     * @param destinationId The unique identifier for the trip.
+     * @param destination The DestinationEntry object to add or update.
+     */
+    public void addOrUpdateDestination(String destinationId, DestinationEntry destination) {
+        databaseReference.child(destinationId).child("destinations").child(destination.getDestinationId()).setValue(destination);
+    }
+
+    /**
+     * Adds a note to a specific trip's notes list.
+     * @param destinationId The unique identifier for the trip.
+     * @param noteText The text content of the note.
+     */
+    public void addNoteToTrip(String destinationId, String noteText) {
+        // Generate a unique note ID under the notes section for the trip
+        String noteId = databaseReference.child(destinationId).child("notes").push().getKey();
+        if (noteId != null) {
+            databaseReference.child(destinationId).child("notes").child(noteId).setValue(new NoteEntry(noteId, noteText));
+        } else {
+            Log.e("DestinationDatabase", "Failed to generate note ID");
+        }
+    }
+
+    /**
+     * Retrieves the list of contributors for a specific trip and returns it via a callback.
+     * @param destinationId The unique identifier for the trip.
+     * @param callback The callback interface for handling the list of contributors.
+     */
+    public void getContributors(String destinationId, DataStatus callback) {
+        databaseReference.child(destinationId).child("contributors").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<String> contributors = new ArrayList<>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    String email = child.getValue(String.class);
+                    if (email != null) {
+                        contributors.add(email);
+                    }
+                }
+                callback.DataIsLoaded(contributors);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w("DestinationDatabase", "Failed to load contributors", error.toException());
+            }
+        });
+    }
+
 }
