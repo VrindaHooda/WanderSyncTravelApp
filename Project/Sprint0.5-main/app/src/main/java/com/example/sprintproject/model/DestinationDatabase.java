@@ -1,18 +1,28 @@
 package com.example.sprintproject.model;
 
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class DestinationDatabase {
 
     private static DestinationDatabase instance;
-
     private DatabaseReference databaseReference;
 
+    public interface DataStatus {
+        void DataIsLoaded(List<DestinationEntry> entries);
+    }
+
     private DestinationDatabase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.setPersistenceEnabled(true);
-        databaseReference = database.getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("destinations");
     }
 
     public static synchronized DestinationDatabase getInstance() {
@@ -21,11 +31,59 @@ public class DestinationDatabase {
         }
         return instance;
     }
-    public void writeData(String path, Object data) {
-        databaseReference.child(path).setValue(data);
-    }
-    public DatabaseReference readData(String path) {
-        return databaseReference.child(path);
+
+    public void addEntry(String destinationId, DestinationEntry entry) {
+        databaseReference.child(destinationId).setValue(entry);
     }
 
+    public void prepopulateDatabase() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChildren()) { // Check if the database is empty
+                    // Prepopulate with 2 entries
+                    DestinationEntry entry1 = new DestinationEntry(
+                            "1",
+                            "Paris",
+                            new Date(2024, 2, 15), // Replace with actual date
+                            new Date(2024, 2, 20)
+                    );
+
+                    DestinationEntry entry2 = new DestinationEntry(
+                            "2",
+                            "Tokyo",
+                            new Date(2024, 4, 10),
+                            new Date(2024, 4, 20)
+                    );
+
+                    addEntry( "1",entry1);
+                    addEntry("2", entry2);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("DestinationDatabase", "Failed to read data", databaseError.toException());
+            }
+        });
+    }
+
+    public void getAllEntries(final DataStatus dataStatus) {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<DestinationEntry> entries = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DestinationEntry entry = snapshot.getValue(DestinationEntry.class);
+                    entries.add(entry);
+                }
+                dataStatus.DataIsLoaded(entries);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
+            }
+        });
+    }
 }

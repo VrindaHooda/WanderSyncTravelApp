@@ -1,52 +1,50 @@
 package com.example.sprintproject.model;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 public class DestinationEntry {
-    private String userId;
+
+    private String destinationId;
     private String location;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private String duration;
 
     public DestinationEntry() {
-        // Default constructor required for Firebase
+        this.destinationId = "0";
+        this.location = "Amsterdam";
+        this.startDate = new Date(2024, 4, 4);
+        this.endDate = new Date(2024, 4, 16) ;
+        this.duration = "16 days";
     }
 
-    public DestinationEntry(String userId, String startDate, String endDate, String duration) {
-        this.userId = userId;
+    public DestinationEntry(String destinationId, String location, Date startDate, Date endDate) {
+        this.destinationId = destinationId;
+        this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
         this.duration = duration;
     }
 
-    public String getUserId() {
-        return userId;
-    }
+    public String getDestinationId() {
+        return destinationId;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public long getDurationInDays() {
+        long diffInMillis = endDate.getTime() - startDate.getTime();
+        return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
     }
 
     public String getDuration() {
         return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
     }
 }
