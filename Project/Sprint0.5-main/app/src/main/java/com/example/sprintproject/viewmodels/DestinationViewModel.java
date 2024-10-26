@@ -1,5 +1,7 @@
 package com.example.sprintproject.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -8,20 +10,16 @@ import com.example.sprintproject.model.DestinationEntry;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationViewModel extends ViewModel {
 
     private DestinationDatabase destinationDatabase;
     private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData;
-    private MutableLiveData<Long> totalPlannedDays = new MutableLiveData<>(); // Holds sum of planned days for trips
-    private static final long TOTAL_ALLOTTED_DAYS = 30; // Example value for allotted days, can be adjusted or fetched from Firebase
-
-
 
     public DestinationViewModel() {
         destinationDatabase = DestinationDatabase.getInstance();
         destinationEntriesLiveData = new MutableLiveData<>();
-        loadTotalPlannedDays(); // Load and calculate planned days
     }
 
     public String generateDestinationId(String location, Date startDate) {
@@ -30,6 +28,11 @@ public class DestinationViewModel extends ViewModel {
 
     public void prepopulateDatabase() {
         destinationDatabase.prepopulateDatabase();
+    }
+
+    public String getDuration() {
+        String duration = String.valueOf(destinationDatabase.getDurationInDays());
+        return duration;
     }
 
     public void addDestination(DestinationEntry entry) {
@@ -49,67 +52,35 @@ public class DestinationViewModel extends ViewModel {
         return destinationEntriesLiveData;
     }
 
-    // Provides LiveData for total planned days, observed by LogisticsActivity
-    public LiveData<Long> getTotalPlannedDays() {
-        return totalPlannedDays;
-    }
+    // In DestinationViewModel.java
 
-    // Returns the total allotted days; can be adjusted to fetch from Firebase if configurable
-    public long getTotalAllottedDays() {
-        return TOTAL_ALLOTTED_DAYS;
-    }
-
-    // Expose contributors for activity observation
-    public LiveData<List<String>> getContributors() {
-        return contributorsLiveData; // doesnt exist yet, needs to be created
-    }
-
-    // Expose notes for activity observation
-    public LiveData<List<String>> getNotes() {
-        return notesLiveData; // doesnt exist yet, needs to be created
-    }
-
-    // Ensures entries are loaded and planned days calculated when ViewModel is initialized
-    private void loadTotalPlannedDays() {
-        readEntries(); // Load data from Firebase
-    }
-
-    // Calculates the total planned days by summing the duration of each destination entry
-    private void calculateTotalPlannedDays(List<DestinationEntry> entries) {
-        long totalDays = 0;
-        for (DestinationEntry entry : entries) {
-            totalDays += entry.getDurationInDays(); // Sum duration of each entry
+    public String calculateMissingValue(Date startDate, Date endDate, Long durationInDays) {
+        if (startDate != null && endDate != null) {
+            // Calculate duration if both startDate and endDate are provided
+            long diffInMillis = endDate.getTime() - startDate.getTime();
+            long days = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            Log.d("Calculation", "Calculated Duration: " + days + " days");
+            return days + " days";
+        } else if (startDate != null && durationInDays != null) {
+            // Calculate endDate if startDate and duration are provided
+            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
+            Date calculatedEndDate = new Date(endMillis);
+            Log.d("Calculation", "Calculated End Date: " + calculatedEndDate);
+            return calculatedEndDate.toString();
+        } else if (endDate != null && durationInDays != null) {
+            // Calculate startDate if endDate and duration are provided
+            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
+            Date calculatedStartDate = new Date(startMillis);
+            Log.d("Calculation", "Calculated Start Date: " + calculatedStartDate);
+            return calculatedStartDate.toString();
+        } else {
+            Log.d("Calculation", "Insufficient data to calculate");
+            return "Insufficient data to calculate";
         }
-        totalPlannedDays.setValue(totalDays); // Update LiveData with total planned days
     }
 
-    /**
-     * Loads all contributors for the trip from Firebase and updates the LiveData.
-     */
-    private void loadContributors() {
-        // Firebase logic to load contributors and set LiveData
-    }
 
-    /**
-     * Loads all notes for the trip from Firebase and updates the LiveData.
-     */
-    private void loadNotes() {
-        // Firebase logic to load notes and set LiveData
-    }
 
-    /**
-     * Adds a contributor to the trip in Firebase.
-     * Updates the contributors list after successfully adding the new user.
-     */
-    public void addContributor(String email) {
-        // Firebase logic to add a new contributor
-    }
 
-    /**
-     * Adds a new note for the trip in Firebase.
-     * Updates the notes list after successfully adding the note.
-     */
-    public void addNoteToTrip(String noteText) {
-        // Firebase logic to add a new note
-    }
+
 }

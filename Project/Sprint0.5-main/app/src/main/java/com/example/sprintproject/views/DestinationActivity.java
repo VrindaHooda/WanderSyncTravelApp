@@ -108,10 +108,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         submitTravelLogButton.setOnClickListener(v -> {
             String location = locationInput.getText().toString();
-            if (location.isEmpty()) {
-                Toast.makeText(this, "Location must not be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             // Validate the dates
             if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
                 Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
