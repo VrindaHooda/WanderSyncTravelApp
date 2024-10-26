@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/vacationTimeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Duration" />
+
+    <!-- Button to open the start date picker -->
+    <Button
+        android:id="@+id/openStartDatePicker2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Start Date" />
+
+    <!-- TextView to display the selected start date -->
+    <TextView
+        android:id="@+id/startDateText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Date: Not Selected"
+        android:paddingTop="10dp" />
+
+    <!-- Button to open the end date picker -->
+    <Button
+        android:id="@+id/openEndDatePicker2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select End Date" />
+
+    <!-- TextView to display the selected end date -->
+    <TextView
+        android:id="@+id/endDateText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="End Date: Not Selected"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/submitVacationTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+</LinearLayout>
