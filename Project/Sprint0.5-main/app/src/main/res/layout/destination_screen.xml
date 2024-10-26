@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@android:color/holo_orange_dark">
 
     <LinearLayout
@@ -16,6 +15,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
+        <!-- Header Text -->
         <TextView
             android:id="@+id/header"
             android:layout_width="wrap_content"
@@ -36,9 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/halloween_spookies"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header">
@@ -56,15 +55,17 @@
                 android:id="@+id/btn_calculate_vacation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:backgroundTint="@android:color/darker_gray"
                 android:fontFamily="@font/halloween_spookies"
                 android:text="Calculate Vacation Time"
                 android:textSize="20sp" />
 
+
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <!-- Destination List Display Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -82,12 +83,12 @@
 
     </LinearLayout>
 
-
+    <!-- Bottom Navigation Fragment -->
     <androidx.fragment.app.FragmentContainerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

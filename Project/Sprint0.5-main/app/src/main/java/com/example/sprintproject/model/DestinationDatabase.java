@@ -71,10 +71,17 @@ public class DestinationDatabase {
     }
 
     // New method to calculate the duration in days
+    // DestinationDatabase.java
+
     public long getDurationInDays() {
+        if (destinationEntry == null) {
+            Log.e("DestinationDatabase", "destinationEntry is null, cannot calculate duration");
+            return -1; // Return -1 to indicate an invalid duration
+        }
         long diffInMillis = destinationEntry.getEndDate().getTime() - destinationEntry.getStartDate().getTime();
         return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
     }
+
 
     public void getAllEntries(final DataStatus dataStatus) {
         databaseReference.addValueEventListener(new ValueEventListener() {

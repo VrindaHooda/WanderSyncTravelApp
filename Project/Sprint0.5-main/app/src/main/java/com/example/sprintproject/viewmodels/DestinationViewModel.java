@@ -30,10 +30,16 @@ public class DestinationViewModel extends ViewModel {
         destinationDatabase.prepopulateDatabase();
     }
 
+    // DestinationViewModel.java
+
     public String getDuration() {
-        String duration = String.valueOf(destinationDatabase.getDurationInDays());
-        return duration;
+        long duration = destinationDatabase.getDurationInDays();
+        if (duration == -1) { // Check for invalid duration from DestinationDatabase
+            return "No calculated time available"; // Provide a default message
+        }
+        return duration + " days";
     }
+
 
     public void addDestination(DestinationEntry entry) {
         destinationDatabase.addEntry(entry.getDestinationId(), entry);
