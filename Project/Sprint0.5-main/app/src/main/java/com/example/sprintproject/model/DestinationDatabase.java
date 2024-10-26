@@ -11,11 +11,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationDatabase {
 
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
+    private DestinationEntry destinationEntry;
 
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
@@ -66,6 +68,12 @@ public class DestinationDatabase {
                 Log.w("DestinationDatabase", "Failed to read data", databaseError.toException());
             }
         });
+    }
+
+    // New method to calculate the duration in days
+    public long getDurationInDays() {
+        long diffInMillis = destinationEntry.getEndDate().getTime() - destinationEntry.getStartDate().getTime();
+        return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
     }
 
     public void getAllEntries(final DataStatus dataStatus) {
