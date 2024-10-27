@@ -12,12 +12,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
 import com.example.sprintproject.model.DurationEntry;
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -34,6 +39,8 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar startDate;
     private Calendar endDate;
     private TextView totalDaysTextView;
+    private TextView plannedDaysTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,8 @@ public class DestinationActivity extends AppCompatActivity {
             totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
             Button logTravelButton = findViewById(R.id.btn_log_travel);
             Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
+            plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
+
 
             if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
@@ -70,6 +79,10 @@ public class DestinationActivity extends AppCompatActivity {
 
             logTravelButton.setOnClickListener(v -> openLogTravelDialog());
             calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog());
+            View plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
+
+            // Fetch and display planned days
+            fetchAndDisplayPlannedDays();
 
         } catch (Exception e) {
             Log.e("DestinationActivity", "Error in onCreate", e);
@@ -77,17 +90,20 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
     //makes a destination list
-    private void updateDestinationList(List<DestinationEntry> entries) {
+    public long updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
         long totalDays = 0;
         for (DestinationEntry entry : entries) {
             long duration = (entry.getEndDate().getTime() - entry.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
             listBuilder.append(entry.getLocation()).append(": ").append(duration).append(" days\n");
             totalDays += duration;
+            return totalDays;
         }
         destinationListTextView.setText(listBuilder.toString());
         updateTotalDays(totalDays);
+        return totalDays;
     }
+
     private void updateTotalDays(long totalDays) {
         TextView totalDaysTextView = findViewById(R.id.totalDaysTextView);
         totalDaysTextView.setText("Total Days: " + totalDays + " days");
@@ -172,7 +188,7 @@ public class DestinationActivity extends AppCompatActivity {
         String resultMessage = null;
 
         if (!startDateText.getText().toString().isEmpty() && !durationStr.isEmpty()) {
-            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), null,Long.parseLong(durationStr) );
+            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, Long.parseLong(durationStr));
             resultMessage = "Calculated End Date: " + calculatedResult;
         } else if (!startDateText.getText().toString().isEmpty() && !endDateText.getText().toString().isEmpty()) {
             calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
@@ -244,5 +260,20 @@ public class DestinationActivity extends AppCompatActivity {
                     dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
                 }, year, month, day);
         datePickerDialog.show();
+    }
+
+    private void fetchAndDisplayPlannedDays() {
+        DestinationDatabase.getInstance().getPlannedVacationDays(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long plannedDays = dataSnapshot.exists() ? dataSnapshot.getValue(Long.class) : 0;
+                plannedDaysTextView.setText("Planned Days: " + plannedDays + " days");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DestinationActivity", "Failed to fetch planned days", databaseError.toException());
+            }
+        });
     }
 }
