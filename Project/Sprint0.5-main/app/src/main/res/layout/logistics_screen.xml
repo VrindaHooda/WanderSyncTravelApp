@@ -35,6 +35,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_graph" >
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.github.mikephil.charting.charts.BarChart>
 
     <TextView
         android:id="@+id/contributors"
@@ -48,19 +63,19 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
+        app:layout_constraintTop_toBottomOf="@id/barChart"
+        app:layout_constraintBottom_toTopOf="@id/contributorsRecyclerView"/>
         app:layout_constraintBottom_toTopOf="@id/usernameListView"/>
 
-    <ListView
-        android:id="@+id/usernameListView"
-        android:layout_width="270dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contributorsRecyclerView"
+        android:layout_width="300dp"
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        app:layout_constraintBottom_toTopOf="@id/contributors"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contributors"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@android:color/white" />
         app:layout_constraintTop_toBottomOf="@id/contributors" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
