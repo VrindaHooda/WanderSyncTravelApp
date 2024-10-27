@@ -301,7 +301,7 @@ public class DestinationActivity extends AppCompatActivity {
                                 endDateVal = convertToDate(endDateText);
                             }
                             // Now save the data with finalUserId
-                            userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
+                            userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal), contributors);
                             Toast.makeText(DestinationActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
                         } else {
                             // Handle the case when userId is null

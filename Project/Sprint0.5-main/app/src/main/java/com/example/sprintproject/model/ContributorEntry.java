@@ -4,6 +4,7 @@ public class ContributorEntry {
     private String userID;
     private String notes;
 
+
     public ContributorEntry() {
     }
 
