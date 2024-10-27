@@ -91,7 +91,7 @@ public class DestinationActivity extends AppCompatActivity {
             destinationViewModel.prepopulateDatabase();
             destinationViewModel.readEntries();
 
-            logTravelButton.setOnClickListener(v -> openLogTravelDialog());
+            logTravelButton.setOnClickListener(v -> openLogTravelDialog(username, password));
             calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog(username, password));
 
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
 
-    private void openLogTravelDialog() {
+    private void openLogTravelDialog(String username, String password) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.log_travel_form, null);
         builder.setView(dialogView);
@@ -152,9 +152,32 @@ public class DestinationActivity extends AppCompatActivity {
                     startDate.getTime(),
                     endDate.getTime()
             );
+            // Get userId the same way as in saveData
+            authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
+                @Override
+                public void onSuccess(FirebaseUser user) {
+                    getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
+                        @Override
+                        public void onResult(String userId) {
+                            if (userId != null) {
+                                finalUserId = userId;
+                                Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
+                                // Add the destination entry
+                                destinationViewModel.addDestination(finalUserId, newEntry);
+                                Toast.makeText(DestinationActivity.this, "Travel log added", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.d("UserId", "Failed to retrieve UserId.");
+                            }
+                        }
+                    });
+                }
 
-            destinationViewModel.addDestination(newEntry);
-            Toast.makeText(this, "Travel log added", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(String error) {
+                    Log.e("Auth", "Sign-in failed: " + error);
+                    Toast.makeText(DestinationActivity.this, "Sign-in failed: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
             dialog.dismiss();
         });
 
