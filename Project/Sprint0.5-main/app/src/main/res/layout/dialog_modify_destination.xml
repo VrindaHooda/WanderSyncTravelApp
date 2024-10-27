@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/locationInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter location" />
+
+    <EditText
+        android:id="@+id/durationInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter duration (days)" />
+
+    <TextView
+        android:id="@+id/startDateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Date: Not selected"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/endDateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="End Date: Not selected"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
