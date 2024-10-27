@@ -178,22 +178,33 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
     private int calculateValues(EditText vacationInput, TextView startDateText, TextView endDateText) {
-        String durationStr = vacationInput.getText().toString();
-
-        String calculatedResult = null;
+        int durationDays = 0;
         String resultMessage = null;
+        String durationStr = vacationInput.getText().toString().trim();
+        Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
 
-        if (!startDateText.getText().toString().isEmpty() && !durationStr.isEmpty()) {
-            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, Long.parseLong(durationStr));
-            resultMessage = "Calculated End Date: " + calculatedResult;
-        } else if (!startDateText.getText().toString().isEmpty() && !endDateText.getText().toString().isEmpty()) {
-            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
-            resultMessage = "Calculated Duration: " + calculatedResult;
-        } else if (!endDateText.getText().toString().isEmpty() && !durationStr.isEmpty()) {
-            calculatedResult = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), Long.parseLong(durationStr));
-            resultMessage = "Calculated Start Date: " + calculatedResult;
+        if (startDateText.getText().toString().contains("Selected Date") && endDateText.getText().toString().contains("Selected Date") && durationInDays == null) {
+            // Both start and end dates provided, calculate duration
+            String calculatedDuration = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+            vacationInput.setText(calculatedDuration);
+            resultMessage = "Calculated Duration: " + calculatedDuration + " days";
+            durationDays = Integer.parseInt(calculatedDuration);
+
+        } else if (startDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+            // Start date and duration provided, calculate end date
+            String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
+            endDateText.setText("Calculated End Date: " + calculatedEndDate);
+            resultMessage = "Calculated End Date: " + calculatedEndDate;
+            durationDays = Math.toIntExact(durationDays);
+
+        } else if (endDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+            // End date and duration provided, calculate start date
+            String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
+            startDateText.setText("Calculated Start Date: " + calculatedStartDate);
+            resultMessage = "Calculated Start Date: " + calculatedStartDate;
+            durationDays = Math.toIntExact(durationDays);
         } else {
-            Toast.makeText(this, "Please provide at least two inputs", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please ensure that at least two of the fields (Start Date, End Date, Duration) are filled.", Toast.LENGTH_SHORT).show();
         }
 
         AlertDialog.Builder resultDialogBuilder = new AlertDialog.Builder(this);
@@ -202,8 +213,14 @@ public class DestinationActivity extends AppCompatActivity {
         resultDialogBuilder.setPositiveButton("OK", (resultDialogButton, which) -> resultDialogButton.dismiss());
         resultDialogBuilder.create().show();
 
+        // Clear input fields after showing the result dialog
+        startDateText.setText(""); // Clear start date text view
+        endDateText.setText("");   // Clear end date text view
+        vacationInput.setText("");  // Clear duration input field
         clearVacationForm(startDateText, endDateText, vacationInput);
-        return dateConversion(calculatedResult);
+
+        return durationDays;
+
     }
 
     private int dateConversion(String dateString) {
