@@ -31,12 +31,6 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
-                    .commit();
-        }
 
         // Set up ViewModel
         destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
