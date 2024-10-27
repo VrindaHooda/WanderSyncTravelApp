@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_orange_dark"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/adduser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:text="Add Your Email"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/halloween_spookies"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@android:color/holo_purple"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/emailadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Username"
+                android:fontFamily="@font/halloween_spookies"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/emailenterable"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                android:background="@android:color/holo_orange_dark"
+                android:hint="Enter your email"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFEB3B"
+                android:textStyle="italic" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/adduserbtn"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/holo_purple"
+            android:text="Add User"
+            android:fontFamily="@font/halloween_spookies"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
