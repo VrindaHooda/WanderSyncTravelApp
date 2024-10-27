@@ -1,13 +1,20 @@
 package com.example.sprintproject.views;
 
 import android.content.Intent;
+
+import android.content.DialogInterface;
+
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -40,6 +47,13 @@ public class LogisticsActivity extends AppCompatActivity {
         }
 
 
+        FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
+        modifyPlansButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showModifyPlansDialog();
+            }
+        });
 
 
         pieChart = findViewById(R.id.pieChart);
@@ -62,6 +76,37 @@ public class LogisticsActivity extends AppCompatActivity {
         });
     }
 
+    private void showModifyPlansDialog() {
+        // Create an EditText field for user input
+        final EditText input = new EditText(this);
+        input.setHint("Enter your new plan");
+
+        // Create the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Modify Plans")
+                .setView(input)  // Set the EditText field in the dialog
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newPlan = input.getText().toString().trim();
+                        if (!newPlan.isEmpty()) {
+                            // Save or process the entered plan here
+                            Toast.makeText(LogisticsActivity.this, "Plan saved: " + newPlan, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LogisticsActivity.this, "Please enter a plan.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Dismiss the dialog
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private void updatePieChart() {
         List<PieEntry> entries = new ArrayList<>();

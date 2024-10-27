@@ -10,6 +10,10 @@ public class DurationEntry {
     private Date startDate;
     private Date endDate;
 
+
+    public DurationEntry() {
+    }
+
     public DurationEntry(String vacationId, int duration, Date startDate, Date endDate) {
         this.vacationId = vacationId;
         this.duration = duration;
@@ -59,15 +63,5 @@ public class DurationEntry {
         long days = TimeUnit.MILLISECONDS.toDays(durationInMillis);
         int durationInDays = Math.toIntExact(days);
         return durationInDays;
-    }
-
-    @Override
-    public String toString() {
-        return "DestinationEntry{" +
-                "vacationId='" + vacationId + '\'' +
-                ", duration='" + duration + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
     }
 }
