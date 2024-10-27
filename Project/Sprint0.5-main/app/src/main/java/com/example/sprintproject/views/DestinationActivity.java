@@ -30,6 +30,7 @@ public class DestinationActivity extends AppCompatActivity {
     private TextView destinationListTextView;
     private Calendar startDate;
     private Calendar endDate;
+    private TextView totalDaysTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class DestinationActivity extends AppCompatActivity {
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
+            totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
             Button logTravelButton = findViewById(R.id.btn_log_travel);
             Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
 
@@ -70,12 +72,20 @@ public class DestinationActivity extends AppCompatActivity {
 
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
+        long totalDays = 0;
         for (DestinationEntry entry : entries) {
             long duration = (entry.getEndDate().getTime() - entry.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
             listBuilder.append(entry.getLocation()).append(": ").append(duration).append(" days\n");
+            totalDays += duration;
         }
         destinationListTextView.setText(listBuilder.toString());
+        updateTotalDays(totalDays);
     }
+    private void updateTotalDays(long totalDays) {
+        TextView totalDaysTextView = findViewById(R.id.totalDaysTextView);
+        totalDaysTextView.setText("Total Days: " + totalDays + " days");
+    }
+
 
     private void openLogTravelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
