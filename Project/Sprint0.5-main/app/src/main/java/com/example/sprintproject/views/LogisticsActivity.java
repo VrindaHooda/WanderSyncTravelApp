@@ -1,6 +1,9 @@
 package com.example.sprintproject.views;
 
+import android.content.Intent;
+
 import android.content.DialogInterface;
+
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -61,6 +64,16 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Set up button click to refresh the chart with updated values
         updateButton.setOnClickListener(v -> updatePieChart());
+        FloatingActionButton inviteButton = findViewById(R.id.invite);
+        inviteButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
+            startActivity(intent);
+        });
+        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
+        viewInvitesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void showModifyPlansDialog() {
@@ -110,13 +123,7 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.invalidate(); // Refreshes the chart
     }
 
-    // A method to update totalDays and secondDays, typically by querying the database
-    private void fetchUpdatedDaysFromDatabase() {
-        // Example method, replace this with actual database fetching code
-        // totalDays = fetchTotalDaysFromDatabase();
-        // secondDays = fetchSecondDaysFromDatabase();
-        updatePieChart(); // Refresh chart after updating values
-    }
+
 
 
 

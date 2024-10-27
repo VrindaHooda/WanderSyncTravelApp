@@ -68,6 +68,17 @@
             android:fontFamily="@font/halloween_spookies"
             android:textSize="24sp"
             android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/exitbtn"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/holo_purple"
+            android:text="Exit"
+            android:fontFamily="@font/halloween_spookies"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
 
 
     </LinearLayout>
