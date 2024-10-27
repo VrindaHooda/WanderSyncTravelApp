@@ -13,37 +13,24 @@ import com.google.firebase.auth.FirebaseUser;
 public class AuthViewModel extends ViewModel {
     private final FirebaseAuth myFirebaseAuth = AuthRepository.getAuthRepository(); // Use the singleton
     private static final String TAG = "UsernamePassword";
-    private MutableLiveData<String> userId = new MutableLiveData<>();
 
-    public LiveData<String> getUserId() {
-        return userId;
+    private MutableLiveData<String> userIdLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> emailLiveData = new MutableLiveData<>();
+
+    private String userId;
+    private String username;
+
+    public LiveData<String> getUserIdLiveData() {
+        return userIdLiveData;
     }
 
-    public void setUserId(String userId) {
-        this.userId.setValue(userId);
+    public LiveData<String> getEmailLiveData() {
+        return emailLiveData;
     }
 
     // Get authentication status
     public boolean isAuthenticated() {
         return myFirebaseAuth.getCurrentUser() != null;
-    }
-
-    public String getEmail() {
-        FirebaseUser currentUser = myFirebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            // Retrieve the email
-            String email = currentUser.getEmail();
-            return email;
-        }
-        return "No user signed in";
-    }
-
-    public String getId() {
-        FirebaseUser currentUser = myFirebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            return currentUser.getUid();
-        }
-        return "No user signed in";
     }
 
     // Register a new user
@@ -53,6 +40,12 @@ public class AuthViewModel extends ViewModel {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = myFirebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            this.userId = user.getUid();
+                            this.username = user.getEmail();
+                            userIdLiveData.setValue(userId);
+                            emailLiveData.setValue(username);
+                        }
                         callback.onSuccess(user);
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -69,8 +62,18 @@ public class AuthViewModel extends ViewModel {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = myFirebaseAuth.getCurrentUser();
-                        callback.onSuccess(user);
-
+                        Log.d(TAG, "isAuthenticated: " + isAuthenticated());
+                        if (isAuthenticated()) {
+                            this.userId = user.getUid(); // Ensure user is not null
+                            this.username = user.getEmail();
+                            userIdLiveData.setValue(userId); // Update LiveData
+                            emailLiveData.setValue(username);
+                            callback.onSuccess(user);
+                        } else {
+                            // This case should generally not happen if the sign-in is successful
+                            Log.w(TAG, "signInWithEmail:success, but user is null");
+                            callback.onFailure("User data is unavailable.");
+                        }
                     } else {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         String errorMsg = task.getException() != null ? task.getException().getMessage() : "Sign in failed";
@@ -79,9 +82,12 @@ public class AuthViewModel extends ViewModel {
                 });
     }
 
+
     // Sign out the current user
     public void signOut() {
         myFirebaseAuth.signOut();
+        userIdLiveData.setValue(null); // Clear LiveData on sign out
+        emailLiveData.setValue(null);
     }
 
     // Callback interface for authentication results

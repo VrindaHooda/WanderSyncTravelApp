@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DestinationEntry;
@@ -18,6 +19,8 @@ import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -34,6 +37,7 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar startDate;
     private Calendar endDate;
     private TextView totalDaysTextView;
+    private String finalUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,15 +217,69 @@ public class DestinationActivity extends AppCompatActivity {
         return 0;
     }
 
+    private void getEmail(LiveData<String> liveData, StringCallback callback) {
+        liveData.observe(this, email -> {
+            if (email != null) {
+                Log.d("Email", "The email is: " + email);
+                callback.onResult(email); // Return the value through the callback
+            } else {
+                Log.d("Email", "Email not found");
+                callback.onResult(null); // Return null if not found
+            }
+        });
+    }
+    private void getUserId(LiveData<String> liveData, StringCallback callback) {
+        liveData.observe(this, newUserId -> {
+            if (newUserId != null) {
+                Log.d("UserId", "The UserId is: " + newUserId);
+                callback.onResult(newUserId); // Return the value through the callback
+            } else {
+                Log.d("UserId", "UserId not found");
+                callback.onResult(null); // Return null if not found
+            }
+        });
+    }
+
+    public interface StringCallback {
+        void onResult(String value);
+    }
+    TextView usernameEditText = findViewById(R.id.usernameEditText);
+    TextView passwordEditText = findViewById(R.id.passwordEditText);
+
+    String email = usernameEditText.getText().toString().trim();
+    String password = passwordEditText.getText().toString().trim();
+
 
     private void saveData(int vacationDuration, Calendar startDate, Calendar endDate) {
-        String email = authViewModel.getEmail();
-        String userId = authViewModel.getId();
+        // Assuming authViewModel is already initialized and user has signed in or registered
+        authViewModel.signIn(email, password, new AuthViewModel.AuthCallback() {
+            @Override
+            public void onSuccess(FirebaseUser user) {
+                // Call getUserId after successful sign-in
+                getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
+                    @Override
+                    public void onResult(String userId) {
+                        if (userId != null) {
+                            finalUserId = userId;
+                            Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
+                        } else {
+                            // Handle the case when userId is null
+                            Log.d("UserId", "Failed to retrieve UserId.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.e("Auth", "Sign-in failed: " + error);
+            }
+        });
         String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
         Date startDateVal = startDate.getTime(); // Convert startDate Calendar to Date
         Date endDateVal = endDate.getTime();
 
-        userDurationViewModel.saveDurationData(userId, email, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
+        userDurationViewModel.saveDurationData(finalUserId, email, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
         Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
     }
 
