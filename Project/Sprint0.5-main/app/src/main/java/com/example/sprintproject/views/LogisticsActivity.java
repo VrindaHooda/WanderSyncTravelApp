@@ -79,11 +79,11 @@ public class LogisticsActivity extends AppCompatActivity {
     private void showModifyPlansDialog() {
         // Create an EditText field for user input
         final EditText input = new EditText(this);
-        input.setHint("Enter your new plan");
+        input.setHint("Type in your note here");
 
         // Create the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Modify Plans")
+        builder.setTitle("Add A Note")
                 .setView(input)  // Set the EditText field in the dialog
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
@@ -91,9 +91,9 @@ public class LogisticsActivity extends AppCompatActivity {
                         String newPlan = input.getText().toString().trim();
                         if (!newPlan.isEmpty()) {
                             // Save or process the entered plan here
-                            Toast.makeText(LogisticsActivity.this, "Plan saved: " + newPlan, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this, "Note saved: " + newPlan, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(LogisticsActivity.this, "Please enter a plan.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this, "Please add a note.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
