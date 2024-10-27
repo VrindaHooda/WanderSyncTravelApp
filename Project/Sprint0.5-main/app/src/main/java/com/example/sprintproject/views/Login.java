@@ -47,7 +47,9 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onSuccess(FirebaseUser user) {
                         Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Login.this, LogisticsActivity.class);
+                        Intent intent = new Intent(Login.this, DestinationActivity.class);
+                        intent.putExtra("username", username);
+                        intent.putExtra("password", password);
                         startActivity(intent);
                         finish();
                     }

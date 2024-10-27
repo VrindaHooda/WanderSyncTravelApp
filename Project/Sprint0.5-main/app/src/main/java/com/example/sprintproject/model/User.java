@@ -3,13 +3,15 @@ package com.example.sprintproject.model;
 public class User {
     private String username;
     private String userId;
+    private String password;
 
     public User() {
     }
 
-    public User(String username, String userId) {
+    public User(String username, String password, String userId) {
         this.username = username;
         this.userId = userId;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -20,6 +22,14 @@ public class User {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -28,12 +38,5 @@ public class User {
         this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", userId='" + userId + '\'' +
-                '}';
-    }
 }
 
