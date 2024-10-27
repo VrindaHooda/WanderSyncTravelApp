@@ -32,6 +32,10 @@ public class DestinationDatabase {
         }
         return instance;
     }
+    public void getPlannedVacationDays(final ValueEventListener listener) {
+        databaseReference.child("plannedVacationDays").addListenerForSingleValueEvent(listener);
+    }
+
 
     //writing to the database
     public void addLogEntry(String destinationId, DestinationEntry entry) {

@@ -77,6 +77,17 @@
         android:text="Total Days: 0 days"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
+    <TextView
+        android:id="@+id/plannedDaysTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Planned Days: 0 days"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/totalDaysTextView" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigation"
