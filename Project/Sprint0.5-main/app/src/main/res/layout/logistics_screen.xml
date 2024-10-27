@@ -82,19 +82,31 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/modify_plans"
+        android:id="@+id/modify_notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_edit"
         app:backgroundTint="@android:color/darker_gray"
         android:fontFamily="@font/halloween_spookies"
-        app:layout_constraintBottom_toTopOf="@id/notes"
+        app:layout_constraintBottom_toTopOf="@id/view_notes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.762" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/notes"
+        android:id="@+id/modify_plans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_agenda"
+        app:backgroundTint="@android:color/darker_gray"
+        android:fontFamily="@font/halloween_spookies"
+        app:layout_constraintBottom_toTopOf="@id/modify_notes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.762" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/view_notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_add"
