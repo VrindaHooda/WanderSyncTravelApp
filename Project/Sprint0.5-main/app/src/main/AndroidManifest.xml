@@ -86,6 +86,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".views.ViewNotesActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
 
     </application>
 </manifest>

@@ -74,6 +74,13 @@ public class LogisticsActivity extends AppCompatActivity {
             Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
             startActivity(intent);
         });
+
+        FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
+        viewNotesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     private void showModifyPlansDialog() {
