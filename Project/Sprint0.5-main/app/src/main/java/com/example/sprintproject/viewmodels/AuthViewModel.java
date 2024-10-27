@@ -8,77 +8,56 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import java.util.Objects;
 
 public class AuthViewModel {
-    private final FirebaseAuth myFIREBASEAUTH = AuthRepository.createAuthRepository();
+    private final FirebaseAuth myFirebaseAuth = AuthRepository.getAuthRepository(); // Use the singleton
     private static final String TAG = "UsernamePassword";
-    private boolean isAuthenticated = false;
 
-    public boolean getAuthenticationStatus() {
-        return isAuthenticated;
+    // Get authentication status
+    public boolean isAuthenticated() {
+        return myFirebaseAuth.getCurrentUser() != null;
     }
 
-    public void checkCurrentUser() {
-        FirebaseUser currentUser = myFIREBASEAUTH.getCurrentUser();
-        if (currentUser != null) {
-            currentUser.reload();
-            isAuthenticated = true;
-        } else {
-            isAuthenticated = false;
-        }
-    }
-
-    public FirebaseUser getCurrentUser() {
-        return myFIREBASEAUTH.getCurrentUser();
-    }
-
-    public void createUser(String username, String password, Callback callback) {
-        myFIREBASEAUTH.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = myFIREBASEAUTH.getCurrentUser();
-                            callback.onSuccess(user);
-                        } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            callback.onFailure(Objects.requireNonNull(task.getException()).
-                                    getMessage());
-                        }
+    // Register a new user
+    public void createUser(String email, String password, AuthCallback callback) {
+        myFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = myFirebaseAuth.getCurrentUser();
+                        callback.onSuccess(user);
+                    } else {
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Registration failed";
+                        callback.onFailure(errorMsg);
                     }
                 });
     }
 
-    public void signIn(String username, String password, Callback callback) {
-        myFIREBASEAUTH.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = myFIREBASEAUTH.getCurrentUser();
-                            callback.onSuccess(user);
-                            isAuthenticated = true;
-                        } else {
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            callback.onFailure(Objects.requireNonNull(task.getException()).
-                                    getMessage());
-                            isAuthenticated = false;
-                        }
+    // Sign in an existing user
+    public void signIn(String email, String password, AuthCallback callback) {
+        myFirebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = myFirebaseAuth.getCurrentUser();
+                        callback.onSuccess(user);
+                    } else {
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Sign in failed";
+                        callback.onFailure(errorMsg);
                     }
                 });
     }
 
+    // Sign out the current user
     public void signOut() {
-        myFIREBASEAUTH.signOut();
-        isAuthenticated = false;
+        myFirebaseAuth.signOut();
     }
 
-    public interface Callback {
+    // Callback interface for authentication results
+    public interface AuthCallback {
         void onSuccess(FirebaseUser user);
         void onFailure(String error);
     }
-
 }

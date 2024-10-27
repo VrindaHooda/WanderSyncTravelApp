@@ -13,14 +13,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DestinationEntry;
+import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
 import java.util.Calendar;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DestinationActivity extends AppCompatActivity {
 
     private DestinationViewModel destinationViewModel;
+    private UserDurationViewModel userDurationViewModel;
     private ValidateViewModel validateViewModel;
     private TextView destinationListTextView;
     private Calendar startDate;
@@ -31,14 +36,17 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
+
         try {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
+            userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
@@ -46,34 +54,21 @@ public class DestinationActivity extends AppCompatActivity {
             Button logTravelButton = findViewById(R.id.btn_log_travel);
             Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
 
-            // Check if TextView and Button are null
-            if (destinationListTextView == null) {
+            if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
-            }
-            if (logTravelButton == null) {
-                Log.e("DestinationActivity", "logTravelButton is null");
-            }
+            if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
-            // Observer for destination entries
-            destinationViewModel.getDestinationEntries().observe(this, entries -> {
-                updateDestinationList(entries);
-            });
-
-            // Prepopulate and read entries from the database
+            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
             destinationViewModel.prepopulateDatabase();
             destinationViewModel.readEntries();
 
-            // Set up button click listener
             logTravelButton.setOnClickListener(v -> openLogTravelDialog());
-
             calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog());
-
 
         } catch (Exception e) {
             Log.e("DestinationActivity", "Error in onCreate", e);
         }
     }
-
 
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
@@ -106,26 +101,20 @@ public class DestinationActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        // Initialize Calendar instances for start and end dates
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
-        // Set up click listener for the start date picker button
         openStartDatePicker.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText));
-
-        // Set up click listener for the end date picker button
         openEndDatePicker.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText));
 
         submitTravelLogButton.setOnClickListener(v -> {
             String location = locationInput.getText().toString();
 
-            // Validate the dates
             if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
                 Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Create and add new destination entry
             DestinationEntry newEntry = new DestinationEntry(
                     destinationViewModel.generateDestinationId(location, startDate.getTime()),
                     location,
@@ -155,72 +144,94 @@ public class DestinationActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        // Initialize Calendar instances for start and end dates
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
-        // Set up click listener for the start date picker button
         openStartDatePicker2.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText2));
-
-        // Set up click listener for the end date picker button
         openEndDatePicker2.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText2));
 
         submitVacationTimeButton.setOnClickListener(v -> {
-            // Retrieve the inputted duration (if provided)
-            String durationStr = vacationInput.getText().toString();
-            Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
-
-            // Variables to store the calculated result and the message for the result dialog
-            String calculatedResult = null;
-            String resultMessage = null;
-
-            // Check for each scenario in order:
-            if (!startDateText2.getText().toString().isEmpty() && durationInDays != null) {
-                calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
-                resultMessage = "Calculated End Date: " + calculatedResult;
-            } else if (!startDateText2.getText().toString().isEmpty() && !endDateText2.getText().toString().isEmpty()) {
-                calculatedResult = destinationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
-                resultMessage = "Calculated Duration: " + calculatedResult + " days";
-            } else if (!endDateText2.getText().toString().isEmpty() && durationInDays != null) {
-                calculatedResult = destinationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
-                resultMessage = "Calculated Start Date: " + calculatedResult;
-            } else {
-                Toast.makeText(this, "Please provide at least two inputs", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Show the calculated result in a separate dialog box
-            AlertDialog.Builder resultDialogBuilder = new AlertDialog.Builder(this);
-            resultDialogBuilder.setTitle("Calculation Result");
-            resultDialogBuilder.setMessage(resultMessage);
-            resultDialogBuilder.setPositiveButton("OK", (resultDialogButton, which) -> resultDialogButton.dismiss());
-
-            AlertDialog resultDialog = resultDialogBuilder.create();
-            resultDialog.show();
-
-            // Clear input fields after showing the result dialog
-            startDateText2.setText(""); // Clear start date text view
-            endDateText2.setText("");   // Clear end date text view
-            vacationInput.setText("");  // Clear duration input field
-
-            // Reset Calendar objects to today's date
-            startDate = Calendar.getInstance();
-            endDate = Calendar.getInstance();
+            int vacationDuration = calculateValues(vacationInput, startDateText2, endDateText2);
+            saveData(vacationDuration, startDateText2, endDateText2);
         });
 
         dialog.show();
     }
 
-    // Method to open a DatePickerDialog and set the selected date in the TextView
+    private int calculateValues(EditText vacationInput, TextView startDateText, TextView endDateText) {
+        String durationStr = vacationInput.getText().toString();
+
+        String calculatedResult = null;
+        String resultMessage = null;
+
+        if (!startDateText.getText().toString().isEmpty() && !durationStr.isEmpty()) {
+            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), null,Long.parseLong(durationStr) );
+            resultMessage = "Calculated End Date: " + calculatedResult;
+        } else if (!startDateText.getText().toString().isEmpty() && !endDateText.getText().toString().isEmpty()) {
+            calculatedResult = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+            resultMessage = "Calculated Duration: " + calculatedResult;
+        } else if (!endDateText.getText().toString().isEmpty() && !durationStr.isEmpty()) {
+            calculatedResult = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), Long.parseLong(durationStr));
+            resultMessage = "Calculated Start Date: " + calculatedResult;
+        } else {
+            Toast.makeText(this, "Please provide at least two inputs", Toast.LENGTH_SHORT).show();
+        }
+
+        AlertDialog.Builder resultDialogBuilder = new AlertDialog.Builder(this);
+        resultDialogBuilder.setTitle("Calculation Result");
+        resultDialogBuilder.setMessage(resultMessage);
+        resultDialogBuilder.setPositiveButton("OK", (resultDialogButton, which) -> resultDialogButton.dismiss());
+        resultDialogBuilder.create().show();
+
+        clearVacationForm(startDateText, endDateText, vacationInput);
+        return dateConversion(calculatedResult);
+    }
+
+    private int dateConversion(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+
+        try {
+            // Parse the date string into a Date object
+            Date date = dateFormat.parse(dateString);
+
+            // Get the time in milliseconds since epoch
+            long timestamp = date.getTime();
+
+            // Convert to int (might lose precision if timestamp exceeds Integer.MAX_VALUE)
+            int timestampInt = (int) timestamp;
+            return timestampInt;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    private void saveData(int vacationDuration, TextView startDateText, TextView endDateText) {
+        String vacationId = String.valueOf(System.currentTimeMillis());
+        int duration = vacationDuration;
+        String startDateStr = startDateText.getText().toString();
+        String endDateStr = endDateText.getText().toString();
+
+        userDurationViewModel.saveDurationData(vacationId, duration, startDateStr, endDateStr);
+        Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearVacationForm(TextView startDateText, TextView endDateText, EditText vacationInput) {
+        startDateText.setText("");
+        endDateText.setText("");
+        vacationInput.setText("");
+        startDate = Calendar.getInstance();
+        endDate = Calendar.getInstance();
+    }
+
     private void openDatePickerDialog(Calendar date, TextView dateTextView) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH);
+        int day = date.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Set the selected date in the Calendar object and update the TextView
                     date.set(selectedYear, selectedMonth, selectedDay);
                     dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
                 }, year, month, day);
