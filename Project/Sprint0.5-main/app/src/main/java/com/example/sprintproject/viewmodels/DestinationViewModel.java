@@ -1,13 +1,11 @@
 package com.example.sprintproject.viewmodels;
 
 import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
-
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -15,11 +13,10 @@ import java.util.concurrent.TimeUnit;
 public class DestinationViewModel extends ViewModel {
 
     private DestinationDatabase destinationDatabase;
-    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData;
+    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData = new MutableLiveData<>();
 
     public DestinationViewModel() {
         destinationDatabase = DestinationDatabase.getInstance();
-        destinationEntriesLiveData = new MutableLiveData<>();
     }
 
     public String generateDestinationId(String location, Date startDate) {
@@ -27,60 +24,21 @@ public class DestinationViewModel extends ViewModel {
     }
 
     public void prepopulateDatabase() {
-        destinationDatabase.prepopulateDatabase();
-    }
-
-    public String getDuration() {
-        String duration = String.valueOf(destinationDatabase.getDurationInDays());
-        return duration;
-    }
-
-    public void addDestination(DestinationEntry entry) {
-        destinationDatabase.addEntry(entry.getDestinationId(), entry);
-    }
-
-    public void readEntries() {
-        destinationDatabase.getAllEntries(new DestinationDatabase.DataStatus() {
-            @Override
-            public void DataIsLoaded(List<DestinationEntry> entries) {
-                destinationEntriesLiveData.setValue(entries);
-            }
-        });
+        destinationDatabase.prepopulateDestinationDatabase();
     }
 
     public LiveData<List<DestinationEntry>> getDestinationEntries() {
         return destinationEntriesLiveData;
     }
 
-    // In DestinationViewModel.java
-
-    public String calculateMissingValue(Date startDate, Date endDate, Long durationInDays) {
-        if (startDate != null && endDate != null) {
-            // Calculate duration if both startDate and endDate are provided
-            long diffInMillis = endDate.getTime() - startDate.getTime();
-            long days = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
-            Log.d("Calculation", "Calculated Duration: " + days + " days");
-            return days + " days";
-        } else if (startDate != null && durationInDays != null) {
-            // Calculate endDate if startDate and duration are provided
-            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
-            Date calculatedEndDate = new Date(endMillis);
-            Log.d("Calculation", "Calculated End Date: " + calculatedEndDate);
-            return calculatedEndDate.toString();
-        } else if (endDate != null && durationInDays != null) {
-            // Calculate startDate if endDate and duration are provided
-            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
-            Date calculatedStartDate = new Date(startMillis);
-            Log.d("Calculation", "Calculated Start Date: " + calculatedStartDate);
-            return calculatedStartDate.toString();
-        } else {
-            Log.d("Calculation", "Insufficient data to calculate");
-            return "Insufficient data to calculate";
-        }
+    public void readEntries() {
+        destinationDatabase.getAllDestinationEntries(entries -> {
+            destinationEntriesLiveData.setValue(entries);
+        });
     }
 
-
-
-
+    public void addDestination(DestinationEntry entry) {
+        destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
+    }
 
 }

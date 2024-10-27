@@ -9,15 +9,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DestinationDatabase {
 
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
-    private DestinationEntry destinationEntry;
 
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
@@ -34,32 +33,35 @@ public class DestinationDatabase {
         return instance;
     }
 
-    public void addEntry(String destinationId, DestinationEntry entry) {
-        databaseReference.child(destinationId).setValue(entry);
+    public void addLogEntry(String destinationId, DestinationEntry entry) {
+        databaseReference.child(destinationId).setValue(entry)
+                .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
+                .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
     }
 
-    public void prepopulateDatabase() {
+    public void prepopulateDestinationDatabase() {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChildren()) { // Check if the database is empty
-                    // Prepopulate with 2 entries
-                    DestinationEntry entry1 = new DestinationEntry(
-                            "1",
-                            "Paris",
-                            new Date(2024, 2, 15), // Replace with actual date
-                            new Date(2024, 2, 20)
-                    );
+                    // Create dates using Calendar
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(2024, Calendar.FEBRUARY, 15);
+                    Date startDate1 = calendar.getTime();
+                    calendar.set(2024, Calendar.FEBRUARY, 20);
+                    Date endDate1 = calendar.getTime();
 
-                    DestinationEntry entry2 = new DestinationEntry(
-                            "2",
-                            "Tokyo",
-                            new Date(2024, 4, 10),
-                            new Date(2024, 4, 20)
-                    );
+                    DestinationEntry entry1 = new DestinationEntry("1", "Paris", startDate1, endDate1);
 
-                    addEntry( "1",entry1);
-                    addEntry("2", entry2);
+                    calendar.set(2024, Calendar.APRIL, 10);
+                    Date startDate2 = calendar.getTime();
+                    calendar.set(2024, Calendar.APRIL, 20);
+                    Date endDate2 = calendar.getTime();
+
+                    DestinationEntry entry2 = new DestinationEntry("2", "Tokyo", startDate2, endDate2);
+
+                    addLogEntry("1", entry1);
+                    addLogEntry("2", entry2);
                 }
             }
 
@@ -70,13 +72,7 @@ public class DestinationDatabase {
         });
     }
 
-    // New method to calculate the duration in days
-    public long getDurationInDays() {
-        long diffInMillis = destinationEntry.getEndDate().getTime() - destinationEntry.getStartDate().getTime();
-        return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
-    }
-
-    public void getAllEntries(final DataStatus dataStatus) {
+    public void getAllDestinationEntries(final DataStatus dataStatus) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
