@@ -36,6 +36,7 @@ public class UserDurationViewModel extends ViewModel {
         return durationEntryLiveData;
     }
 
+
     public void readDurationEntry(String userId) {
         userDurationDatabase.getVacationEntry(userId, (userIdCallback, email, entry) -> {
             if (entry != null) {

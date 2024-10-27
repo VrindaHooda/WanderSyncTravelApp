@@ -1,6 +1,7 @@
 package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DestinationEntry;
@@ -18,11 +20,13 @@ import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.Calendar;
 import java.util.List;
@@ -40,7 +44,9 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar startDate;
     private Calendar endDate;
     private TextView totalDaysTextView;
+    private String finalUserId;
     private TextView plannedDaysTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,11 @@ public class DestinationActivity extends AppCompatActivity {
                     .commit();
         }
 
+        // Getting the intent
+        Intent intent = getIntent();
+
+        String username = intent.getStringExtra("username");
+        String password = intent.getStringExtra("password");
 
         try {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
@@ -80,7 +91,7 @@ public class DestinationActivity extends AppCompatActivity {
             destinationViewModel.readEntries();
 
             logTravelButton.setOnClickListener(v -> openLogTravelDialog());
-            calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog());
+            calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog(username, password));
 
         } catch (Exception e) {
             Log.e("DestinationActivity", "Error in onCreate", e);
@@ -149,7 +160,7 @@ public class DestinationActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void openCalculateVacationDialog() {
+    private void openCalculateVacationDialog(String username, String password) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.vacation_time_form, null);
         builder.setView(dialogView);
@@ -171,7 +182,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         submitVacationTimeButton.setOnClickListener(v -> {
             int vacationDuration = calculateValues(vacationInput, startDateText2, endDateText2);
-            saveData(vacationDuration, startDate, endDate);
+            saveData(username, password, vacationDuration, startDateText2, endDateText2);
         });
 
         dialog.show();
@@ -223,36 +234,58 @@ public class DestinationActivity extends AppCompatActivity {
 
     }
 
-    private int dateConversion(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-
-        try {
-            // Parse the date string into a Date object
-            Date date = dateFormat.parse(dateString);
-
-            // Get the time in milliseconds since epoch
-            long timestamp = date.getTime();
-
-            // Convert to int (might lose precision if timestamp exceeds Integer.MAX_VALUE)
-            int timestampInt = (int) timestamp;
-            return timestampInt;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return 0;
+    private void getUserId(LiveData<String> liveData, StringCallback callback) {
+        liveData.observe(this, newUserId -> {
+            if (newUserId != null) {
+                Log.d("UserId", "The UserId is: " + newUserId);
+                callback.onResult(newUserId); // Return the value through the callback
+            } else {
+                Log.d("UserId", "UserId not found");
+                callback.onResult(null); // Return null if not found
+            }
+        });
     }
 
-
-    private void saveData(int vacationDuration, Calendar startDate, Calendar endDate) {
-        String email = authViewModel.getEmail();
-        String userId = authViewModel.getId();
-        String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
-        Date startDateVal = startDate.getTime(); // Convert startDate Calendar to Date
-        Date endDateVal = endDate.getTime();
-
-        userDurationViewModel.saveDurationData(userId, email, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
-        Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+    public interface StringCallback {
+        void onResult(String value);
     }
+
+    private void saveData(String username, String password, int vacationDuration, Calendar startDate, Calendar endDate) {
+        // Assuming authViewModel is already initialized and user has signed in or registered
+        authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
+            @Override
+            public void onSuccess(FirebaseUser user) {
+                // Call getUserId after successful sign-in
+                getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
+                    @Override
+                    public void onResult(String userId) {
+                        if (userId != null) {
+                            finalUserId = userId;
+                            Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
+
+                            // Generate vacationId only after successful sign-in and userId retrieval
+                            String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
+                            Date startDateVal = startDate.getTime(); // Convert startDate Calendar to Date
+                            Date endDateVal = endDate.getTime();
+
+                            // Now save the data with finalUserId
+                            userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
+                            Toast.makeText(DestinationActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Handle the case when userId is null
+                            Log.d("UserId", "Failed to retrieve UserId.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.e("Auth", "Sign-in failed: " + error);
+            }
+        });
+    }
+
 
     private void clearVacationForm(TextView startDateText, TextView endDateText, EditText vacationInput) {
         startDateText.setText("");
