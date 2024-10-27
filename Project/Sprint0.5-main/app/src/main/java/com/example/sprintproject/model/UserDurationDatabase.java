@@ -30,8 +30,8 @@ public class UserDurationDatabase {
         return userDurationDatabaseinstance;
     }
 
-    public void addVacationDurationEntry(String vacationId, DurationEntry entry) {
-        userDurationDatabaseReference.child(vacationId).setValue(entry)
+    public void addVacationDurationEntry(String vacationId, DurationEntry entry, ContributorEntry contributors) {
+        userDurationDatabaseReference.child(vacationId).setValue(entry, contributors)
                 .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully!"))
                 .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to add entry", e));
     }
