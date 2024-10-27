@@ -18,6 +18,12 @@ import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -34,6 +40,7 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar startDate;
     private Calendar endDate;
     private TextView totalDaysTextView;
+    private TextView plannedDaysTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,10 @@ public class DestinationActivity extends AppCompatActivity {
             totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
             Button logTravelButton = findViewById(R.id.btn_log_travel);
             Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
+            plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
+
+            // Fetch and display planned days from Firebase
+            fetchPlannedDaysFromFirebase();
 
             if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
@@ -88,6 +99,7 @@ public class DestinationActivity extends AppCompatActivity {
         destinationListTextView.setText(listBuilder.toString());
         updateTotalDays(totalDays);
     }
+
     private void updateTotalDays(long totalDays) {
         TextView totalDaysTextView = findViewById(R.id.totalDaysTextView);
         totalDaysTextView.setText("Total Days: " + totalDays + " days");
@@ -261,5 +273,29 @@ public class DestinationActivity extends AppCompatActivity {
                     dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
                 }, year, month, day);
         datePickerDialog.show();
+    }
+
+    private void fetchPlannedDaysFromFirebase() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                .child("No user signed in").child("entry").child("duration"); // Adjust this path as needed
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long plannedDays = dataSnapshot.getValue(Long.class);
+                    plannedDaysTextView.setText("Planned Days: " + plannedDays + " days");
+                } else {
+                    plannedDaysTextView.setText("Planned Days: N/A");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("DestinationActivity", "Failed to fetch planned days", databaseError.toException());
+            }
+        });
+        // In DestinationDatabase.java
+
     }
 }
