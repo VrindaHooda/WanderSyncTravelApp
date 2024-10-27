@@ -33,7 +33,9 @@ public class DestinationDatabase {
         return instance;
     }
 
+    //writing to the database
     public void addLogEntry(String destinationId, DestinationEntry entry) {
+        //set up a child to the destination ID and set the value as an entry
         databaseReference.child(destinationId).setValue(entry)
                 .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
                 .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
@@ -42,6 +44,7 @@ public class DestinationDatabase {
     public void prepopulateDestinationDatabase() {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
+            //takes a data snapshot, as soon as a data changes, it catches it
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChildren()) { // Check if the database is empty
                     // Create dates using Calendar
@@ -72,6 +75,7 @@ public class DestinationDatabase {
         });
     }
 
+    //reads the data
     public void getAllDestinationEntries(final DataStatus dataStatus) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

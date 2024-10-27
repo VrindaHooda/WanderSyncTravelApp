@@ -1,18 +1,23 @@
 package com.example.sprintproject.views;
 
 import android.os.Bundle;
-import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sprintproject.R;
+
+import android.widget.Button;
+
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+
 import java.util.List;
+
 
 public class LogisticsActivity extends AppCompatActivity {
 
@@ -20,10 +25,20 @@ public class LogisticsActivity extends AppCompatActivity {
     private long totalDays = 15; // Example initial value
     private long secondDays = 8; // Example initial value for testing
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logistics_screen);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
+                    .commit();
+        }
+
+
+
 
         pieChart = findViewById(R.id.pieChart);
         Button updateButton = findViewById(R.id.btn_graph);
@@ -57,4 +72,7 @@ public class LogisticsActivity extends AppCompatActivity {
         // secondDays = fetchSecondDaysFromDatabase();
         updatePieChart(); // Refresh chart after updating values
     }
+
+
+
 }
