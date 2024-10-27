@@ -3,92 +3,85 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_orange_dark">
 
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/halloween_spookies"
+        android:text="Destinations"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/button_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/halloween_spookies"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
 
-        <!-- Header Text -->
-        <TextView
-            android:id="@+id/header"
+        <Button
+            android:id="@+id/btn_log_travel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:backgroundTint="@android:color/darker_gray"
             android:fontFamily="@font/halloween_spookies"
-            android:text="Destinations"
-            android:textColor="@android:color/white"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="Log Travel"
+            android:textSize="20sp" />
 
-        <!-- Button Section -->
-        <LinearLayout
-            android:id="@+id/button_section"
+        <Button
+            android:id="@+id/btn_calculate_vacation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header">
-
-            <Button
-                android:id="@+id/btn_log_travel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/darker_gray"
-                android:fontFamily="@font/halloween_spookies"
-                android:text="Log Travel"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btn_calculate_vacation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@android:color/darker_gray"
-                android:fontFamily="@font/halloween_spookies"
-                android:text="Calculate Vacation Time"
-                android:textSize="20sp" />
-
-
-        </LinearLayout>
-
-        <!-- Destination List Display Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/destinationListTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:textColor="#000000"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:fontFamily="@font/halloween_spookies"
+            android:text="Calculate Vacation Time"
+            android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- Bottom Navigation Fragment -->
+    <TextView
+        android:id="@+id/destinationListTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_section" />
+
+    <TextView
+        android:id="@+id/totalDaysTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="500dp"
+        android:text="Total Days: 0 days"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-32dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,7 @@
         android:textSize="20sp"
         android:layout_marginTop="5dp"
         android:backgroundTint="@android:color/darker_gray"
+
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -64,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barChart"
         app:layout_constraintBottom_toTopOf="@id/contributorsRecyclerView"/>
-
+        app:layout_constraintBottom_toTopOf="@id/usernameListView"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contributorsRecyclerView"
@@ -75,6 +76,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@android:color/white" />
+        app:layout_constraintTop_toBottomOf="@id/contributors" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/notes"
@@ -82,6 +84,7 @@
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_edit"
         app:backgroundTint="@android:color/darker_gray"
+        android:fontFamily="@font/halloween_spookies"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contributors"
@@ -93,9 +96,27 @@
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_view"
         app:backgroundTint="@android:color/darker_gray"
+        android:fontFamily="@font/halloween_spookies"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contributors"
         app:layout_constraintVertical_bias="0.762" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/halloween_spookies"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_graph" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-32dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
