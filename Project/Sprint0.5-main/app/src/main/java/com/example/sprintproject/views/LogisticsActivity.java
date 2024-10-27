@@ -1,5 +1,6 @@
 package com.example.sprintproject.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,18 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Set up button click to refresh the chart with updated values
         updateButton.setOnClickListener(v -> updatePieChart());
+        FloatingActionButton inviteButton = findViewById(R.id.invite);
+        inviteButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
+            startActivity(intent);
+        });
+        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
+        viewInvitesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+            startActivity(intent);
+        });
     }
+
 
     private void updatePieChart() {
         List<PieEntry> entries = new ArrayList<>();
@@ -65,13 +78,7 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.invalidate(); // Refreshes the chart
     }
 
-    // A method to update totalDays and secondDays, typically by querying the database
-    private void fetchUpdatedDaysFromDatabase() {
-        // Example method, replace this with actual database fetching code
-        // totalDays = fetchTotalDaysFromDatabase();
-        // secondDays = fetchSecondDaysFromDatabase();
-        updatePieChart(); // Refresh chart after updating values
-    }
+
 
 
 
