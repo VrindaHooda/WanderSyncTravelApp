@@ -78,6 +78,20 @@
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
+
+    <TextView
+        android:id="@+id/plannedDaysTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="500dp"
+        android:text="Planned Days: 0 days"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

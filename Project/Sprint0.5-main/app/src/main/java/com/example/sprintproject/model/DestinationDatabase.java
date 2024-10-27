@@ -18,6 +18,10 @@ public class DestinationDatabase {
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
 
+    public void getPlannedVacationDays(final ValueEventListener listener) {
+        databaseReference.child("duration").addListenerForSingleValueEvent(listener);
+    }
+
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
     }
@@ -92,6 +96,8 @@ public class DestinationDatabase {
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
             }
+
         });
+
     }
 }
