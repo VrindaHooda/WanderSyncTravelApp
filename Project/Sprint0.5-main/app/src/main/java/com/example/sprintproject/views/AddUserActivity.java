@@ -25,6 +25,14 @@ public class AddUserActivity extends AppCompatActivity {
 
         // Set an onClickListener on the button to validate email when clicked
         addUserButton.setOnClickListener(v -> validateEmail());
+        Button exitButton = findViewById(R.id.exitbtn);
+
+        // Set up the onClickListener for the exit button
+        exitButton.setOnClickListener(v -> {
+            // Close the current activity and go back to LogisticsActivity
+            finish(); // This will go back to the previous activity in the stack
+        });
+
     }
 
     // Method to validate email format
