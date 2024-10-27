@@ -8,15 +8,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDurationDatabase {
     private static UserDurationDatabase userDurationDatabaseinstance;
     private DatabaseReference userDurationDatabaseReference;
 
     public interface DataStatus {
-        void DataIsLoaded(List<DurationEntry> entries);
+        void DataIsLoaded(String userId, String email, DurationEntry entry);
     }
 
     private UserDurationDatabase() {
@@ -30,27 +28,34 @@ public class UserDurationDatabase {
         return userDurationDatabaseinstance;
     }
 
-    public void addVacationDurationEntry(String vacationId, DurationEntry entry) {
-        userDurationDatabaseReference.child(vacationId).setValue(entry)
-                .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully!"))
-                .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to add entry", e));
+    public void addVacationEntry(String userId, String email, DurationEntry entry) {
+        UserEntry userData = new UserEntry(email, entry);
+        userDurationDatabaseReference.child(userId).setValue(userData)
+                .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully for userId: " + userId))
+                .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to add entry for userId: " + userId, e));
     }
 
-    public void getAllUserDurationEntries(final UserDurationDatabase.DataStatus dataStatus) {
-        userDurationDatabaseReference.addValueEventListener(new ValueEventListener() {
+
+    public void getVacationEntry(String userId, final DataStatus dataStatus) {
+        if (dataStatus == null) {
+            Log.w("UserDurationDatabase", "DataStatus callback is null");
+            return;
+        }
+
+        userDurationDatabaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<DurationEntry> entries = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DurationEntry entry = snapshot.getValue(DurationEntry.class);
-                    entries.add(entry);
+                UserEntry userData = dataSnapshot.getValue(UserEntry.class);
+                if (userData != null) {
+                    dataStatus.DataIsLoaded(userId, userData.getEmail(), userData.getEntry());
+                } else {
+                    Log.w("UserDurationDatabase", "No data found for userId: " + userId);
                 }
-                dataStatus.DataIsLoaded(entries);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("UserDurationDatabase", "Failed to get data", databaseError.toException());
+                Log.w("UserDurationDatabase", "Failed to get data for userId: " + userId, databaseError.toException());
             }
         });
     }

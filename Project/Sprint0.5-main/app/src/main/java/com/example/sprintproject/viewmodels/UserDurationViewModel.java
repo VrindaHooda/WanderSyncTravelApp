@@ -7,53 +7,43 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprintproject.model.DurationEntry;
 import com.example.sprintproject.model.UserDurationDatabase;
+
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class UserDurationViewModel extends ViewModel {
     private UserDurationDatabase userDurationDatabase;
-    private MutableLiveData<List<DurationEntry>> durationEntriesLiveData = new MutableLiveData<>();
-    private MutableLiveData<String> userId = new MutableLiveData<>();
+    private MutableLiveData<DurationEntry> durationEntryLiveData = new MutableLiveData<>();
+
 
     public UserDurationViewModel() {
         userDurationDatabase = UserDurationDatabase.getInstance();
     }
 
-    public LiveData<String> getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId.setValue(userId);
-    }
-
-    public void saveDurationData(String vacationId, int duration, String startDate, String endDate) {
-        String currentUserId = userId.getValue();
-        if (currentUserId != null) {
-            userDurationDatabase.addVacationDurationEntry(vacationId, new DurationEntry(vacationId, duration, new Date(startDate), new Date(endDate)));
-        } else {
-            Log.d("UserDurationDatabase", "User ID is null. Cannot save duration data.");
-        }
+    public void saveDurationData(String userId, String email, DurationEntry entry) {
+        userDurationDatabase.addVacationEntry(userId, email, entry);
     }
 
     public String generateVacationId(int duration, Date startDate) {
         return duration + "_" + startDate.getTime();
     }
 
-
-    public LiveData<List<DurationEntry>> getDurationEntries() {
-        return durationEntriesLiveData;
+    public String getVacationId(DurationEntry entry) {
+        return generateVacationId(entry.getDuration(), entry.getStartDate());
     }
 
-    public void readDurationEntries() {
-        userDurationDatabase.getAllUserDurationEntries(entries -> {
-            durationEntriesLiveData.setValue(entries);
+    public LiveData<DurationEntry> getDurationEntry() {
+        return durationEntryLiveData;
+    }
+
+    public void readDurationEntry(String userId) {
+        userDurationDatabase.getVacationEntry(userId, (userIdCallback, email, entry) -> {
+            if (entry != null) {
+                durationEntryLiveData.setValue(entry);
+            } else {
+                Log.d("UserDurationViewModel", "No entry found for userId: " + userIdCallback);
+            }
         });
-    }
-
-    public void addDuration(DurationEntry entry) {
-        userDurationDatabase.addVacationDurationEntry(entry.getVacationId(), entry);
     }
 
     public String calculateMissingValue(Date startDate, Date endDate, Long durationInDays) {
@@ -81,3 +71,4 @@ public class UserDurationViewModel extends ViewModel {
         }
     }
 }
+
