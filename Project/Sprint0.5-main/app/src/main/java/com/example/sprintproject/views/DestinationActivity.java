@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -250,7 +251,23 @@ public class DestinationActivity extends AppCompatActivity {
         void onResult(String value);
     }
 
-    private void saveData(String username, String password, int vacationDuration, Calendar startDate, Calendar endDate) {
+    private Date convertToDate(TextView input) {
+        Date date = new Date();
+        try {
+            // Parse the string to a Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY");
+            String dateString = input.getText().toString();
+            date = dateFormat.parse(dateString);
+            // Log or use the Date object as needed
+            Log.d("DateConversion", "Parsed Date: " + date);
+        } catch (ParseException e) {
+            // Handle the exception if parsing fails
+            Log.e("DateConversion", "Failed to parse date: " + e.getMessage());
+        }
+        return date;
+    }
+
+    private void saveData(String username, String password, int vacationDuration, TextView startDateText, TextView endDateText) {
         // Assuming authViewModel is already initialized and user has signed in or registered
         authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
             @Override
@@ -262,12 +279,27 @@ public class DestinationActivity extends AppCompatActivity {
                         if (userId != null) {
                             finalUserId = userId;
                             Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
-
                             // Generate vacationId only after successful sign-in and userId retrieval
                             String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
-                            Date startDateVal = startDate.getTime(); // Convert startDate Calendar to Date
-                            Date endDateVal = endDate.getTime();
-
+                            Date startDateVal = new Date();
+                            Date endDateVal = new Date();
+                            if (startDateText.getText().toString().contains("Selected Date") && endDateText.getText().toString().contains("Selected Date")) {
+                                // Both start and end dates provided, calculate duration
+                                startDateVal = convertToDate(startDateText);
+                                endDateVal = convertToDate(endDateText);
+                            } else if (startDateText.getText().toString().contains("Selected Date") && vacationDuration != 0) {
+                                // Start date and duration provided, calculate end date
+                                String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, (long)vacationDuration);
+                                endDateText.setText(calculatedEndDate);
+                                startDateVal = convertToDate(startDateText);
+                                endDateVal = convertToDate(endDateText);
+                            } else if (endDateText.getText().toString().contains("Selected Date") && vacationDuration != 0) {
+                                // End date and duration provided, calculate start date
+                                String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), (long)vacationDuration);
+                                startDateText.setText(calculatedStartDate);
+                                startDateVal = convertToDate(startDateText);
+                                endDateVal = convertToDate(endDateText);
+                            }
                             // Now save the data with finalUserId
                             userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
                             Toast.makeText(DestinationActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
@@ -328,7 +360,5 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.w("DestinationActivity", "Failed to fetch planned days", databaseError.toException());
             }
         });
-        // In DestinationDatabase.java
-
     }
 }
