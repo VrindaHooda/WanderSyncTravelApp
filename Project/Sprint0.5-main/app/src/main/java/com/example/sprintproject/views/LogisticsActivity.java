@@ -48,11 +48,10 @@ public class LogisticsActivity extends AppCompatActivity {
 
 
         FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
-        modifyPlansButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showModifyPlansDialog();
-            }
+        // Set OnClickListener for the Modify Plans button
+        modifyPlansButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
+            startActivity(intent); // Start the ModifyTripPlansActivity
         });
 
 
