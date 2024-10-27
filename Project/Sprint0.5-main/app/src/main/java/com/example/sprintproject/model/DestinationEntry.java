@@ -22,13 +22,6 @@ public class DestinationEntry {
         this.duration = calculateDuration(startDate, endDate);
     }
 
-    public DestinationEntry(String destinationId, int duration, Date startDate, Date endDate) {
-        this.destinationId = destinationId;
-        this.duration = String.valueOf(duration);
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
     public String getDestinationId() {
         return destinationId;
     }

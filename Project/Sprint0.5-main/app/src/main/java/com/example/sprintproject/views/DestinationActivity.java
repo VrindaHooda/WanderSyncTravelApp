@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DestinationEntry;
+import com.example.sprintproject.model.DurationEntry;
+import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
@@ -24,6 +26,7 @@ import java.util.Date;
 
 public class DestinationActivity extends AppCompatActivity {
 
+    private AuthViewModel authViewModel;
     private DestinationViewModel destinationViewModel;
     private UserDurationViewModel userDurationViewModel;
     private ValidateViewModel validateViewModel;
@@ -50,6 +53,7 @@ public class DestinationActivity extends AppCompatActivity {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
+            authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
             totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
@@ -155,7 +159,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         submitVacationTimeButton.setOnClickListener(v -> {
             int vacationDuration = calculateValues(vacationInput, startDateText2, endDateText2);
-            saveData(vacationDuration, startDateText2, endDateText2);
+            saveData(vacationDuration, startDate, endDate);
         });
 
         dialog.show();
@@ -210,13 +214,14 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
 
-    private void saveData(int vacationDuration, TextView startDateText, TextView endDateText) {
-        String vacationId = String.valueOf(System.currentTimeMillis());
-        int duration = vacationDuration;
-        String startDateStr = startDateText.getText().toString();
-        String endDateStr = endDateText.getText().toString();
+    private void saveData(int vacationDuration, Calendar startDate, Calendar endDate) {
+        String email = authViewModel.getEmail();
+        String userId = authViewModel.getId();
+        String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
+        Date startDateVal = startDate.getTime(); // Convert startDate Calendar to Date
+        Date endDateVal = endDate.getTime();
 
-        userDurationViewModel.saveDurationData(vacationId, duration, startDateStr, endDateStr);
+        userDurationViewModel.saveDurationData(userId, email, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
         Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
     }
 
