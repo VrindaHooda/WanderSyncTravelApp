@@ -37,12 +37,14 @@ public class DestinationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
 
+        //adds fragment bar
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
+
 
         try {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
@@ -70,6 +72,7 @@ public class DestinationActivity extends AppCompatActivity {
         }
     }
 
+    //makes a destination list
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
         long totalDays = 0;

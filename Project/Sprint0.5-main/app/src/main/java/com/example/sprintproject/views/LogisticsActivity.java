@@ -3,19 +3,12 @@ package com.example.sprintproject.views;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.ContributorAdapter;
-
-import java.util.Arrays;
 
 import android.widget.Button;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.sprintproject.R;
+
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -27,11 +20,6 @@ import java.util.List;
 
 
 public class LogisticsActivity extends AppCompatActivity {
-  
-    private RecyclerView contributorsRecyclerView;
-    private ContributorAdapter adapter;
-    private List<String> contributorList;
-
 
     private PieChart pieChart;
     private long totalDays = 15; // Example initial value
@@ -49,14 +37,8 @@ public class LogisticsActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // Initialize the list with some example data
-        contributorList = Arrays.asList("Contributor 1", "Contributor 2", "Contributor 3");
 
-        // Set up RecyclerView
-        contributorsRecyclerView = findViewById(R.id.contributorsRecyclerView);
-        contributorsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ContributorAdapter(this, contributorList);
-        contributorsRecyclerView.setAdapter(adapter);
+
 
         pieChart = findViewById(R.id.pieChart);
         Button updateButton = findViewById(R.id.btn_graph);
