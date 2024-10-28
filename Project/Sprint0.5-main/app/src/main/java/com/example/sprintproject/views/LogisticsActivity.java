@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sprintproject.model.ContributorEntry;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -47,7 +48,7 @@ public class LogisticsActivity extends AppCompatActivity {
         }
 
 
-        FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
+        FloatingActionButton modifyPlansButton = findViewById(R.id.modify_plans);
         // Set OnClickListener for the Modify Plans button
         modifyPlansButton.setOnClickListener(v -> {
             Intent intent = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
@@ -130,6 +131,9 @@ public class LogisticsActivity extends AppCompatActivity {
     }
 
 
+    private void inviteContributor(ContributorEntry person) {
+
+    }
 
 
 
