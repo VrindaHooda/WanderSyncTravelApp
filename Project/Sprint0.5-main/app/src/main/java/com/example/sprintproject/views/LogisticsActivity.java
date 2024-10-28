@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.sprintproject.model.ContributorEntry;
+import com.example.sprintproject.model.ContributorEntry;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.sprintproject.model.ContributorEntry;
@@ -62,7 +63,11 @@ public class LogisticsActivity extends AppCompatActivity {
                     .commit();
         }
 
-
+        FloatingActionButton modifyPlansButton = findViewById(R.id.modify_plans);
+        // Set OnClickListener for the Modify Plans button
+        modifyPlansButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
+            startActivity(intent); // Start the ModifyTripPlansActivity
         FloatingActionButton addANote = findViewById(R.id.modify_notes);
         addANote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +189,11 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.setData(data);
         pieChart.invalidate(); // Refreshes the chart
     }
+
+    private void inviteContributor(ContributorEntry person) {
+
+    }
+
     private LiveData<ContributorEntry> getContributorLiveDataFromUI() {
         // Logic to get the LiveData from your UI (for example, from a form or input fields)
         // You might have a MutableLiveData that you update based on user actions

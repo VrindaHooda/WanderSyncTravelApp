@@ -91,6 +91,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
+        <activity android:name=".views.ModifyPlansActivity" />
 
     </application>
 </manifest>

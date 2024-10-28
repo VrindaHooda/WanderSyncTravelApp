@@ -9,15 +9,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.TravelLogEntry;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class LogTravelForm extends AppCompatActivity {
 
     private TextView startDateText;
     private TextView endDateText;
+    private List<TravelLogEntry> travelLogs; // List to store travel logs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,9 @@ public class LogTravelForm extends AppCompatActivity {
         Button openEndDatePicker = findViewById(R.id.openEndDatePicker);
         startDateText = findViewById(R.id.startDateText);
         endDateText = findViewById(R.id.endDateText);
+
+        // Initialize the travelLogs list
+        travelLogs = new ArrayList<>();
 
         // Set up click listeners to open date pickers
         openStartDatePicker.setOnClickListener(v -> openDatePicker(startDateText));
@@ -77,4 +84,5 @@ public class LogTravelForm extends AppCompatActivity {
         // Implement the logic to save the travel log using your ViewModel or Repository here
         Toast.makeText(this, "Travel log saved successfully!", Toast.LENGTH_SHORT).show();
     }
+
 }
