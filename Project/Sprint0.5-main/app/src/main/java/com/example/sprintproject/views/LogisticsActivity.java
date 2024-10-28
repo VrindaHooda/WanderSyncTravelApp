@@ -2,39 +2,34 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 
-import android.content.DialogInterface;
+
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.sprintproject.R;
-import android.os.Parcelable;
+
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprintproject.R;
+
 import android.util.Log;
-import android.view.View;
+
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+
 import com.example.sprintproject.model.ContributorEntry;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.example.sprintproject.model.ContributorEntry;
-import com.example.sprintproject.model.DestinationEntry;
+
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
-import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -63,13 +58,13 @@ public class LogisticsActivity extends AppCompatActivity {
         }
 
 
-        FloatingActionButton addANote = findViewById(R.id.modify_notes);
-        addANote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addANote();
-            }
-        });
+        //        FloatingActionButton addANote = findViewById(R.id.modify_notes);
+        //        addANote.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                addANote();
+        //            }
+        //        });
 
 
         pieChart = findViewById(R.id.pieChart);
@@ -77,24 +72,24 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Initial display of the chart
         updatePieChart();
-//        // Set up button click to refresh the chart with updated values
-//        updateButton.setOnClickListener(v -> updatePieChart());
-//        FloatingActionButton inviteButton = findViewById(R.id.invite);
-//        inviteButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
-//            startActivity(intent);
-//        });
-//        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
-//        viewInvitesButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
-//        viewNotesButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-//            startActivity(intent);
-//        });
+        //        // Set up button click to refresh the chart with updated values
+        //        updateButton.setOnClickListener(v -> updatePieChart());
+        //        FloatingActionButton inviteButton = findViewById(R.id.invite);
+        //        inviteButton.setOnClickListener(v -> {
+        //            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
+        //            startActivity(intent);
+        //        });
+        //        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
+        //        viewInvitesButton.setOnClickListener(v -> {
+        //            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+        //            startActivity(intent);
+        //        });
+        //
+        //        FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
+        //        viewNotesButton.setOnClickListener(v -> {
+        //            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+        //            startActivity(intent);
+        //        });
 
         // Method to get LiveData from UI
 
@@ -102,7 +97,7 @@ public class LogisticsActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("contributorsList", getAllContributors());
         startActivity(intent);
 
-        Intent intent = getIntent();
+        //        Intent intent = getIntent();
         try {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
@@ -118,19 +113,20 @@ public class LogisticsActivity extends AppCompatActivity {
 
             ListView contributorsListView = findViewById(R.id.contributorsListView);
 
-            if (contributorsListView == null)
+            if (contributorsListView == null) {
                 Log.e("LogisticsActivity", "contributorsListView is null");
 
-
-            destinationViewModel.getDestinationEntries().observe(this, entries -> updateContributorsList(entries));
+            }
+            //            destinationViewModel.getDestinationEntries().observe(this,
+            //            entries -> updateContributorsList(entries));
             destinationViewModel.prepopulateDatabase();
             destinationViewModel.readEntries();
 
-            //bruh
-            viewNotes.setOnClickListener(v -> viewTheNotes());
-            modifyPlans.setOnClickListener(v -> modifyTrip());
-            viewInvites.setOnClickListener(v -> viewTheInvites());
-            invite.setOnClickListener(v -> inviteContributor(contributor));
+        //            //bruh
+        //            viewNotes.setOnClickListener(v -> viewTheNotes());
+        //            modifyPlans.setOnClickListener(v -> modifyTrip());
+        //            viewInvites.setOnClickListener(v -> viewTheInvites());
+        //            invite.setOnClickListener(v -> inviteContributor(contributor));
 
 
         } catch (Exception e) {
@@ -138,37 +134,40 @@ public class LogisticsActivity extends AppCompatActivity {
         }
     }
 
-    private void addANote() {
-        // Create an EditText field for user input
-        final EditText input = new EditText(this);
-        input.setHint("Type in your note here");
-
-        // Create the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add A Note")
-                .setView(input)  // Set the EditText field in the dialog
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newPlan = input.getText().toString().trim();
-                        if (!newPlan.isEmpty()) {
-                            // Save or process the entered plan here
-                            Toast.makeText(LogisticsActivity.this, "Note saved: " + newPlan, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LogisticsActivity.this, "Please add a note.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); // Dismiss the dialog
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+    //    private void addANote() {
+    //        // Create an EditText field for user input
+    //        final EditText input = new EditText(this);
+    //        input.setHint("Type in your note here");
+    //
+    //        // Create the dialog
+    //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    //        builder.setTitle("Add A Note")
+    //                .setView(input)  // Set the EditText field in the dialog
+    //                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+    //                    @Override
+    //                    public void onClick(DialogInterface dialog, int which) {
+    //                        String newPlan = input.getText().toString().trim();
+    //                        if (!newPlan.isEmpty()) {
+    //                            // Save or process the entered plan here
+    //                            Toast.makeText(LogisticsActivity.this, "Note
+    //                            saved: " + newPlan, Toast.LENGTH_SHORT).show();
+    //                        } else {
+    //                            Toast.makeText(LogisticsActivity.this, "Please a
+    //                            dd a note.", Toast.LENGTH_SHORT).show();
+    //                        }
+    //                    }
+    //                })
+    //                .setNegativeButton("Cancel", new DialogInterface.OnClickLis
+    //                tener() {
+    //                    @Override
+    //                    public void onClick(DialogInterface dialog, int which) {
+    //                        dialog.dismiss(); // Dismiss the dialog
+    //                    }
+    //                });
+    //
+    //        AlertDialog dialog = builder.create();
+    //        dialog.show();
+    //    }
 
     private void updatePieChart() {
         List<PieEntry> entries = new ArrayList<>();
@@ -189,16 +188,18 @@ public class LogisticsActivity extends AppCompatActivity {
         // You might have a MutableLiveData that you update based on user actions
         MutableLiveData<ContributorEntry> liveData = new MutableLiveData<>();
         // Example: Update liveData based on user input
-        ContributorEntry entry = new ContributorEntry("", "exampleNote"); // Create a ContributorEntry based on user input
+        ContributorEntry entry = new ContributorEntry("", "exampleNote");
+        // Create a ContributorEntry based on user input
         liveData.setValue(entry); // Update LiveData with the new entry
         return liveData;
     }
-    public ContributorEntry convertLiveData(LiveData<ContributorEntry> contributorEntryLiveData) {
+    public ContributorEntry convertLiveData(LiveData<ContributorEntry>
+                                                    contributorEntryLiveData) {
         ContributorEntry contributorEntry = contributorEntryLiveData.getValue();
         return contributorEntry;
     }
     public ArrayList<ContributorEntry> getAllContributors() {
-        ArrayList<ContributorEntry> listOfContributors= new ArrayList<>();
+        ArrayList<ContributorEntry> listOfContributors = new ArrayList<>();
         listOfContributors.add(convertLiveData(getContributorLiveDataFromUI()));
         return listOfContributors;
     }

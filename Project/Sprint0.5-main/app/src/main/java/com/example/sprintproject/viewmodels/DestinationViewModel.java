@@ -1,6 +1,6 @@
 package com.example.sprintproject.viewmodels;
 
-import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -8,12 +8,13 @@ import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 public class DestinationViewModel extends ViewModel {
 
     private DestinationDatabase destinationDatabase;
-    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<DestinationEntry>>
+            destinationEntriesLiveData = new MutableLiveData<>();
 
     public DestinationViewModel() {
         destinationDatabase = DestinationDatabase.getInstance();
