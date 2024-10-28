@@ -14,7 +14,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        // Test instrumentation runner
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -31,23 +30,6 @@ android {
 }
 
 dependencies {
-    // JUnit for unit tests
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test.ext:junit:1.1.5'
-    testImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    testImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
-
-    // Espresso for UI testing
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    // Espresso Intents for testing Intents
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
-
-    // Mockito for mocking in tests
-    testImplementation 'org.mockito:mockito-core:5.2.0'
-
-    // Additional dependencies
     def fragment_version = "1.8.4"
     implementation "androidx.fragment:fragment:$fragment_version"
     implementation 'com.github.Philjay:MPAndroidChart:v3.1.0'
@@ -57,10 +39,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:21.0.0'
     implementation 'com.google.firebase:firebase-auth:23.0.0'
     implementation 'com.github.Philjay:MPAndroidChart:v3.1.0'
-
-    // Test rules for JUnit tests
-    testImplementation 'androidx.test:rules:1.5.0'
-
-    testImplementation 'org.robolectric:robolectric:4.8.1' // Check for the latest version
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
 }
