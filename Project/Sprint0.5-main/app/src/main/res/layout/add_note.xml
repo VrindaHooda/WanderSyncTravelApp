@@ -13,13 +13,13 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/adduser"
+            android:id="@+id/addNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:gravity="center"
-            android:text="Add Your Email"
+            android:text="Add Notes"
             android:textColor="@android:color/white"
             android:fontFamily="@font/halloween_spookies"
             android:textSize="40sp"
@@ -34,23 +34,23 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/emailadd"
+                android:id="@+id/addnotebox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Username"
+                android:text="Add Note"
                 android:fontFamily="@font/halloween_spookies"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
 
             <EditText
-                android:id="@+id/emailenterable"
+                android:id="@+id/add_note_text"
                 android:layout_width="320dp"
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp"
                 android:autofillHints="username"
                 android:background="@android:color/holo_orange_dark"
-                android:hint="Enter your email"
+                android:hint="Enter your note here"
                 android:inputType="textEmailAddress"
                 android:textColor="#FFEB3B"
                 android:textStyle="italic" />
@@ -59,25 +59,16 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/adduserbtn"
+            android:id="@+id/add_note_btn"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@android:color/holo_purple"
-            android:text="Add User"
+            android:text="Add"
             android:fontFamily="@font/halloween_spookies"
             android:textSize="24sp"
             android:textColor="@android:color/white" />
-        <Button
-            android:id="@+id/exitbtn"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@android:color/holo_purple"
-            android:text="Exit"
-            android:fontFamily="@font/halloween_spookies"
-            android:textSize="24sp"
-            android:textColor="@android:color/white" />
+
 
 
 
