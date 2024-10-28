@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AuthRepository {
 
     // Private constructor to prevent instantiation
-    private AuthRepository() {}
+    private AuthRepository() { }
 
     // Method to get the FirebaseAuth instance
     public static FirebaseAuth getAuthRepository() {
