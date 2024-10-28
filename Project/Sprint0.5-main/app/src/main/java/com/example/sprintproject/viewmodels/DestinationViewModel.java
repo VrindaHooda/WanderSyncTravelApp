@@ -1,6 +1,6 @@
 package com.example.sprintproject.viewmodels;
 
-
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -8,13 +8,12 @@ import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
 import java.util.Date;
 import java.util.List;
-
+import java.util.concurrent.TimeUnit;
 
 public class DestinationViewModel extends ViewModel {
 
     private DestinationDatabase destinationDatabase;
-    private MutableLiveData<List<DestinationEntry>>
-            destinationEntriesLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData = new MutableLiveData<>();
 
     public DestinationViewModel() {
         destinationDatabase = DestinationDatabase.getInstance();
@@ -38,32 +37,8 @@ public class DestinationViewModel extends ViewModel {
         });
     }
 
-    public void addDestination(String userId, DestinationEntry entry) {
-        destinationDatabase.addLogEntry(userId, entry.getDestinationId(), entry);
-    }
-
-    public boolean isDestinationAdded(String location) {
-        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
-        if (entries != null) {
-            for (DestinationEntry entry : entries) {
-                if (entry.getLocation().equals(location)) {
-                    return true; // Destination found
-                }
-            }
-        }
-        return false; // Destination not found
-    }
-    public boolean isTravelLogSaved(String location, String duration) {
-        // Assuming you have a method to get all destination entries
-        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
-        if (entries != null) {
-            for (DestinationEntry entry : entries) {
-                if (entry.getLocation().equals(location) && entry.getDuration().equals(duration)) {
-                    return true; // Travel log exists
-                }
-            }
-        }
-        return false; // Travel log does not exist
+    public void addDestination(DestinationEntry entry) {
+        destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
     }
 
 }

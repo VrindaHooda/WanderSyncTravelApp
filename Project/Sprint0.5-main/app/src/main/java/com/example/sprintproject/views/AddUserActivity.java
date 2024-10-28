@@ -17,8 +17,7 @@ public class AddUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_users_form); // Replace 'your_layout_name'
-        // with your actual XML layout file name
+        setContentView(R.layout.add_users_form); // Replace 'your_layout_name' with your actual XML layout file name
 
         // Initialize the EditText and Button
         emailEditText = findViewById(R.id.emailenterable);
