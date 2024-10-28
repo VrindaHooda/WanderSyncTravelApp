@@ -37,8 +37,8 @@ public class DestinationViewModel extends ViewModel {
         });
     }
 
-    public void addDestination(DestinationEntry entry) {
-        destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
+    public void addDestination(String userId, DestinationEntry entry) {
+        destinationDatabase.addLogEntry(userId, entry.getDestinationId(), entry);
     }
 
 }

@@ -5,10 +5,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprintproject.model.ContributorEntry;
 import com.example.sprintproject.model.DurationEntry;
 import com.example.sprintproject.model.UserDurationDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class UserDurationViewModel extends ViewModel {
@@ -20,31 +23,16 @@ public class UserDurationViewModel extends ViewModel {
         userDurationDatabase = UserDurationDatabase.getInstance();
     }
 
-    public void saveDurationData(String userId, String email, DurationEntry entry) {
-        userDurationDatabase.addVacationEntry(userId, email, entry);
+    public void saveDurationData(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
+        userDurationDatabase.addVacationEntry(userId, email, entry, contributors);
     }
 
     public String generateVacationId(int duration, Date startDate) {
         return duration + "_" + startDate.getTime();
     }
 
-    public String getVacationId(DurationEntry entry) {
-        return generateVacationId(entry.getDuration(), entry.getStartDate());
-    }
-
     public LiveData<DurationEntry> getDurationEntry() {
         return durationEntryLiveData;
-    }
-
-
-    public void readDurationEntry(String userId) {
-        userDurationDatabase.getVacationEntry(userId, (userIdCallback, email, entry) -> {
-            if (entry != null) {
-                durationEntryLiveData.setValue(entry);
-            } else {
-                Log.d("UserDurationViewModel", "No entry found for userId: " + userIdCallback);
-            }
-        });
     }
 
     public String calculateMissingValue(Date startDate, Date endDate, Long durationInDays) {

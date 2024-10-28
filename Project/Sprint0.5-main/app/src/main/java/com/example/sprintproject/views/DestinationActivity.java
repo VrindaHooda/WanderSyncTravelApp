@@ -2,11 +2,13 @@ package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -14,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.ContributorEntry;
 import com.example.sprintproject.model.DestinationEntry;
 import com.example.sprintproject.model.DurationEntry;
+import com.example.sprintproject.model.UserEntry;
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
@@ -29,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -46,6 +51,8 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar endDate;
     private TextView totalDaysTextView;
     private String finalUserId;
+    private ArrayList<ContributorEntry> contributors;
+    private ArrayList<ContributorEntry> values;
     private TextView plannedDaysTextView;
 
 
@@ -64,6 +71,10 @@ public class DestinationActivity extends AppCompatActivity {
 
         // Getting the intent
         Intent intent = getIntent();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            values = extras.getParcelableArrayList("contributorsList"); // Replace with the appropriate type
+        }
 
         String username = intent.getStringExtra("username");
         String password = intent.getStringExtra("password");
@@ -91,7 +102,7 @@ public class DestinationActivity extends AppCompatActivity {
             destinationViewModel.prepopulateDatabase();
             destinationViewModel.readEntries();
 
-            logTravelButton.setOnClickListener(v -> openLogTravelDialog());
+            logTravelButton.setOnClickListener(v -> openLogTravelDialog(username, password));
             calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog(username, password));
 
         } catch (Exception e) {
@@ -118,7 +129,7 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
 
-    private void openLogTravelDialog() {
+    private void openLogTravelDialog(String username, String password) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.log_travel_form, null);
         builder.setView(dialogView);
@@ -152,9 +163,32 @@ public class DestinationActivity extends AppCompatActivity {
                     startDate.getTime(),
                     endDate.getTime()
             );
+            // Get userId the same way as in saveData
+            authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
+                @Override
+                public void onSuccess(FirebaseUser user) {
+                    getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
+                        @Override
+                        public void onResult(String userId) {
+                            if (userId != null) {
+                                finalUserId = userId;
+                                Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
+                                // Add the destination entry
+                                destinationViewModel.addDestination(finalUserId, newEntry);
+                                Toast.makeText(DestinationActivity.this, "Travel log added", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.d("UserId", "Failed to retrieve UserId.");
+                            }
+                        }
+                    });
+                }
 
-            destinationViewModel.addDestination(newEntry);
-            Toast.makeText(this, "Travel log added", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(String error) {
+                    Log.e("Auth", "Sign-in failed: " + error);
+                    Toast.makeText(DestinationActivity.this, "Sign-in failed: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
             dialog.dismiss();
         });
 
@@ -300,8 +334,11 @@ public class DestinationActivity extends AppCompatActivity {
                                 startDateVal = convertToDate(startDateText);
                                 endDateVal = convertToDate(endDateText);
                             }
+
+
+                            contributors = values;
                             // Now save the data with finalUserId
-                            userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
+                            userDurationViewModel.saveDurationData(finalUserId, username, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal), contributors);
                             Toast.makeText(DestinationActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
                         } else {
                             // Handle the case when userId is null

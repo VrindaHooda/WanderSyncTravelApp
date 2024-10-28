@@ -1,25 +1,32 @@
 package com.example.sprintproject.model;
 
+import androidx.lifecycle.LiveData;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UserEntry {
 
     private String userId;
     private String email;
     private DurationEntry entry;
+    private ArrayList<ContributorEntry> contributors;
 
     public UserEntry() {
     }
 
-    public UserEntry(String email, DurationEntry entry) {
+    public UserEntry(String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
         this.email = email;
         this.entry = entry;
+        this.contributors = contributors;
     }
 
-    public UserEntry(String userId, String email, DurationEntry entry) {
+    public UserEntry(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
         this.userId = userId;
         this.email = email;
         this.entry = entry;
+        this.contributors = contributors;
     }
 
     public DurationEntry getEntry() {
@@ -44,5 +51,13 @@ public class UserEntry {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public ArrayList<ContributorEntry> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(ArrayList<ContributorEntry> contributors) {
+        this.contributors = contributors;
     }
 }
