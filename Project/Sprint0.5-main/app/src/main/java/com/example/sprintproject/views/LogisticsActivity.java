@@ -8,14 +8,20 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.sprintproject.R;
 
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sprintproject.model.ContributorEntry;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -33,7 +39,6 @@ public class LogisticsActivity extends AppCompatActivity {
     private PieChart pieChart;
     private long totalDays = 15; // Example initial value
     private long secondDays = 8; // Example initial value for testing
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,24 +67,30 @@ public class LogisticsActivity extends AppCompatActivity {
         // Initial display of the chart
         updatePieChart();
 
-        // Set up button click to refresh the chart with updated values
-        updateButton.setOnClickListener(v -> updatePieChart());
-        FloatingActionButton inviteButton = findViewById(R.id.invite);
-        inviteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
-            startActivity(intent);
-        });
-        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
-        viewInvitesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-            startActivity(intent);
-        });
+//        // Set up button click to refresh the chart with updated values
+//        updateButton.setOnClickListener(v -> updatePieChart());
+//        FloatingActionButton inviteButton = findViewById(R.id.invite);
+//        inviteButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
+//            startActivity(intent);
+//        });
+//        FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
+//        viewInvitesButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
+//        viewNotesButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+//            startActivity(intent);
+//        });
 
-        FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
-        viewNotesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-            startActivity(intent);
-        });
+        // Method to get LiveData from UI
+
+        Intent intent = new Intent(LogisticsActivity.this, DestinationActivity.class);
+        intent.putParcelableArrayListExtra("contributorsList", getAllContributors());
+        startActivity(intent);
 
     }
 
@@ -130,8 +141,23 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.invalidate(); // Refreshes the chart
     }
 
-
-
-
+    private LiveData<ContributorEntry> getContributorLiveDataFromUI() {
+        // Logic to get the LiveData from your UI (for example, from a form or input fields)
+        // You might have a MutableLiveData that you update based on user actions
+        MutableLiveData<ContributorEntry> liveData = new MutableLiveData<>();
+        // Example: Update liveData based on user input
+        ContributorEntry entry = new ContributorEntry("", "exampleNote"); // Create a ContributorEntry based on user input
+        liveData.setValue(entry); // Update LiveData with the new entry
+        return liveData;
+    }
+    public ContributorEntry convertLiveData(LiveData<ContributorEntry> contributorEntryLiveData) {
+        ContributorEntry contributorEntry = contributorEntryLiveData.getValue();
+        return contributorEntry;
+    }
+    public ArrayList<ContributorEntry> getAllContributors() {
+        ArrayList<ContributorEntry> listOfContributors= new ArrayList<>();
+        listOfContributors.add(convertLiveData(getContributorLiveDataFromUI()));
+        return listOfContributors;
+    }
 
 }
