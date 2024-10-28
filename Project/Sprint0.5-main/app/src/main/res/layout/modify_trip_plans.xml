@@ -1,60 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/holo_orange_dark">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/modify_plans_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Modify Plans"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/halloween_spookies" />
-
-    <ListView
-        android:id="@+id/destinations_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:fontFamily="@font/halloween_spookies" />
-
-    <Button
-        android:id="@+id/add_destination_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+"
-        android:layout_gravity="center"
-        android:textSize="36sp"
-        android:background="@android:color/holo_purple"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp" />
-
-    <Button
-        android:id="@+id/modify_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Modify"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/holo_purple"
-        android:textColor="@android:color/white"
-        android:fontFamily="@font/halloween_spookies" />
-
-    <Button
-        android:id="@+id/exit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Exit"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_purple"
-        android:textColor="@android:color/white"
-        android:fontFamily="@font/halloween_spookies" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
