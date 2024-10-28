@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,7 +19,7 @@ public class UserDurationDatabase {
     private DatabaseReference userDurationDatabaseReference;
 
     public interface DataStatus {
-        void DataIsLoaded(String userId, String email, DurationEntry entry, List<LiveData<ContributorEntry>> contributors);
+        void DataIsLoaded(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors);
     }
 
     private UserDurationDatabase() {
@@ -32,7 +33,7 @@ public class UserDurationDatabase {
         return userDurationDatabaseinstance;
     }
 
-    public void addVacationEntry(String userId, String email, DurationEntry entry, List<LiveData<ContributorEntry>> contributors) {
+    public void addVacationEntry(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
         UserEntry userData = new UserEntry(email, entry, contributors);
         userDurationDatabaseReference.child(userId).setValue(userData)
                 .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully for userId: " + userId))
@@ -40,7 +41,7 @@ public class UserDurationDatabase {
     }
 
 
-    public void getVacationEntry(String userId, final DataStatus dataStatus, List<LiveData<ContributorEntry>> contributors) {
+    public void getVacationEntry(String userId, final DataStatus dataStatus) {
         if (dataStatus == null) {
             Log.w("UserDurationDatabase", "DataStatus callback is null");
             return;

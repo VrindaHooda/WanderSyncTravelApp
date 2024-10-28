@@ -2,6 +2,7 @@ package com.example.sprintproject.model;
 
 import android.util.Log;
 
+import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,6 +18,7 @@ public class DestinationDatabase {
 
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
+    private User user;
 
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
@@ -38,9 +40,9 @@ public class DestinationDatabase {
 
 
     //writing to the database
-    public void addLogEntry(String destinationId, DestinationEntry entry) {
+    public void addLogEntry(String userDestination, String destinationId, DestinationEntry entry) {
         //set up a child to the destination ID and set the value as an entry
-        databaseReference.child(destinationId).setValue(entry)
+        databaseReference.child("userDestination").child(userDestination).child(destinationId).setValue(entry)
                 .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
                 .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
     }
@@ -67,8 +69,8 @@ public class DestinationDatabase {
 
                     DestinationEntry entry2 = new DestinationEntry("2", "Tokyo", startDate2, endDate2);
 
-                    addLogEntry("1", entry1);
-                    addLogEntry("2", entry2);
+                    // addLogEntry("1", entry1);
+                    // addLogEntry("2", entry2);
                 }
             }
 
@@ -81,7 +83,8 @@ public class DestinationDatabase {
 
     //reads the data
     public void getAllDestinationEntries(final DataStatus dataStatus) {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userDestinationsRef = databaseReference.child(user.getUserId());
+        userDestinationsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<DestinationEntry> entries = new ArrayList<>();
