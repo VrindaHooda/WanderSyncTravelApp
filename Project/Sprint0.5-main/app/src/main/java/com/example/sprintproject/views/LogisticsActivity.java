@@ -1,27 +1,17 @@
 package com.example.sprintproject.views;
 
 import android.content.Intent;
-
-
-
 import android.os.Bundle;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.sprintproject.R;
-
 import androidx.lifecycle.ViewModelProvider;
-
-
 import android.util.Log;
-
 import android.widget.Button;
-
+import com.example.sprintproject.model.ContributorEntry;
 import com.example.sprintproject.model.ContributorEntry;
 import android.widget.ListView;
-
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
@@ -30,9 +20,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 import java.util.ArrayList;
-
 import java.util.List;
 
 
@@ -56,17 +44,18 @@ public class LogisticsActivity extends AppCompatActivity {
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
-
-
-        //        FloatingActionButton addANote = findViewById(R.id.modify_notes);
-        //        addANote.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                addANote();
-        //            }
-        //        });
-
-
+        FloatingActionButton modifyPlansButton = findViewById(R.id.modify_plans);
+        // Set OnClickListener for the Modify Plans button
+        modifyPlansButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
+            startActivity(intent); // Start the ModifyTripPlansActivity
+        FloatingActionButton addANote = findViewById(R.id.modify_notes);
+        addANote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addANote();
+            }
+        });
         pieChart = findViewById(R.id.pieChart);
         Button updateButton = findViewById(R.id.btn_graph);
 
@@ -183,6 +172,11 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.setData(data);
         pieChart.invalidate(); // Refreshes the chart
     }
+
+    private void inviteContributor(ContributorEntry person) {
+
+    }
+
     private LiveData<ContributorEntry> getContributorLiveDataFromUI() {
         // Logic to get the LiveData from your UI (for example, from a form or input fields)
         // You might have a MutableLiveData that you update based on user actions

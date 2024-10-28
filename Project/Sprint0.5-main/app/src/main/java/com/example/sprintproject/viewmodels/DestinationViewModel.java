@@ -42,4 +42,28 @@ public class DestinationViewModel extends ViewModel {
         destinationDatabase.addLogEntry(userId, entry.getDestinationId(), entry);
     }
 
+    public boolean isDestinationAdded(String location) {
+        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
+        if (entries != null) {
+            for (DestinationEntry entry : entries) {
+                if (entry.getLocation().equals(location)) {
+                    return true; // Destination found
+                }
+            }
+        }
+        return false; // Destination not found
+    }
+    public boolean isTravelLogSaved(String location, String duration) {
+        // Assuming you have a method to get all destination entries
+        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
+        if (entries != null) {
+            for (DestinationEntry entry : entries) {
+                if (entry.getLocation().equals(location) && entry.getDuration().equals(duration)) {
+                    return true; // Travel log exists
+                }
+            }
+        }
+        return false; // Travel log does not exist
+    }
+
 }
