@@ -11,7 +11,7 @@ import com.example.sprintproject.model.UserDurationDatabase;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class UserDurationViewModel extends ViewModel {
@@ -23,8 +23,7 @@ public class UserDurationViewModel extends ViewModel {
         userDurationDatabase = UserDurationDatabase.getInstance();
     }
 
-    public void saveDurationData(String userId, String email,
-                                 DurationEntry entry, ArrayList<ContributorEntry> contributors) {
+    public void saveDurationData(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
         userDurationDatabase.addVacationEntry(userId, email, entry, contributors);
     }
 
@@ -45,15 +44,13 @@ public class UserDurationViewModel extends ViewModel {
             return Long.toString(days);
         } else if (startDate != null && durationInDays != null) {
             // Calculate endDate if startDate and duration are provided
-            long endMillis = startDate.getTime()
-                    + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
+            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedEndDate = new Date(endMillis);
             Log.d("Calculation", "Calculated End Date: " + calculatedEndDate);
             return calculatedEndDate.toString();
         } else if (endDate != null && durationInDays != null) {
             // Calculate startDate if endDate and duration are provided
-            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS
-                    .convert(durationInDays, TimeUnit.DAYS);
+            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedStartDate = new Date(startMillis);
             Log.d("Calculation", "Calculated Start Date: " + calculatedStartDate);
             return calculatedStartDate.toString();

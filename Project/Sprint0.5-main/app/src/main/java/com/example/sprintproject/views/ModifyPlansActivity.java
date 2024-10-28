@@ -9,9 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.UserDurationViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +25,7 @@ public class ModifyPlansActivity extends AppCompatActivity {
     private Button addDestinationButton;
     private Button modifyButton;
     private Button exitButton;
-    private Button open = findViewById(R.id.openStartDatePicker2);
-    private Button enddate = findViewById(R.id.openEndDatePicker2);
-    private TextView start = findViewById(R.id.startDateText2);
-    private TextView dateend = findViewById(R.id.endDateText2);
+
     private List<String> destinations;
     private ArrayAdapter<String> adapter;
 
@@ -85,21 +86,7 @@ public class ModifyPlansActivity extends AppCompatActivity {
 
         dialog.show();
     }
-    // Method to open the DatePickerDialog
-    private void openDatePicker(TextView dateTextView) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Create and show the DatePickerDialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Set the selected date in the TextView
-                    dateTextView.setText("Selected Date: "
-                            + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
-                }, year, month, day);
-        datePickerDialog.show();
     private void showModifyDestinationDialog(String destination) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_modify_destination, null);
