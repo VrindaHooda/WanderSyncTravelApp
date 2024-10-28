@@ -71,12 +71,12 @@ public class DestinationEntry {
 
     @Override
     public String toString() {
-        return "DestinationEntry{"
-                + "destinationId='" + destinationId + '\''
-                + ", location='" + location + '\''
-                + ", startDate=" + startDate
-                + ", endDate=" + endDate
-                + ", duration='" + duration + '\''
-                + '}';
+        return "DestinationEntry{" +
+                "destinationId='" + destinationId + '\'' +
+                ", location='" + location + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", duration='" + duration + '\'' +
+                '}';
     }
 }

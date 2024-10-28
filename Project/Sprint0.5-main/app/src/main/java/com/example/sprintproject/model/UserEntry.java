@@ -1,9 +1,10 @@
 package com.example.sprintproject.model;
 
-
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
-
+import java.util.Date;
+import java.util.List;
 
 public class UserEntry {
 
@@ -21,8 +22,7 @@ public class UserEntry {
         this.contributors = contributors;
     }
 
-    public UserEntry(String userId, String email, DurationEntry entry,
-                     ArrayList<ContributorEntry> contributors) {
+    public UserEntry(String userId, String email, DurationEntry entry, ArrayList<ContributorEntry> contributors) {
         this.userId = userId;
         this.email = email;
         this.entry = entry;
