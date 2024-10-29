@@ -179,7 +179,7 @@ public class DestinationActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putInt("PLANNED_DAYS_KEY", tripData.getTotalDays());
+        editor.putInt("TOTAl_DAYS_KEY", tripData.getTotalDays());
         Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + tripData.getTotalDays());
 
         editor.apply();
