@@ -114,6 +114,10 @@ public class DestinationActivity extends AppCompatActivity {
                     Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             });
+            Intent sendIntent= new Intent(DestinationActivity.this, LogisticsActivity.class);
+            sendIntent.putExtra("totalDays", totalDays);
+            sendIntent.putExtra("plannedDays", duration);
+            startActivity(sendIntent);
 
         } catch (Exception e) {
             Log.e("DestinationActivity", "Error in onCreate", e);
