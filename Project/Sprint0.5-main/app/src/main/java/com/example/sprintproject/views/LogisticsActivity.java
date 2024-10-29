@@ -136,6 +136,7 @@ public class LogisticsActivity extends AppCompatActivity {
     }
 
     private void updatePieChart() {
+        pieChart.clear();
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(totalDays, "Total Days: " + totalDays));
         entries.add(new PieEntry(duration, "Planned Days: " + duration));
@@ -164,7 +165,7 @@ public class LogisticsActivity extends AppCompatActivity {
             Log.d("LogisticsActivity", "Listening for updates at path: users/" + userId + "/entry");
 
             // Use addValueEventListener to continuously listen for updates in Firebase
-            databaseRef.addValueEventListener(new ValueEventListener() {
+            databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("LogisticsActivity", "DataSnapshot received: " + dataSnapshot.toString());
