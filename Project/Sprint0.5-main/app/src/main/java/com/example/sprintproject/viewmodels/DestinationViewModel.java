@@ -23,21 +23,22 @@ public class DestinationViewModel extends ViewModel {
         return location + "_" + startDate.getTime();
     }
 
-    public void prepopulateDatabase() {
-        destinationDatabase.prepopulateDestinationDatabase();
+    public void prepopulateDatabase(String userId) {
+        destinationDatabase.prepopulateDestinationDatabase(userId);
     }
 
     public LiveData<List<DestinationEntry>> getDestinationEntries() {
         return destinationEntriesLiveData;
     }
 
-    public void readEntries() {
-        destinationDatabase.getAllDestinationEntries(entries -> {
+    public void readEntries(String userId) {
+        destinationDatabase.getAllDestinationEntries(userId, entries -> {
             destinationEntriesLiveData.setValue(entries);
         });
     }
-    public void addDestination(DestinationEntry entry) {
-        destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
+    public void addDestination(String userId, DestinationEntry entry) {
+        destinationDatabase.addLogEntry( userId,entry.getDestinationId(), entry);
+
     }
 
 }

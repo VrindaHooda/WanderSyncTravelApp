@@ -39,36 +39,35 @@ public class DestinationDatabase {
 
 
     //writing to the database
-    public void addLogEntry(String destinationId, DestinationEntry entry) {
+    public void addLogEntry(String userId, String destinationId, DestinationEntry entry) {
         //set up a child to the destination ID and set the value as an entry
-        databaseReference.child(destinationId).setValue(entry)
+        databaseReference.child(userId).child(destinationId).setValue(entry)
                 .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
                 .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
     }
 
-    public void prepopulateDestinationDatabase() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void prepopulateDestinationDatabase(String userId) {
+        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             //takes a data snapshot, as soon as a data changes, it catches it
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChildren()) { // Check if the database is empty
-                    // Create dates using Calendar
+                if (!dataSnapshot.hasChildren()) { // Check if user's destination data is empty
                     Calendar calendar = Calendar.getInstance();
+
                     calendar.set(2024, Calendar.FEBRUARY, 15);
                     Date startDate1 = calendar.getTime();
                     calendar.set(2024, Calendar.FEBRUARY, 20);
                     Date endDate1 = calendar.getTime();
-
                     DestinationEntry entry1 = new DestinationEntry("1", "Paris", startDate1, endDate1);
 
                     calendar.set(2024, Calendar.APRIL, 10);
                     Date startDate2 = calendar.getTime();
                     calendar.set(2024, Calendar.APRIL, 20);
                     Date endDate2 = calendar.getTime();
-
                     DestinationEntry entry2 = new DestinationEntry("2", "Tokyo", startDate2, endDate2);
-                    addLogEntry("1", entry1);
-                    addLogEntry("2", entry2);
+
+                    addLogEntry(userId, "1", entry1);
+                    addLogEntry(userId, "2", entry2);
                 }
             }
 
@@ -80,8 +79,8 @@ public class DestinationDatabase {
     }
 
     //reads the data
-    public void getAllDestinationEntries(final DataStatus dataStatus) {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+    public void getAllDestinationEntries(String userId, final DataStatus dataStatus) {
+        databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<DestinationEntry> entries = new ArrayList<>();
