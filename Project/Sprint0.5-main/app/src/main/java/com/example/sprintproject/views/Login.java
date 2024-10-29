@@ -26,6 +26,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
         initializeViews();
         setupListeners();
     }
@@ -47,10 +48,12 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onSuccess(FirebaseUser user) {
                         Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Login.this, DestinationActivity.class);
-                        intent.putExtra("username", username);
-                        intent.putExtra("password", password);
-                        startActivity(intent);
+                        String userId = authViewModel.getUser().getUid();
+                        String username = authViewModel.getUser().getEmail();
+                        Intent intent1 = new Intent(Login.this, DestinationActivity.class);
+                        intent1.putExtra("userId", userId);
+                        intent1.putExtra("username", username);
+                        startActivity(intent1);
                         finish();
                     }
 
@@ -76,7 +79,12 @@ public class Login extends AppCompatActivity {
         super.onResume();
         if (authViewModel.isAuthenticated()) {
             Toast.makeText(Login.this, "Already logged in!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(Login.this, LogisticsActivity.class));
+            String userId = authViewModel.getUser().getUid();
+            String username = authViewModel.getUser().getEmail();
+            Intent intent = new Intent(Login.this, DestinationActivity.class);
+            intent.putExtra("userId", userId);
+            intent.putExtra("username", username);
+            startActivity(intent);
             finish();
         }
     }
@@ -84,6 +92,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        authViewModel.signOut(); // Consider whether to call signOut here
+        // Remove signOut unless you want users to be logged out when this activity is destroyed
     }
 }
