@@ -2,6 +2,7 @@ package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.UserDurationViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
 import com.example.sprintproject.viewmodels.DestinationViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,7 +54,8 @@ public class DestinationActivity extends AppCompatActivity {
     private String password;
     private String finalEmail;
     private TextView plannedDaysTextView;
-
+    private int duration;
+    private int totalDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,8 @@ public class DestinationActivity extends AppCompatActivity {
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
             authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+            // In DestinationActivity, when navigating to LogisticsActivity
+
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
             totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
@@ -84,8 +89,8 @@ public class DestinationActivity extends AppCompatActivity {
             plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
 
             // Fetch and display planned days from Firebase
-            fetchPlannedDaysFromFirebase();
 
+            fetchDurationForCurrentUser();
             if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
@@ -106,7 +111,8 @@ public class DestinationActivity extends AppCompatActivity {
     //makes a destination list
     private void updateDestinationList(List<DestinationEntry> entries) {
         StringBuilder listBuilder = new StringBuilder();
-        long totalDays = 0;
+        this.totalDays = 0; // Instead of declaring a new local variable
+
         for (DestinationEntry entry : entries) {
             long duration = (entry.getEndDate().getTime() - entry.getStartDate().getTime()) / (1000 * 60 * 60 * 24);
             listBuilder.append(entry.getLocation()).append(": ").append(duration).append(" days\n");
@@ -114,6 +120,8 @@ public class DestinationActivity extends AppCompatActivity {
         }
         destinationListTextView.setText(listBuilder.toString());
         updateTotalDays(totalDays);
+        saveTripData();
+
     }
 
     // Define the callback interface
@@ -126,6 +134,61 @@ public class DestinationActivity extends AppCompatActivity {
         TextView totalDaysTextView = findViewById(R.id.totalDaysTextView);
         totalDaysTextView.setText("Total Days: " + totalDays + " days");
     }
+
+    private void fetchDurationForCurrentUser() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference durationRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(userId).child("entry").child("duration");
+
+            durationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        duration = dataSnapshot.getValue(Integer.class);
+                        plannedDaysTextView.setText("Planned Days: " + duration + " days");
+                        saveDurationData();
+                    } else {
+                        plannedDaysTextView.setText("Planned Days: N/A");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("DestinationActivity", "Failed to fetch duration", databaseError.toException());
+                    Toast.makeText(DestinationActivity.this, "Failed to retrieve duration", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void saveTripData() {
+        // Assume totalDays has been calculated in updateDestinationList
+        TripData tripData = new TripData(totalDays);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt("PLANNED_DAYS_KEY", tripData.getTotalDays());
+        Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + tripData.getTotalDays());
+
+        editor.apply();
+    }
+
+    private void saveDurationData() {
+        DurationData durationData = new DurationData (duration);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt("PLANNED_DAYS_KEY", durationData.getDuration());
+        Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + durationData.getDuration());
+
+        editor.apply();
+    }
+
+
 
 
     private void openLogTravelDialog(String aUserId) {
