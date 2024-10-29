@@ -52,7 +52,15 @@ public class DestinationDatabase {
         databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChildren()) {
+                boolean hasNestedChildren = false;
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.hasChildren()) {
+                        hasNestedChildren = true;
+                        break; // Exit loop as soon as one nested child is found
+                    }
+                }
+                if (hasNestedChildren) {
                     Calendar calendar = Calendar.getInstance();
 
                     // Example of adding entries
