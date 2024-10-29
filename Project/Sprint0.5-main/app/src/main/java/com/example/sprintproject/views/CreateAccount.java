@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
 import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.example.sprintproject.viewmodels.ValidateViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class CreateAccount extends AppCompatActivity {
 
     private final ValidateViewModel validateViewModel = new ValidateViewModel();
     private final AuthViewModel authViewModel = new AuthViewModel();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -65,5 +67,10 @@ public class CreateAccount extends AppCompatActivity {
             startActivity(new Intent(CreateAccount.this, Login.class));
             finish();
         });
+    }
+
+    public boolean isAccountCreated(String email) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        return currentUser != null && currentUser.getEmail().equals(email);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.sprintproject.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -63,5 +65,23 @@ public class DurationEntry {
         long days = TimeUnit.MILLISECONDS.toDays(durationInMillis);
         int durationInDays = Math.toIntExact(days);
         return durationInDays;
+    }
+
+    public DurationEntry(String vacationId, String startDateStr, String endDateStr) {
+        this.vacationId = vacationId;
+        this.startDate = parseDate(startDateStr);
+        this.endDate = parseDate(endDateStr);
+        this.duration = calculateDuration(this.startDate, this.endDate);
+    }
+
+    // Add a parseDate method to handle the conversion of String to Date
+    private Date parseDate(String dateStr) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

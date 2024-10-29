@@ -2,22 +2,29 @@ package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.TravelLogEntry;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class LogTravelForm extends AppCompatActivity {
 
     private TextView startDateText;
     private TextView endDateText;
+    private EditText locationInput;
+    private List<TravelLogEntry> travelLogs; // List to store travel logs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,10 @@ public class LogTravelForm extends AppCompatActivity {
         Button openEndDatePicker = findViewById(R.id.openEndDatePicker);
         startDateText = findViewById(R.id.startDateText);
         endDateText = findViewById(R.id.endDateText);
+        locationInput = findViewById(R.id.locationInput);
+
+        // Initialize the travelLogs list
+        travelLogs = new ArrayList<>();
 
         // Set up click listeners to open date pickers
         openStartDatePicker.setOnClickListener(v -> openDatePicker(startDateText));
@@ -37,6 +48,17 @@ public class LogTravelForm extends AppCompatActivity {
         // Optional: Add a save button to handle travel log saving logic
         Button saveLogButton = findViewById(R.id.submitTravelLogButton);
         saveLogButton.setOnClickListener(v -> saveTravelLog());
+    }
+
+    // Method to set location input for testing
+    public void setLocationInput(String location) {
+        locationInput.setText(location);
+    }
+
+    // Method to validate form inputs
+    public boolean isFormValid() {
+        String location = locationInput.getText().toString();
+        return !TextUtils.isEmpty(location) && !location.trim().isEmpty();
     }
 
     // Method to open the DatePickerDialog
@@ -61,6 +83,7 @@ public class LogTravelForm extends AppCompatActivity {
     private void saveTravelLog() {
         String startDate = startDateText.getText().toString();
         String endDate = endDateText.getText().toString();
+        String location = locationInput.getText().toString();
 
         // Validate that both start date and end date are selected
         if (startDate.isEmpty() || endDate.isEmpty()) {
@@ -75,6 +98,7 @@ public class LogTravelForm extends AppCompatActivity {
         }
 
         // Implement the logic to save the travel log using your ViewModel or Repository here
+        travelLogs.add(new TravelLogEntry(location, startDate, endDate));
         Toast.makeText(this, "Travel log saved successfully!", Toast.LENGTH_SHORT).show();
     }
 }
