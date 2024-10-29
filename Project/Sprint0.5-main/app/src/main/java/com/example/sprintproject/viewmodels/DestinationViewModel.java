@@ -36,7 +36,6 @@ public class DestinationViewModel extends ViewModel {
             destinationEntriesLiveData.setValue(entries);
         });
     }
-
     public void addDestination(DestinationEntry entry) {
         destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
     }

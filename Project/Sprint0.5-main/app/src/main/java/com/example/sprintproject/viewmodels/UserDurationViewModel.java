@@ -19,7 +19,6 @@ public class UserDurationViewModel extends ViewModel {
     public UserDurationViewModel() {
         userDurationDatabase = UserDurationDatabase.getInstance();
     }
-
     public void saveDurationData(String userId, String email, DurationEntry entry) {
         userDurationDatabase.addVacationEntry(userId, email, entry);
     }

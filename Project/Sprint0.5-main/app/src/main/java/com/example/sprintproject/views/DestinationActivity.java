@@ -90,7 +90,6 @@ public class DestinationActivity extends AppCompatActivity {
             destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
             destinationViewModel.prepopulateDatabase();
             destinationViewModel.readEntries();
-
             logTravelButton.setOnClickListener(v -> openLogTravelDialog());
             calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog(username, password));
 
@@ -152,7 +151,6 @@ public class DestinationActivity extends AppCompatActivity {
                     startDate.getTime(),
                     endDate.getTime()
             );
-
             destinationViewModel.addDestination(newEntry);
             Toast.makeText(this, "Travel log added", Toast.LENGTH_SHORT).show();
             dialog.dismiss();

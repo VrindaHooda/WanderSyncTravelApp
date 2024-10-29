@@ -1,5 +1,6 @@
 package com.example.sprintproject.model;
 
+
 import java.util.Date;
 
 public class UserEntry {
@@ -15,7 +16,6 @@ public class UserEntry {
         this.email = email;
         this.entry = entry;
     }
-
     public UserEntry(String userId, String email, DurationEntry entry) {
         this.userId = userId;
         this.email = email;

@@ -2,6 +2,7 @@ package com.example.sprintproject.model;
 
 import android.util.Log;
 
+import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,7 +67,6 @@ public class DestinationDatabase {
                     Date endDate2 = calendar.getTime();
 
                     DestinationEntry entry2 = new DestinationEntry("2", "Tokyo", startDate2, endDate2);
-
                     addLogEntry("1", entry1);
                     addLogEntry("2", entry2);
                 }
