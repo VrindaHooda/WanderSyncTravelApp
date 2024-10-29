@@ -26,8 +26,16 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        EditText username = findViewById(R.id.usernameEditText);
+        String email = username.getText().toString();
+        EditText password = findViewById(R.id.passwordEditText);
+        String passwordVal = password.getText().toString();
+        Intent intent = getIntent();
+        intent.putExtra("username", email );
+        intent.putExtra("password", passwordVal);
         initializeViews();
         setupListeners();
+        startActivity(intent);
     }
 
     private void initializeViews() {

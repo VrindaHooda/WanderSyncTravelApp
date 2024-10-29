@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.text.ParseException;
@@ -46,7 +47,8 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar endDate;
     private TextView totalDaysTextView;
     private String finalUserId;
-
+    private String username;
+    private String password;
     private String finalEmail;
     private TextView plannedDaysTextView;
 
@@ -67,8 +69,8 @@ public class DestinationActivity extends AppCompatActivity {
         // Getting the intent
         Intent intent = getIntent();
 
-        String username = intent.getStringExtra("username");
-        String password = intent.getStringExtra("password");
+        username = intent.getStringExtra("username");
+        password = intent.getStringExtra("password");
 
         try {
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
@@ -89,31 +91,9 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
+            finalUserId = retrieveValues(username, password).get(0);
+            finalEmail = retrieveValues(username, password).get(1);
             destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
-            authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
-                @Override
-                public void onSuccess(FirebaseUser user) {
-                    // Call getUserId after successful sign-in
-                    getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
-                        @Override
-                        public void onResult(String userId) {
-                            if (userId != null) {
-                                finalEmail = username;
-                                finalUserId = userId;
-                                Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
-                            } else {
-                                // Handle the case when userId is null
-                                Log.d("UserId", "Failed to retrieve UserId.");
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(String error) {
-                    Log.e("Auth", "Sign-in failed: " + error);
-                }
-            });
             destinationViewModel.prepopulateDatabase(finalUserId);
             destinationViewModel.readEntries(finalUserId);
 
@@ -136,6 +116,38 @@ public class DestinationActivity extends AppCompatActivity {
         }
         destinationListTextView.setText(listBuilder.toString());
         updateTotalDays(totalDays);
+    }
+
+    private ArrayList<String> retrieveValues(String username, String password) {
+
+        ArrayList<String> values = new ArrayList<>();
+        authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
+            @Override
+            public void onSuccess(FirebaseUser user) {
+                // Call getUserId after successful sign-in
+                getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
+                    @Override
+                    public void onResult(String userId) {
+                        if (userId != null) {
+                            finalEmail = username;
+                            finalUserId = userId;
+                            Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
+                        } else {
+                            // Handle the case when userId is null
+                            Log.d("UserId", "Failed to retrieve UserId.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.e("Auth", "Sign-in failed: " + error);
+            }
+        });
+        values.add(finalUserId);
+        values.add(finalEmail);
+        return values;
     }
 
     private void updateTotalDays(long totalDays) {
