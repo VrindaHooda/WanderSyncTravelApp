@@ -84,17 +84,26 @@ public class LogisticsActivity extends AppCompatActivity {
         });
 
 
-        Button updateButton = findViewById(R.id.btn_graph);
+
 
         // Initial display of the chart
         updatePieChart();
 
         // Set up button click to refresh the chart with updated values
+        Button updateButton = findViewById(R.id.btn_graph);
+
         updateButton.setOnClickListener(v -> {
-            // Manually update the chart with the latest values
-            listenForFirebaseUpdates();
-            Toast.makeText(LogisticsActivity.this, "Graph updated!", Toast.LENGTH_SHORT).show();
+            // Toggle visibility of pie chart
+            if (pieChart.getVisibility() == View.GONE) {
+                updatePieChart(); // Update chart data before making it visible
+                pieChart.setVisibility(View.VISIBLE);
+                updateButton.setText("Hide Graph");
+            } else {
+                pieChart.setVisibility(View.GONE);
+                updateButton.setText("Show Graph");
+            }
         });
+
         FloatingActionButton inviteButton = findViewById(R.id.invite);
         inviteButton.setOnClickListener(v -> {
             Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
@@ -159,11 +168,11 @@ public class LogisticsActivity extends AppCompatActivity {
 
 
         data.setDrawValues(true);
-        pieChart.setUsePercentValues(true); // Optional: Display values as percentages
+         // Optional: Display values as percentages
         pieChart.setDrawHoleEnabled(false);
 
         pieChart.setData(data);
-        pieChart.setUsePercentValues(false);
+        pieChart.setUsePercentValues(true);
         pieChart.invalidate(); // Refreshes the chart
     }
 
@@ -217,6 +226,7 @@ public class LogisticsActivity extends AppCompatActivity {
 }
     protected void onResume() {
         super.onResume();
+        updatePieChart();
         // Re-read entries on activity resume
         Intent intent = getIntent();
         finalEmail = intent.getStringExtra("username");
