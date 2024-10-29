@@ -1,13 +1,11 @@
 package com.example.sprintproject.model;
 
 import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 
 public class UserDurationDatabase {
     private static UserDurationDatabase userDurationDatabaseinstance;
@@ -27,7 +25,6 @@ public class UserDurationDatabase {
         }
         return userDurationDatabaseinstance;
     }
-
     public void addVacationEntry(String userId, String email, DurationEntry entry) {
         UserEntry userData = new UserEntry(email, entry);
         userDurationDatabaseReference.child(userId).setValue(userData)

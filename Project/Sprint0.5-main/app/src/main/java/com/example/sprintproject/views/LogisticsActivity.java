@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -45,7 +44,6 @@ public class LogisticsActivity extends AppCompatActivity {
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
-
 
         FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
         modifyPlansButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +80,6 @@ public class LogisticsActivity extends AppCompatActivity {
         });
 
     }
-
     private void showModifyPlansDialog() {
         // Create an EditText field for user input
         final EditText input = new EditText(this);
@@ -129,9 +126,5 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.setData(data);
         pieChart.invalidate(); // Refreshes the chart
     }
-
-
-
-
 
 }
