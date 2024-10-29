@@ -75,6 +75,9 @@ public class DestinationActivity extends AppCompatActivity {
             Intent intent = getIntent();
             finalEmail = intent.getStringExtra("username");
             finalUserId = intent.getStringExtra("userId");
+            Intent intent1 = new Intent(DestinationActivity.this, LogisticsActivity.class);
+            intent1.putExtra("userId", finalUserId);
+            intent1.putExtra("username", finalEmail);
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
@@ -454,5 +457,11 @@ public class DestinationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         destinationViewModel.readEntries(finalUserId); // Re-read entries on activity resume
+        Intent intent = getIntent();
+        finalEmail = intent.getStringExtra("username");
+        finalUserId = intent.getStringExtra("userId");
+        Intent sendintent = new Intent(DestinationActivity.this, LogisticsActivity.class);
+        sendintent.putExtra("userId", finalUserId);
+        sendintent.putExtra("username", finalEmail);
     }
 }
