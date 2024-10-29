@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Sprint0.5-main.SprintProject.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Sprint0.5-main.SprintProject.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SprintProject.iml" filepath="$PROJECT_DIR$/.idea/modules/SprintProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SprintProject.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SprintProject.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SprintProject.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SprintProject.app.androidTest.iml" />
