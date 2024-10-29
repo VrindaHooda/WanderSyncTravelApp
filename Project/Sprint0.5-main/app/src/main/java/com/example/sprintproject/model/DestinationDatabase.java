@@ -2,7 +2,6 @@ package com.example.sprintproject.model;
 
 import android.util.Log;
 
-import com.example.sprintproject.viewmodels.AuthViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,12 +18,16 @@ public class DestinationDatabase {
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
 
+    private static final String DESTINATIONS_KEY = "destinations";
+    private static final String PLANNED_VACATION_DAYS_KEY = "plannedVacationDays";
+
     public interface DataStatus {
         void DataIsLoaded(List<DestinationEntry> entries);
+        void DataLoadFailed(DatabaseError databaseError);
     }
 
     private DestinationDatabase() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("destinations");
+        databaseReference = FirebaseDatabase.getInstance().getReference(DESTINATIONS_KEY);
     }
 
     public static synchronized DestinationDatabase getInstance() {
@@ -33,14 +36,13 @@ public class DestinationDatabase {
         }
         return instance;
     }
+
     public void getPlannedVacationDays(final ValueEventListener listener) {
-        databaseReference.child("plannedVacationDays").addListenerForSingleValueEvent(listener);
+        databaseReference.child(PLANNED_VACATION_DAYS_KEY).addListenerForSingleValueEvent(listener);
     }
 
-
-    //writing to the database
+    // Writing to the database
     public void addLogEntry(String userId, String destinationId, DestinationEntry entry) {
-        //set up a child to the destination ID and set the value as an entry
         databaseReference.child(userId).child(destinationId).setValue(entry)
                 .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
                 .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
@@ -49,25 +51,13 @@ public class DestinationDatabase {
     public void prepopulateDestinationDatabase(String userId) {
         databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            //takes a data snapshot, as soon as a data changes, it catches it
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChildren()) { // Check if user's destination data is empty
+                if (!dataSnapshot.hasChildren()) {
                     Calendar calendar = Calendar.getInstance();
 
-                    calendar.set(2024, Calendar.FEBRUARY, 15);
-                    Date startDate1 = calendar.getTime();
-                    calendar.set(2024, Calendar.FEBRUARY, 20);
-                    Date endDate1 = calendar.getTime();
-                    DestinationEntry entry1 = new DestinationEntry("1", "Paris", startDate1, endDate1);
-
-                    calendar.set(2024, Calendar.APRIL, 10);
-                    Date startDate2 = calendar.getTime();
-                    calendar.set(2024, Calendar.APRIL, 20);
-                    Date endDate2 = calendar.getTime();
-                    DestinationEntry entry2 = new DestinationEntry("2", "Tokyo", startDate2, endDate2);
-
-                    addLogEntry(userId, "1", entry1);
-                    addLogEntry(userId, "2", entry2);
+                    // Example of adding entries
+                    addEntry(userId, "1", "Paris", calendar, 2024, Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
+                    addEntry(userId, "2", "Tokyo", calendar, 2024, Calendar.APRIL, 10, Calendar.APRIL, 20);
                 }
             }
 
@@ -78,7 +68,16 @@ public class DestinationDatabase {
         });
     }
 
-    //reads the data
+    private void addEntry(String userId, String destinationId, String location, Calendar calendar, int year, int monthStart, int dayStart, int monthEnd, int dayEnd) {
+        calendar.set(year, monthStart, dayStart);
+        Date startDate = calendar.getTime();
+        calendar.set(year, monthEnd, dayEnd);
+        Date endDate = calendar.getTime();
+        DestinationEntry entry = new DestinationEntry(destinationId, location, startDate, endDate);
+        addLogEntry(userId, destinationId, entry);
+    }
+
+    // Reads the data
     public void getAllDestinationEntries(String userId, final DataStatus dataStatus) {
         databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -89,11 +88,13 @@ public class DestinationDatabase {
                     entries.add(entry);
                 }
                 dataStatus.DataIsLoaded(entries);
+                Log.d("DestinationDatabase", "Data retrieved successfully: " + entries.size() + " entries found.");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
+                dataStatus.DataLoadFailed(databaseError);  // Notify the observer about the error
             }
         });
     }

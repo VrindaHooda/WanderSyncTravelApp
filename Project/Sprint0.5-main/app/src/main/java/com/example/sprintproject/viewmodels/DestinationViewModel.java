@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
+import com.google.firebase.database.DatabaseError;  // Make sure to import DatabaseError
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DestinationViewModel extends ViewModel {
 
@@ -32,13 +34,22 @@ public class DestinationViewModel extends ViewModel {
     }
 
     public void readEntries(String userId) {
-        destinationDatabase.getAllDestinationEntries(userId, entries -> {
-            destinationEntriesLiveData.setValue(entries);
+        destinationDatabase.getAllDestinationEntries(userId, new DestinationDatabase.DataStatus() {
+            @Override
+            public void DataIsLoaded(List<DestinationEntry> entries) {
+                destinationEntriesLiveData.setValue(entries);
+            }
+
+            @Override
+            public void DataLoadFailed(DatabaseError databaseError) {
+                Log.w("DestinationViewModel", "Failed to load entries: " + databaseError.getMessage());
+                // Optionally, set an empty list or handle the error state
+                destinationEntriesLiveData.setValue(new ArrayList<>()); // Handle as needed
+            }
         });
     }
+
     public void addDestination(String userId, DestinationEntry entry) {
-        destinationDatabase.addLogEntry( userId,entry.getDestinationId(), entry);
-
+        destinationDatabase.addLogEntry(userId, entry.getDestinationId(), entry);
     }
-
 }
