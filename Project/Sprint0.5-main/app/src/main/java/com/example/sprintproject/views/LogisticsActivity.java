@@ -1,9 +1,10 @@
 package com.example.sprintproject.views;
-
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import android.content.Intent;
 
 import android.content.DialogInterface;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,8 +33,8 @@ import java.util.List;
 public class LogisticsActivity extends AppCompatActivity {
 
     private PieChart pieChart;
-    private long totalDays = 15; // Example initial value
-    private long secondDays = 8; // Example initial value for testing
+    private int totalDays; // Example initial value
+    private int duration; // Example initial value for testing
 
 
     @Override
@@ -44,6 +47,13 @@ public class LogisticsActivity extends AppCompatActivity {
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
+        pieChart = findViewById(R.id.pieChart);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        totalDays = sharedPreferences.getInt("PLANNED_DAYS_KEY", 0);  // Should match the key in DestinationActivity
+        duration = sharedPreferences.getInt("ALLOTTED_DAYS_KEY", 0);  // Should match the key in DestinationActivity
+
+        Log.d("LogisticsActivity", "Retrieved totalDays: " + totalDays + ", duration: " + duration);
+
 
         FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
         modifyPlansButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +64,7 @@ public class LogisticsActivity extends AppCompatActivity {
         });
 
 
-        pieChart = findViewById(R.id.pieChart);
+
         Button updateButton = findViewById(R.id.btn_graph);
 
         // Initial display of the chart
@@ -114,16 +124,20 @@ public class LogisticsActivity extends AppCompatActivity {
 
     private void updatePieChart() {
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(totalDays, "Total Days"));
-        entries.add(new PieEntry(secondDays, "Second Days"));
+        entries.add(new PieEntry(totalDays, "Total Days: " + totalDays));
+        entries.add(new PieEntry(duration, "Planned Days: " + duration));
 
-        PieDataSet dataSet = new PieDataSet(entries, "Days");
+        PieDataSet dataSet = new PieDataSet(entries, "Trip Days Overview");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-
         PieData data = new PieData(dataSet);
+
+
         data.setDrawValues(true);
+        pieChart.setUsePercentValues(true); // Optional: Display values as percentages
+        pieChart.setDrawHoleEnabled(false);
 
         pieChart.setData(data);
+        pieChart.setUsePercentValues(false);
         pieChart.invalidate(); // Refreshes the chart
     }
 
