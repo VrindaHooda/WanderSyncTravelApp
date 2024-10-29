@@ -95,6 +95,14 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
+            logTravelButton.setOnClickListener(v -> {
+                if (finalEmail != null) {
+                    openLogTravelDialog(finalUserId);
+                } else {
+                    Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             calculateVacationTime.setOnClickListener(v -> {
                 if (finalEmail != null) {
                     openCalculateVacationDialog(finalUserId, finalEmail);
