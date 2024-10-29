@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
+import com.google.firebase.database.DatabaseError;  // Make sure to import DatabaseError
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DestinationViewModel extends ViewModel {
 
@@ -23,48 +25,31 @@ public class DestinationViewModel extends ViewModel {
         return location + "_" + startDate.getTime();
     }
 
-    public void prepopulateDatabase() {
-        destinationDatabase.prepopulateDestinationDatabase();
+    public void prepopulateDatabase(String userId) {
+        destinationDatabase.prepopulateDestinationDatabase(userId);
     }
 
     public LiveData<List<DestinationEntry>> getDestinationEntries() {
         return destinationEntriesLiveData;
     }
 
-    public void readEntries() {
-        destinationDatabase.getAllDestinationEntries(entries -> {
-            destinationEntriesLiveData.setValue(entries);
+    public void readEntries(String userId) {
+        destinationDatabase.getAllDestinationEntries(userId, new DestinationDatabase.DataStatus() {
+            @Override
+            public void DataIsLoaded(List<DestinationEntry> entries) {
+                destinationEntriesLiveData.setValue(entries);
+            }
+
+            @Override
+            public void DataLoadFailed(DatabaseError databaseError) {
+                Log.w("DestinationViewModel", "Failed to load entries: " + databaseError.getMessage());
+                // Optionally, set an empty list or handle the error state
+                destinationEntriesLiveData.setValue(new ArrayList<>()); // Handle as needed
+            }
         });
     }
-    public void addDestination(DestinationEntry entry) {
-        destinationDatabase.addLogEntry(entry.getDestinationId(), entry);
+
+    public void addDestination(String userId, DestinationEntry entry) {
+        destinationDatabase.addLogEntry(userId, entry.getDestinationId(), entry);
     }
-
-    public boolean isDestinationAdded(String location) {
-        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
-        if (entries != null) {
-            for (DestinationEntry entry : entries) {
-                if (entry.getLocation().equals(location)) {
-                    return true; // Destination found
-                }
-            }
-        }
-        return false; // Destination not found
-    }
-
-    public boolean isTravelLogSaved(String location, Date startDate, Date endDate) {
-        List<DestinationEntry> entries = destinationEntriesLiveData.getValue();
-        if (entries != null) {
-            for (DestinationEntry entry : entries) {
-                if (entry.getLocation().equals(location) &&
-                        entry.getStartDate().equals(startDate) &&
-                        entry.getEndDate().equals(endDate)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
 }
