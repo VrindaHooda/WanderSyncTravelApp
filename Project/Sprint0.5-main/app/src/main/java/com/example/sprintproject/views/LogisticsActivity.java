@@ -176,9 +176,14 @@ public class LogisticsActivity extends AppCompatActivity {
                         duration = dataSnapshot.child("duration").getValue(Integer.class);
 
                         Log.d("LogisticsActivity", "Updated totalDays: " + totalDays + ", duration: " + duration);
-
+                        if (totalDays != 0 && duration != 0) {
+                            updatePieChart();
+                        } else {
+                            Log.w("LogisticsActivity", "TotalDays or Duration is zero");
+                            Toast.makeText(LogisticsActivity.this, "Data not found or is zero", Toast.LENGTH_SHORT).show();
+                        }
                         // Refresh the chart with new values
-                        updatePieChart();
+
                     } else {
                         Log.d("LogisticsActivity", "totalDays or duration field does not exist in the database.");
                         Toast.makeText(LogisticsActivity.this, "Data not found in Firebase", Toast.LENGTH_SHORT).show();
