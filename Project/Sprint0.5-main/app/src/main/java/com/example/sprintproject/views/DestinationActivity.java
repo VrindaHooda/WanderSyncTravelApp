@@ -47,6 +47,7 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar endDate;
     private TextView totalDaysTextView;
     private String finalUserId;
+
     private String username;
     private String password;
     private String finalEmail;
@@ -66,13 +67,11 @@ public class DestinationActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // Getting the intent
-        Intent intent = getIntent();
-
-        username = intent.getStringExtra("username");
-        password = intent.getStringExtra("password");
 
         try {
+            Intent intent = getIntent();
+            finalEmail = intent.getStringExtra("username");
+            finalUserId = intent.getStringExtra("userId");
             destinationViewModel = new ViewModelProvider(this).get(DestinationViewModel.class);
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
@@ -91,14 +90,13 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
-            finalUserId = retrieveValues(username, password).get(0);
-            finalEmail = retrieveValues(username, password).get(1);
-            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
-            destinationViewModel.prepopulateDatabase(finalUserId);
-            destinationViewModel.readEntries(finalUserId);
-
-            logTravelButton.setOnClickListener(v -> openLogTravelDialog());
-            calculateVacationTime.setOnClickListener(v -> openCalculateVacationDialog(finalUserId, finalEmail));
+            calculateVacationTime.setOnClickListener(v -> {
+                if (finalEmail != null) {
+                    openCalculateVacationDialog(finalUserId, finalEmail);
+                } else {
+                    Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         } catch (Exception e) {
             Log.e("DestinationActivity", "Error in onCreate", e);
@@ -118,36 +116,10 @@ public class DestinationActivity extends AppCompatActivity {
         updateTotalDays(totalDays);
     }
 
-    private ArrayList<String> retrieveValues(String username, String password) {
-
-        ArrayList<String> values = new ArrayList<>();
-        authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
-            @Override
-            public void onSuccess(FirebaseUser user) {
-                // Call getUserId after successful sign-in
-                getUserId(authViewModel.getUserIdLiveData(), new StringCallback() {
-                    @Override
-                    public void onResult(String userId) {
-                        if (userId != null) {
-                            finalEmail = username;
-                            finalUserId = userId;
-                            Log.d("UserId", "Successfully retrieved UserId: " + finalUserId);
-                        } else {
-                            // Handle the case when userId is null
-                            Log.d("UserId", "Failed to retrieve UserId.");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Log.e("Auth", "Sign-in failed: " + error);
-            }
-        });
-        values.add(finalUserId);
-        values.add(finalEmail);
-        return values;
+    // Define the callback interface
+    public interface RetrieveValuesCallback {
+        void onResult(ArrayList<String> values);
+        void onError(String error);
     }
 
     private void updateTotalDays(long totalDays) {
@@ -156,7 +128,7 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
 
-    private void openLogTravelDialog() {
+    private void openLogTravelDialog(String aUserId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.log_travel_form, null);
         builder.setView(dialogView);
@@ -177,22 +149,37 @@ public class DestinationActivity extends AppCompatActivity {
         openEndDatePicker.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText));
 
         submitTravelLogButton.setOnClickListener(v -> {
-            String location = locationInput.getText().toString();
+            String location = locationInput.getText().toString().trim();
+
+            if (location.isEmpty()) {
+                Toast.makeText(this, "Location cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
                 Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Generate a new destination ID
+            String destinationId = destinationViewModel.generateDestinationId(location, startDate.getTime());
+
+            // Create a new DestinationEntry
             DestinationEntry newEntry = new DestinationEntry(
-                    destinationViewModel.generateDestinationId(location, startDate.getTime()),
+                    destinationId,
                     location,
                     startDate.getTime(),
                     endDate.getTime()
             );
 
-            destinationViewModel.addDestination(finalUserId, newEntry);
+            // Add the new destination entry to the ViewModel
+            destinationViewModel.addDestination(aUserId, newEntry);
+
+            // Provide user feedback and clear fields
             Toast.makeText(this, "Travel log added", Toast.LENGTH_SHORT).show();
+            locationInput.setText("");  // Clear location input
+            startDateText.setText("");   // Clear start date text
+            endDateText.setText("");     // Clear end date text
             dialog.dismiss();
         });
 
@@ -293,7 +280,7 @@ public class DestinationActivity extends AppCompatActivity {
         Date date = new Date();
         try {
             // Parse the string to a Date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = input.getText().toString();
             date = dateFormat.parse(dateString);
             // Log or use the Date object as needed
