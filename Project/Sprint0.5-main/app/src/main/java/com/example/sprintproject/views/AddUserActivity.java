@@ -10,9 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class AddUserActivity extends AppCompatActivity {
 
     private EditText emailEditText;
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +59,13 @@ public class AddUserActivity extends AppCompatActivity {
         Toast.makeText(this, "Valid email entered!", Toast.LENGTH_SHORT).show();
 
         // Add further logic here to save the user email if necessary
+    }
+
+    public void isUserAdded(String email, MainActivity.OnUserAddedCallback callback) {
+        firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(task -> {
+            boolean userExists = task.isSuccessful() && task.getResult().getSignInMethods() != null &&
+                    !task.getResult().getSignInMethods().isEmpty();
+            callback.onCallback(userExists);
+        });
     }
 }

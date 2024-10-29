@@ -33,6 +33,10 @@ public class AuthViewModel extends ViewModel {
         return myFirebaseAuth.getCurrentUser() != null;
     }
 
+    public FirebaseUser getUser() {
+        return myFirebaseAuth.getCurrentUser();
+    }
+
     // Register a new user
     public void createUser(String email, String password, AuthCallback callback) {
         myFirebaseAuth.createUserWithEmailAndPassword(email, password)
