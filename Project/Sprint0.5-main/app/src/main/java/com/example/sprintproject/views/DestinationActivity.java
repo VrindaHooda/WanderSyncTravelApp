@@ -98,8 +98,8 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
-            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
             destinationViewModel.prepopulateDatabase(finalUserId);
+            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
             destinationViewModel.readEntries(finalUserId);
 
             logTravelButton.setOnClickListener(v -> {
@@ -287,6 +287,7 @@ public class DestinationActivity extends AppCompatActivity {
         submitVacationTimeButton.setOnClickListener(v -> {
             int vacationDuration = calculateValues(vacationInput, startDateText2, endDateText2);
             saveData(username, password, vacationDuration, startDateText2, endDateText2);
+            fetchDurationForCurrentUser();
         });
 
         dialog.show();
