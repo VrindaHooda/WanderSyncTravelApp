@@ -95,6 +95,10 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
+            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
+            destinationViewModel.prepopulateDatabase(finalUserId);
+            destinationViewModel.readEntries(finalUserId);
+
             logTravelButton.setOnClickListener(v -> {
                 if (finalEmail != null) {
                     openLogTravelDialog(finalUserId);
