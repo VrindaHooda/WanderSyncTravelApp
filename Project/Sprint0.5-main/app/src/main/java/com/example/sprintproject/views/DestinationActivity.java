@@ -183,7 +183,7 @@ public class DestinationActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putInt("TOTAl_DAYS_KEY", tripData.getTotalDays());
+        editor.putInt("TOTAL_DAYS_KEY", tripData.getTotalDays());
         Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + tripData.getTotalDays());
 
         editor.apply();
@@ -290,50 +290,63 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
     private int calculateValues(EditText vacationInput, TextView startDateText, TextView endDateText) {
-        int durationDays = 0;
+        int durationDays = 0; // Resulting duration in days
         String resultMessage = null;
         String durationStr = vacationInput.getText().toString().trim();
         Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
 
-        if (startDateText.getText().toString().contains("Selected Date") && endDateText.getText().toString().contains("Selected Date") && durationInDays == null) {
-            // Both start and end dates provided, calculate duration
-            String calculatedDuration = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
-            vacationInput.setText(calculatedDuration);
-            resultMessage = "Calculated Duration: " + calculatedDuration + " days";
-            durationDays = Integer.parseInt(calculatedDuration);
+        try {
+            if (startDateText.getText().toString().contains("Selected Date")
+                    && endDateText.getText().toString().contains("Selected Date")
+                    && durationInDays == null) {
 
-        } else if (startDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
-            // Start date and duration provided, calculate end date
-            String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
-            endDateText.setText("Calculated End Date: " + calculatedEndDate);
-            resultMessage = "Calculated End Date: " + calculatedEndDate;
-            durationDays = Math.toIntExact(durationDays);
+                // Both start and end dates provided, calculate duration
+                String calculatedDuration = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+                vacationInput.setText(calculatedDuration);
+                resultMessage = "Calculated Duration: " + calculatedDuration + " days";
+                durationDays = Integer.parseInt(calculatedDuration);
+                Log.d("calculateValues", "Calculated duration from start and end dates: " + durationDays);
 
-        } else if (endDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
-            // End date and duration provided, calculate start date
-            String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
-            startDateText.setText("Calculated Start Date: " + calculatedStartDate);
-            resultMessage = "Calculated Start Date: " + calculatedStartDate;
-            durationDays = Math.toIntExact(durationDays);
-        } else {
-            Toast.makeText(this, "Please ensure that at least two of the fields (Start Date, End Date, Duration) are filled.", Toast.LENGTH_SHORT).show();
+            } else if (startDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+                // Start date and duration provided, calculate end date
+                String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
+                endDateText.setText("Calculated End Date: " + calculatedEndDate);
+                resultMessage = "Calculated End Date: " + calculatedEndDate;
+                durationDays = durationInDays.intValue();
+                Log.d("calculateValues", "End date calculated from start date and duration: " + calculatedEndDate);
+
+            } else if (endDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
+                // End date and duration provided, calculate start date
+                String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
+                startDateText.setText("Calculated Start Date: " + calculatedStartDate);
+                resultMessage = "Calculated Start Date: " + calculatedStartDate;
+                durationDays = durationInDays.intValue();
+                Log.d("calculateValues", "Start date calculated from end date and duration: " + calculatedStartDate);
+
+            } else {
+                Toast.makeText(this, "Please ensure that at least two of the fields (Start Date, End Date, Duration) are filled.", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Log.e("calculateValues", "Error calculating values", e);
+            Toast.makeText(this, "Error calculating values. Please check inputs.", Toast.LENGTH_SHORT).show();
         }
 
-        AlertDialog.Builder resultDialogBuilder = new AlertDialog.Builder(this);
-        resultDialogBuilder.setTitle("Calculation Result");
-        resultDialogBuilder.setMessage(resultMessage);
-        resultDialogBuilder.setPositiveButton("OK", (resultDialogButton, which) -> resultDialogButton.dismiss());
-        resultDialogBuilder.create().show();
+        // Display result in an AlertDialog
+        if (resultMessage != null) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Calculation Result")
+                    .setMessage(resultMessage)
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show();
+        }
 
         // Clear input fields after showing the result dialog
-        startDateText.setText(""); // Clear start date text view
-        endDateText.setText("");   // Clear end date text view
-        vacationInput.setText("");  // Clear duration input field
         clearVacationForm(startDateText, endDateText, vacationInput);
-
         return durationDays;
-
     }
+
 
     private void getUserId(LiveData<String> liveData, StringCallback callback) {
         liveData.observe(this, newUserId -> {
@@ -436,5 +449,10 @@ public class DestinationActivity extends AppCompatActivity {
                 Log.w("DestinationActivity", "Failed to fetch planned days", databaseError.toException());
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        destinationViewModel.readEntries(finalUserId); // Re-read entries on activity resume
     }
 }
