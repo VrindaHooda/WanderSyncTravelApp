@@ -43,6 +43,8 @@ public class LogisticsActivity extends AppCompatActivity {
     private PieChart pieChart;
     private int totalDays; // Example initial value
     private int duration; // Example initial value for testing
+    private String finalEmail;
+    private String finalUserId;
 
 
     @Override
@@ -55,6 +57,16 @@ public class LogisticsActivity extends AppCompatActivity {
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
+
+
+        Intent intent = getIntent();
+        finalEmail = intent.getStringExtra("username");
+        finalUserId = intent.getStringExtra("userId");
+
+        Intent sendintent = new Intent(LogisticsActivity.this, DestinationActivity.class);
+        sendintent.putExtra("userId", finalUserId);
+        sendintent.putExtra("username", finalEmail);
+
         pieChart = findViewById(R.id.pieChart);
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         totalDays = sharedPreferences.getInt("TOTAL_DAYS_KEY", 0);  // Should match the key in DestinationActivity
@@ -85,19 +97,19 @@ public class LogisticsActivity extends AppCompatActivity {
         });
         FloatingActionButton inviteButton = findViewById(R.id.invite);
         inviteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, AddUserActivity.class);
-            startActivity(intent);
+            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
+            startActivity(intent1);
         });
         FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
         viewInvitesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-            startActivity(intent);
+            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+            startActivity(intent2);
         });
 
         FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
         viewNotesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-            startActivity(intent);
+            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+            startActivity(intent3);
         });
 
 
@@ -203,6 +215,16 @@ public class LogisticsActivity extends AppCompatActivity {
 
 
 }
+    protected void onResume() {
+        super.onResume();
+        // Re-read entries on activity resume
+        Intent intent = getIntent();
+        finalEmail = intent.getStringExtra("username");
+        finalUserId = intent.getStringExtra("userId");
+        Intent sendintent = new Intent(LogisticsActivity.this, DestinationActivity.class);
+        sendintent.putExtra("userId", finalUserId);
+        sendintent.putExtra("username", finalEmail);
+    }
 
 
 
