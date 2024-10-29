@@ -56,6 +56,8 @@ public class DestinationActivity extends AppCompatActivity {
     private TextView plannedDaysTextView;
     private int duration;
     private int totalDays;
+    Button logTravelButton;
+    Button calculateVacationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,20 +89,20 @@ public class DestinationActivity extends AppCompatActivity {
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
             totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
-            Button logTravelButton = findViewById(R.id.btn_log_travel);
-            Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
+            logTravelButton = findViewById(R.id.btn_log_travel);
+            calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
             plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
 
             // Fetch and display planned days from Firebase
 
             fetchDurationForCurrentUser();
+            destinationViewModel.prepopulateDatabase(finalUserId);
+            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
+            destinationViewModel.readEntries(finalUserId);
             if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
             if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
 
-            destinationViewModel.prepopulateDatabase(finalUserId);
-            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
-            destinationViewModel.readEntries(finalUserId);
 
             logTravelButton.setOnClickListener(v -> {
                 if (finalEmail != null) {
@@ -259,6 +261,7 @@ public class DestinationActivity extends AppCompatActivity {
             startDateText.setText("");   // Clear start date text
             endDateText.setText("");     // Clear end date text
             dialog.dismiss();
+            destinationViewModel.prepopulateDatabase(aUserId);
         });
 
         dialog.show();
@@ -457,12 +460,37 @@ public class DestinationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        destinationViewModel.readEntries(finalUserId); // Re-read entries on activity resume
+         // Re-read entries on activity resume
         Intent intent = getIntent();
         finalEmail = intent.getStringExtra("username");
         finalUserId = intent.getStringExtra("userId");
+        destinationViewModel.readEntries(finalUserId);
         Intent sendintent = new Intent(DestinationActivity.this, LogisticsActivity.class);
         sendintent.putExtra("userId", finalUserId);
         sendintent.putExtra("username", finalEmail);
+        fetchDurationForCurrentUser();
+        destinationViewModel.prepopulateDatabase(finalUserId);
+        if (destinationListTextView == null)
+            Log.e("DestinationActivity", "destinationListTextView is null");
+        if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
+
+        destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
+        destinationViewModel.readEntries(finalUserId);
+
+        logTravelButton.setOnClickListener(v -> {
+            if (finalEmail != null) {
+                openLogTravelDialog(finalUserId);
+            } else {
+                Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        calculateVacationTime.setOnClickListener(v -> {
+            if (finalEmail != null) {
+                openCalculateVacationDialog(finalUserId, finalEmail);
+            } else {
+                Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
