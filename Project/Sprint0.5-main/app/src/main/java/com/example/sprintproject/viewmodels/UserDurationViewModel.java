@@ -55,15 +55,13 @@ public class UserDurationViewModel extends ViewModel {
             return Long.toString(days);
         } else if (startDate != null && durationInDays != null) {
             // Calculate endDate if startDate and duration are provided
-            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays,
-                    TimeUnit.DAYS);
+            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedEndDate = new Date(endMillis);
             Log.d("Calculation", "Calculated End Date: " + calculatedEndDate);
             return calculatedEndDate.toString();
         } else if (endDate != null && durationInDays != null) {
             // Calculate startDate if endDate and duration are provided
-            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays,
-                    TimeUnit.DAYS);
+            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedStartDate = new Date(startMillis);
             Log.d("Calculation", "Calculated Start Date: " + calculatedStartDate);
             return calculatedStartDate.toString();

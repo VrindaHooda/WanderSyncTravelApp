@@ -21,6 +21,11 @@ public class DestinationDatabase {
     private static final String DESTINATIONS_KEY = "destinations";
     private static final String PLANNED_VACATION_DAYS_KEY = "plannedVacationDays";
 
+    public interface DataStatus {
+        void DataIsLoaded(List<DestinationEntry> entries);
+        void DataLoadFailed(DatabaseError databaseError);
+    }
+
     private DestinationDatabase() {
         databaseReference = FirebaseDatabase.getInstance().getReference(DESTINATIONS_KEY);
     }
@@ -38,12 +43,9 @@ public class DestinationDatabase {
 
     // Writing to the database
     public void addLogEntry(String userId, String destinationId, DestinationEntry entry) {
-        databaseReference.child(userId).child(destinationId)
-                .setValue(entry)
-                .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase",
-                        "Entry added successfully!"))
-                .addOnFailureListener(e -> Log.w("DestinationDatabase",
-                        "Failed to add entry", e));
+        databaseReference.child(userId).child(destinationId).setValue(entry)
+                .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
+                .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
     }
 
     public void prepopulateDestinationDatabase(String userId) {
@@ -62,23 +64,19 @@ public class DestinationDatabase {
                     Calendar calendar = Calendar.getInstance();
 
                     // Example of adding entries
-                    addEntry(userId, "1", "Paris", calendar, 2024,
-                            Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
-                    addEntry(userId, "2", "Tokyo", calendar, 2024,
-                            Calendar.APRIL, 10, Calendar.APRIL, 20);
+                    addEntry(userId, "1", "Paris", calendar, 2024, Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
+                    addEntry(userId, "2", "Tokyo", calendar, 2024, Calendar.APRIL, 10, Calendar.APRIL, 20);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("DestinationDatabase", "Failed to read data",
-                        databaseError.toException());
+                Log.w("DestinationDatabase", "Failed to read data", databaseError.toException());
             }
         });
     }
 
-    private void addEntry(String userId, String destinationId, String location, Calendar calendar,
-                          int year, int monthStart, int dayStart, int monthEnd, int dayEnd) {
+    private void addEntry(String userId, String destinationId, String location, Calendar calendar, int year, int monthStart, int dayStart, int monthEnd, int dayEnd) {
         calendar.set(year, monthStart, dayStart);
         Date startDate = calendar.getTime();
         calendar.set(year, monthEnd, dayEnd);
@@ -97,22 +95,15 @@ public class DestinationDatabase {
                     DestinationEntry entry = snapshot.getValue(DestinationEntry.class);
                     entries.add(entry);
                 }
-                dataStatus.dataIsLoaded(entries);
-                Log.d("DestinationDatabase", "Data retrieved successfully: "
-                        + entries.size() + " entries found.");
+                dataStatus.DataIsLoaded(entries);
+                Log.d("DestinationDatabase", "Data retrieved successfully: " + entries.size() + " entries found.");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("DestinationDatabase", "Failed to get data", databaseError.
-                        toException());
-                dataStatus.dataLoadFailed(databaseError);  // Notify the observer about the error
+                Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
+                dataStatus.DataLoadFailed(databaseError);  // Notify the observer about the error
             }
         });
-    }
-
-    public interface DataStatus {
-        void dataIsLoaded(List<DestinationEntry> entries);
-        void dataLoadFailed(DatabaseError databaseError);
     }
 }

@@ -26,12 +26,8 @@ public class TravelLogEntry {
         return duration;
     }
 
-    public String getStartDate() {
-        return startDate;
-    }
-    public String getEndDate() {
-        return endDate;
-    }
+    public String getStartDate() { return startDate; }
+    public String getEndDate() { return endDate; }
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;

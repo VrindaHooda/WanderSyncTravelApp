@@ -2,6 +2,7 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -58,13 +59,11 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String error) {
-                        Toast.makeText(Login.this, "Login failed: " + error,
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(Login.this, "Invalid input. Can't be empty or contain "
-                        + "whitespace", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
             }
         });
 

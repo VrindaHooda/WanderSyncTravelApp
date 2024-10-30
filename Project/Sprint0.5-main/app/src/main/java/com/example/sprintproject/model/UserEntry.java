@@ -1,6 +1,8 @@
 package com.example.sprintproject.model;
 
 
+import java.util.Date;
+
 public class UserEntry {
 
     private String userId;

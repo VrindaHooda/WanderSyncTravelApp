@@ -1,4 +1,5 @@
 package com.example.sprintproject.views;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import android.content.Intent;
 
 import android.content.DialogInterface;
@@ -27,8 +28,10 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -65,15 +68,11 @@ public class LogisticsActivity extends AppCompatActivity {
         sendintent.putExtra("username", finalEmail);
 
         pieChart = findViewById(R.id.pieChart);
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs",
-                MODE_PRIVATE);
-        totalDays = sharedPreferences.getInt("TOTAL_DAYS_KEY", 0);  // Should match the key
-        // in DestinationActivity
-        duration = sharedPreferences.getInt("PLANNED_DAYS_KEY", 0);  // Should match the key
-        // in DestinationActivity
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        totalDays = sharedPreferences.getInt("TOTAL_DAYS_KEY", 0);  // Should match the key in DestinationActivity
+        duration = sharedPreferences.getInt("PLANNED_DAYS_KEY", 0);  // Should match the key in DestinationActivity
 
-        Log.d("LogisticsActivity", "Retrieved totalDays: " + totalDays + ", duration: "
-                + duration);
+        Log.d("LogisticsActivity", "Retrieved totalDays: " + totalDays + ", duration: " + duration);
 
 
         FloatingActionButton modifyPlansButton = findViewById(R.id.modify_notes);
@@ -107,21 +106,18 @@ public class LogisticsActivity extends AppCompatActivity {
 
         FloatingActionButton inviteButton = findViewById(R.id.invite);
         inviteButton.setOnClickListener(v -> {
-            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity
-                    .class);
+            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
             startActivity(intent1);
         });
         FloatingActionButton viewInvitesButton = findViewById(R.id.view_invites);
         viewInvitesButton.setOnClickListener(v -> {
-            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity
-                    .class);
+            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
             startActivity(intent2);
         });
 
         FloatingActionButton viewNotesButton = findViewById(R.id.view_notes);
         viewNotesButton.setOnClickListener(v -> {
-            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity
-                    .class);
+            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
             startActivity(intent3);
         });
 
@@ -143,11 +139,9 @@ public class LogisticsActivity extends AppCompatActivity {
                         String newPlan = input.getText().toString().trim();
                         if (!newPlan.isEmpty()) {
                             // Save or process the entered plan here
-                            Toast.makeText(LogisticsActivity.this, "Note saved: "
-                                    + newPlan, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this, "Note saved: " + newPlan, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(LogisticsActivity.this, "Please add a note.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this, "Please add a note.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -174,7 +168,7 @@ public class LogisticsActivity extends AppCompatActivity {
 
 
         data.setDrawValues(true);
-        // Optional: Display values as percentages
+         // Optional: Display values as percentages
         pieChart.setDrawHoleEnabled(false);
 
         pieChart.setData(data);
@@ -186,51 +180,41 @@ public class LogisticsActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(
-                    "users")
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users")
                     .child(userId).child("entry");
 
-            Log.d("LogisticsActivity", "Listening for updates at path: users/" + userId
-                    + "/entry");
+            Log.d("LogisticsActivity", "Listening for updates at path: users/" + userId + "/entry");
 
             // Use addValueEventListener to continuously listen for updates in Firebase
             databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d("LogisticsActivity", "DataSnapshot received: " + dataSnapshot
-                            .toString());
+                    Log.d("LogisticsActivity", "DataSnapshot received: " + dataSnapshot.toString());
 
                     // Check for totalDays and duration existence
-                    if (dataSnapshot.child("totalDays").exists() && dataSnapshot.child(
-                            "duration").exists()) {
+                    if (dataSnapshot.child("totalDays").exists() && dataSnapshot.child("duration").exists()) {
                         totalDays = dataSnapshot.child("totalDays").getValue(Integer.class);
                         duration = dataSnapshot.child("duration").getValue(Integer.class);
 
-                        Log.d("LogisticsActivity", "Updated totalDays: " + totalDays
-                                + ", duration: " + duration);
+                        Log.d("LogisticsActivity", "Updated totalDays: " + totalDays + ", duration: " + duration);
                         if (totalDays != 0 && duration != 0) {
                             updatePieChart();
                         } else {
                             Log.w("LogisticsActivity", "TotalDays or Duration is zero");
-                            Toast.makeText(LogisticsActivity.this, "Data not found "
-                                    + "or is zero", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this, "Data not found or is zero", Toast.LENGTH_SHORT).show();
                         }
                         // Refresh the chart with new values
 
                     } else {
-                        Log.d("LogisticsActivity", "totalDays or duration field does "
-                                + "not exist in the database.");
-                        Toast.makeText(LogisticsActivity.this, "Data not found in"
-                                + " Firebase", Toast.LENGTH_SHORT).show();
+                        Log.d("LogisticsActivity", "totalDays or duration field does not exist in the database.");
+                        Toast.makeText(LogisticsActivity.this, "Data not found in Firebase", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.w("LogisticsActivity", "Database error: " + databaseError
-                            .getMessage(), databaseError.toException());
-                    Toast.makeText(LogisticsActivity.this, "Failed to retrieve data "
-                            + "from Firebase", Toast.LENGTH_SHORT).show();
+                    Log.w("LogisticsActivity", "Database error: " + databaseError.getMessage(), databaseError.toException());
+                    Toast.makeText(LogisticsActivity.this, "Failed to retrieve data from Firebase", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -239,7 +223,7 @@ public class LogisticsActivity extends AppCompatActivity {
         }
 
 
-    }
+}
     protected void onResume() {
         super.onResume();
         updatePieChart();
@@ -247,8 +231,7 @@ public class LogisticsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         finalEmail = intent.getStringExtra("username");
         finalUserId = intent.getStringExtra("userId");
-        Intent sendintent = new Intent(LogisticsActivity.this, DestinationActivity
-                .class);
+        Intent sendintent = new Intent(LogisticsActivity.this, DestinationActivity.class);
         sendintent.putExtra("userId", finalUserId);
         sendintent.putExtra("username", finalEmail);
     }
