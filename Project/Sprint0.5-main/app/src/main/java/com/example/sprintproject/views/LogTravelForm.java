@@ -73,7 +73,8 @@ public class LogTravelForm extends AppCompatActivity {
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     Calendar selectedDate = Calendar.getInstance();
                     selectedDate.set(selectedYear, selectedMonth, selectedDay);
-                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate.getTime());
+                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd",
+                            Locale.getDefault()).format(selectedDate.getTime());
                     dateTextView.setText(formattedDate); // Set formatted date
                 }, year, month, day);
         datePickerDialog.show();
@@ -87,7 +88,8 @@ public class LogTravelForm extends AppCompatActivity {
 
         // Validate that both start date and end date are selected
         if (startDate.isEmpty() || endDate.isEmpty()) {
-            Toast.makeText(this, "Please select both start date and end date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select both start date and end date",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 

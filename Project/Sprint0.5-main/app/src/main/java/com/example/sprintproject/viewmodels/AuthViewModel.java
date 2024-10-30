@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthViewModel extends ViewModel {
-    private final FirebaseAuth myFirebaseAuth = AuthRepository.getAuthRepository(); // Use the singleton
+    private final FirebaseAuth myFirebaseAuth = AuthRepository.getAuthRepository();
     private static final String TAG = "UsernamePassword";
 
     private MutableLiveData<String> userIdLiveData = new MutableLiveData<>();
@@ -53,7 +53,8 @@ public class AuthViewModel extends ViewModel {
                         callback.onSuccess(user);
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Registration failed";
+                        String errorMsg = task.getException() != null ? task.getException()
+                                .getMessage() : "Registration failed";
                         callback.onFailure(errorMsg);
                     }
                 });
@@ -80,7 +81,8 @@ public class AuthViewModel extends ViewModel {
                         }
                     } else {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Sign in failed";
+                        String errorMsg = task.getException() != null ? task.getException()
+                                .getMessage() : "Sign in failed";
                         callback.onFailure(errorMsg);
                     }
                 });
