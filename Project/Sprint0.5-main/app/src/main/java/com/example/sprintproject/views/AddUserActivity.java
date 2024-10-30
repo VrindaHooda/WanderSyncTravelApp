@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class AddUserActivity extends AppCompatActivity {
 
@@ -21,7 +20,7 @@ public class AddUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_users_form); // Replace 'your_layout_name' with your actual XML layout file name
+        setContentView(R.layout.add_users_form);
 
         // Initialize the EditText and Button
         emailEditText = findViewById(R.id.emailenterable);
@@ -63,8 +62,8 @@ public class AddUserActivity extends AppCompatActivity {
 
     public void isUserAdded(String email, MainActivity.OnUserAddedCallback callback) {
         firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(task -> {
-            boolean userExists = task.isSuccessful() && task.getResult().getSignInMethods() != null &&
-                    !task.getResult().getSignInMethods().isEmpty();
+            boolean userExists = task.isSuccessful() && task.getResult().getSignInMethods() != null
+                    && !task.getResult().getSignInMethods().isEmpty();
             callback.onCallback(userExists);
         });
     }

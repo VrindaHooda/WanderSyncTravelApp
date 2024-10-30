@@ -6,7 +6,9 @@ public class AuthRepository {
     private static AuthRepository instance;
 
     // Private constructor to prevent instantiation
-    private AuthRepository() {}
+    private AuthRepository() {
+
+    }
 
     public static AuthRepository getInstance() {
         if (instance == null) {

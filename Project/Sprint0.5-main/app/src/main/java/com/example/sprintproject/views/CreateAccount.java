@@ -2,7 +2,6 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -48,18 +47,21 @@ public class CreateAccount extends AppCompatActivity {
                 authViewModel.createUser(username, password, new AuthViewModel.AuthCallback() {
                     @Override
                     public void onSuccess(FirebaseUser user) {
-                        Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccount.this,
+                                "Account created successfully!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateAccount.this, Login.class));
                         finish();
                     }
 
                     @Override
                     public void onFailure(String error) {
-                        Toast.makeText(CreateAccount.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccount.this, "Account creation failed: "
+                                + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccount.this, "Invalid input. Can't be empty "
+                        + "or contain whitespace", Toast.LENGTH_SHORT).show();
             }
         });
 
