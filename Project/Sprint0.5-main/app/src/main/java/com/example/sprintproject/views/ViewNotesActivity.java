@@ -25,8 +25,7 @@ public class ViewNotesActivity extends AppCompatActivity {
         notes.add("user@example.com - This is a sample note.");
         notes.add("user2@example.com - Another sample note.");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.
-                simple_list_item_1, notes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
         notesListView.setAdapter(adapter);
 
         exitButton.setOnClickListener(v -> finish());
