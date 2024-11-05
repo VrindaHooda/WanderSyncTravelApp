@@ -1,9 +1,7 @@
 package com.example.sprintproject.views;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sprintproject.R;
 
 public class DiningActivity extends AppCompatActivity {

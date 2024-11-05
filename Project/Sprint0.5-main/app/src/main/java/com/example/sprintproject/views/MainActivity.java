@@ -38,14 +38,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isAccountCreated(String email) {
-        // Check if the user is logged in
         FirebaseUser user = mAuth.getCurrentUser();
-
         if (user != null) {
-            // User is signed in, check if the email matches
             return user.getEmail().equals(email);
         } else {
-            // No user is signed in
             return false;
         }
     }
@@ -64,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle possible errors.
             }
         });
     }

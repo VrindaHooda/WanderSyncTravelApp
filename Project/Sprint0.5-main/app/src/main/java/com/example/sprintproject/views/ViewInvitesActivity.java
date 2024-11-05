@@ -24,20 +24,18 @@ public class ViewInvitesActivity extends AppCompatActivity {
 
         inviteListView = findViewById(R.id.inviteListView);
 
-        // Dummy data for invites
         invites = new ArrayList<>();
         invites.add("Trip to Paris");
         invites.add("Trip to Tokyo");
         invites.add("Trip to New York");
 
-        // Set up the adapter with invite data
         inviteAdapter = new InviteAdapter(this, invites);
         inviteListView.setAdapter((ListAdapter) inviteAdapter);
         Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(v -> {
             Intent intent = new Intent(ViewInvitesActivity.this, LogisticsActivity.class);
             startActivity(intent);
-            finish(); // Optional: closes the current activity
+            finish();
         });
     }
 }
