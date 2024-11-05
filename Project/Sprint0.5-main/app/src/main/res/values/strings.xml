@@ -19,4 +19,22 @@
     <string name="transportation">Transportation</string>
     <string name="travel_community">Travel Community</string>
 
+    <string name="accommodations_header">Accommodations</string>
+    <string name="location_hint">Location</string>
+    <string name="checkin_date_hint">Check-In Date</string>
+    <string name="checkout_date_hint">Check-Out Date</string>
+    <string name="num_rooms_hint">Number of Rooms</string>
+    <string name="room_type_hint">Room Type</string>
+    <string name="add_accommodation">Add Accommodation</string>
+    <string name="room_type_prompt">Room Type</string>
+
+
+    <string-array name="room_types">
+        <item>King Suite</item>
+        <item>Triple Room</item>
+        <item>Double Room</item>
+        <item>Single Room</item>
+    </string-array>
+
+
 </resources>
