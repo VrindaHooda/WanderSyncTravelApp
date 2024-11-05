@@ -24,18 +24,19 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.accommodation_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.accommodation_item, parent,
+                false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Accommodation accommodation = accommodations.get(position);
-        holder.location.setText(accommodation.getLocation());
-        holder.checkInDate.setText(accommodation.getCheckInDate());
-        holder.checkOutDate.setText(accommodation.getCheckOutDate());
-        holder.numRooms.setText(String.valueOf(accommodation.getNumRooms()));
-        holder.roomType.setText(accommodation.getRoomType());
+        holder.getLocation().setText(accommodation.getLocation());
+        holder.getCheckInDate().setText(accommodation.getCheckInDate());
+        holder.getCheckOutDate().setText(accommodation.getCheckOutDate());
+        holder.getNumRooms().setText(String.valueOf(accommodation.getNumRooms()));
+        holder.getRoomType().setText(accommodation.getRoomType());
     }
 
     @Override
@@ -43,8 +44,12 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         return accommodations.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView location, checkInDate, checkOutDate, numRooms, roomType;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView location;
+        private TextView checkInDate;
+        private TextView checkOutDate;
+        private TextView numRooms;
+        private TextView roomType;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -54,5 +59,26 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
             numRooms = itemView.findViewById(R.id.numRooms);
             roomType = itemView.findViewById(R.id.roomType);
         }
+
+        public TextView getLocation() {
+            return location;
+        }
+
+        public TextView getCheckInDate() {
+            return checkInDate;
+        }
+
+        public TextView getCheckOutDate() {
+            return checkOutDate;
+        }
+
+        public TextView getNumRooms() {
+            return numRooms;
+        }
+
+        public TextView getRoomType() {
+            return roomType;
+        }
     }
 }
+

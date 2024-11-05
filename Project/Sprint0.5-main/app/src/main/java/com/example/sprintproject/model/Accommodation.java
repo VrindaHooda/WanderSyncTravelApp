@@ -13,7 +13,8 @@ public class Accommodation {
     }
 
     // Constructor to initialize all fields
-    public Accommodation(String location, String checkInDate, String checkOutDate, int numRooms, String roomType) {
+    public Accommodation(String location, String checkInDate, String checkOutDate, int numRooms,
+                         String roomType) {
         this.location = location;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -22,7 +23,8 @@ public class Accommodation {
     }
 
 
-    public Accommodation(String id, String location, String checkInDate, String checkOutDate, String numRooms, String roomType) {
+    public Accommodation(String id, String location, String checkInDate, String checkOutDate,
+                         String numRooms, String roomType) {
         this.id = id;
         this.location = location;
         this.checkInDate = checkInDate;
@@ -31,11 +33,23 @@ public class Accommodation {
         this.roomType = roomType;
     }
 
-    public String getId() { return id; }
-    public String getLocation() { return location; }
-    public String getCheckInDate() { return checkInDate; }
-    public String getCheckOutDate() { return checkOutDate; }
-    public String getNumRooms() { return numRooms; }
-    public String getRoomType() { return roomType; }
+    public String getId() {
+        return id;
+    }
+    public String getLocation() {
+        return location;
+    }
+    public String getCheckInDate() {
+        return checkInDate;
+    }
+    public String getCheckOutDate() {
+        return checkOutDate;
+    }
+    public String getNumRooms() {
+        return numRooms;
+    }
+    public String getRoomType() {
+        return roomType;
+    }
 }
 

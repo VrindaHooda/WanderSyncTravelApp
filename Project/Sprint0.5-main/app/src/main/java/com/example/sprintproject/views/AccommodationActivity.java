@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -71,7 +70,8 @@ public class AccommodationActivity extends AppCompatActivity {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1,
+                                                                            month1, dayOfMonth) -> {
                 checkInDateInput.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1);
             }, year, month, day);
             datePickerDialog.show();
@@ -84,7 +84,8 @@ public class AccommodationActivity extends AppCompatActivity {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1,
+                                                                            month1, dayOfMonth) -> {
                 checkOutDateInput.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1);
             }, year, month, day);
             datePickerDialog.show();
@@ -98,11 +99,14 @@ public class AccommodationActivity extends AppCompatActivity {
             String numRooms = numRoomsInput.getText().toString();
             String roomType = roomTypeSpinner.getSelectedItem().toString();
 
-            if (location.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty() || numRooms.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            if (location.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty()
+                    || numRooms.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields",
+                        Toast.LENGTH_SHORT).show();
             } else {
                 // Create a new Accommodation entry and add it to Firebase
-                Accommodation accommodation = new Accommodation(location, checkInDate, checkOutDate, Integer.parseInt(numRooms), roomType);
+                Accommodation accommodation = new Accommodation(location, checkInDate, checkOutDate,
+                        Integer.parseInt(numRooms), roomType);
                 databaseReference.push().setValue(accommodation);
                 accommodations.add(accommodation);
                 adapter.notifyDataSetChanged();
