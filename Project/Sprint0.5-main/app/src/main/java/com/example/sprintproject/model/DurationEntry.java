@@ -74,7 +74,6 @@ public class DurationEntry {
         this.duration = calculateDuration(this.startDate, this.endDate);
     }
 
-    // Add a parseDate method to handle the conversion of String to Date
     private Date parseDate(String dateStr) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
