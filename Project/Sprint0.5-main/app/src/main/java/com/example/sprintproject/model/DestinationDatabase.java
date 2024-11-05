@@ -1,13 +1,11 @@
 package com.example.sprintproject.model;
 
 import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +15,6 @@ public class DestinationDatabase {
 
     private static DestinationDatabase instance;
     private DatabaseReference databaseReference;
-
     private static final String DESTINATIONS_KEY = "destinations";
     private static final String PLANNED_VACATION_DAYS_KEY = "plannedVacationDays";
 
@@ -41,7 +38,6 @@ public class DestinationDatabase {
         databaseReference.child(PLANNED_VACATION_DAYS_KEY).addListenerForSingleValueEvent(listener);
     }
 
-    // Writing to the database
     public void addLogEntry(String userId, String destinationId, DestinationEntry entry) {
         databaseReference.child(userId).child(destinationId).setValue(entry)
                 .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
@@ -57,18 +53,15 @@ public class DestinationDatabase {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if (child.hasChildren()) {
                         hasNestedChildren = true;
-                        break; // Exit loop as soon as one nested child is found
+                        break;
                     }
                 }
                 if (hasNestedChildren) {
                     Calendar calendar = Calendar.getInstance();
-
-                    // Example of adding entries
                     addEntry(userId, "1", "Paris", calendar, 2024, Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
                     addEntry(userId, "2", "Tokyo", calendar, 2024, Calendar.APRIL, 10, Calendar.APRIL, 20);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("DestinationDatabase", "Failed to read data", databaseError.toException());
@@ -85,7 +78,6 @@ public class DestinationDatabase {
         addLogEntry(userId, destinationId, entry);
     }
 
-    // Reads the data
     public void getAllDestinationEntries(String userId, final DataStatus dataStatus) {
         databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,13 +88,14 @@ public class DestinationDatabase {
                     entries.add(entry);
                 }
                 dataStatus.DataIsLoaded(entries);
-                Log.d("DestinationDatabase", "Data retrieved successfully: " + entries.size() + " entries found.");
+                Log.d("DestinationDatabase",
+                        "Data retrieved successfully: " + entries.size() + " entries found.");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
-                dataStatus.DataLoadFailed(databaseError);  // Notify the observer about the error
+                dataStatus.DataLoadFailed(databaseError);
             }
         });
     }

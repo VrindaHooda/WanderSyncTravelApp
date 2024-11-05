@@ -4,10 +4,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.sprintproject.model.DurationEntry;
 import com.example.sprintproject.model.UserDurationDatabase;
-
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -48,20 +46,19 @@ public class UserDurationViewModel extends ViewModel {
 
     public String calculateMissingValue(Date startDate, Date endDate, Long durationInDays) {
         if (startDate != null && endDate != null) {
-            // Calculate duration if both startDate and endDate are provided
             long diffInMillis = endDate.getTime() - startDate.getTime();
             long days = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
             Log.d("Calculation", "Calculated Duration: " + days + " days");
             return Long.toString(days);
         } else if (startDate != null && durationInDays != null) {
-            // Calculate endDate if startDate and duration are provided
-            long endMillis = startDate.getTime() + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
+            long endMillis = startDate.getTime()
+                    + TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedEndDate = new Date(endMillis);
             Log.d("Calculation", "Calculated End Date: " + calculatedEndDate);
             return calculatedEndDate.toString();
         } else if (endDate != null && durationInDays != null) {
-            // Calculate startDate if endDate and duration are provided
-            long startMillis = endDate.getTime() - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
+            long startMillis = endDate.getTime()
+                    - TimeUnit.MILLISECONDS.convert(durationInDays, TimeUnit.DAYS);
             Date calculatedStartDate = new Date(startMillis);
             Log.d("Calculation", "Calculated Start Date: " + calculatedStartDate);
             return calculatedStartDate.toString();

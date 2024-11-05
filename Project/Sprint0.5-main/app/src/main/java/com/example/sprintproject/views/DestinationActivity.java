@@ -49,20 +49,19 @@ public class DestinationActivity extends AppCompatActivity {
     private Calendar endDate;
     private TextView totalDaysTextView;
     private String finalUserId;
-
     private String username;
     private String password;
     private String finalEmail;
     private TextView plannedDaysTextView;
     private int duration;
     private int totalDays;
+    Button logTravelButton;
+    Button calculateVacationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_screen);
-
-        //adds fragment bar
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
@@ -82,31 +81,30 @@ public class DestinationActivity extends AppCompatActivity {
             userDurationViewModel = new ViewModelProvider(this).get(UserDurationViewModel.class);
             validateViewModel = new ViewModelProvider(this).get(ValidateViewModel.class);
             authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-            // In DestinationActivity, when navigating to LogisticsActivity
-
 
             destinationListTextView = findViewById(R.id.destinationListTextView);
-            totalDaysTextView = findViewById(R.id.totalDaysTextView); // Initialize the total days TextView
-            Button logTravelButton = findViewById(R.id.btn_log_travel);
-            Button calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
+            totalDaysTextView = findViewById(R.id.totalDaysTextView);
+            logTravelButton = findViewById(R.id.btn_log_travel);
+            calculateVacationTime = findViewById(R.id.btn_calculate_vacation);
             plannedDaysTextView = findViewById(R.id.plannedDaysTextView);
 
-            // Fetch and display planned days from Firebase
-
             fetchDurationForCurrentUser();
+            destinationViewModel.prepopulateDatabase(finalUserId);
+            destinationViewModel.getDestinationEntries().observe(this,
+                    entries -> updateDestinationList(entries));
+            destinationViewModel.readEntries(finalUserId);
             if (destinationListTextView == null)
                 Log.e("DestinationActivity", "destinationListTextView is null");
-            if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
+            if (logTravelButton == null) Log.e("DestinationActivity",
+                    "logTravelButton is null");
 
-            destinationViewModel.prepopulateDatabase(finalUserId);
-            destinationViewModel.getDestinationEntries().observe(this, entries -> updateDestinationList(entries));
-            destinationViewModel.readEntries(finalUserId);
 
             logTravelButton.setOnClickListener(v -> {
                 if (finalEmail != null) {
                     openLogTravelDialog(finalUserId);
                 } else {
-                    Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Email is not available. Please try again.",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -114,7 +112,8 @@ public class DestinationActivity extends AppCompatActivity {
                 if (finalEmail != null) {
                     openCalculateVacationDialog(finalUserId, finalEmail);
                 } else {
-                    Toast.makeText(this, "Email is not available. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Email is not available. Please try again.",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -139,7 +138,6 @@ public class DestinationActivity extends AppCompatActivity {
 
     }
 
-    // Define the callback interface
     public interface RetrieveValuesCallback {
         void onResult(ArrayList<String> values);
         void onError(String error);
@@ -154,7 +152,8 @@ public class DestinationActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            DatabaseReference durationRef = FirebaseDatabase.getInstance().getReference("users")
+            DatabaseReference durationRef = FirebaseDatabase.getInstance()
+                    .getReference("users")
                     .child(userId).child("entry").child("duration");
 
             durationRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -171,8 +170,10 @@ public class DestinationActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.w("DestinationActivity", "Failed to fetch duration", databaseError.toException());
-                    Toast.makeText(DestinationActivity.this, "Failed to retrieve duration", Toast.LENGTH_SHORT).show();
+                    Log.w("DestinationActivity", "Failed to fetch duration",
+                            databaseError.toException());
+                    Toast.makeText(DestinationActivity.this, "Failed to retrieve duration",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -180,14 +181,15 @@ public class DestinationActivity extends AppCompatActivity {
         }
     }
     private void saveTripData() {
-        // Assume totalDays has been calculated in updateDestinationList
         TripData tripData = new TripData(totalDays);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs",
+                MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt("TOTAL_DAYS_KEY", tripData.getTotalDays());
-        Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + tripData.getTotalDays());
+        Log.d("DestinationActivity",
+                "Saving to SharedPreferences: totalDays = " + tripData.getTotalDays());
 
         editor.apply();
     }
@@ -198,13 +200,11 @@ public class DestinationActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt("PLANNED_DAYS_KEY", durationData.getDuration());
-        Log.d("DestinationActivity", "Saving to SharedPreferences: totalDays = " + durationData.getDuration());
+        Log.d("DestinationActivity",
+                "Saving to SharedPreferences: totalDays = " + durationData.getDuration());
 
         editor.apply();
     }
-
-
-
 
     private void openLogTravelDialog(String aUserId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -230,35 +230,31 @@ public class DestinationActivity extends AppCompatActivity {
             String location = locationInput.getText().toString().trim();
 
             if (location.isEmpty()) {
-                Toast.makeText(this, "Location cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Location cannot be empty",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (!validateViewModel.validateDate(startDate.getTime(), endDate.getTime())) {
-                Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "End date must be after start date",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // Generate a new destination ID
-            String destinationId = destinationViewModel.generateDestinationId(location, startDate.getTime());
-
-            // Create a new DestinationEntry
+            String destinationId = destinationViewModel.generateDestinationId(location,
+                    startDate.getTime());
             DestinationEntry newEntry = new DestinationEntry(
                     destinationId,
                     location,
                     startDate.getTime(),
                     endDate.getTime()
             );
-
-            // Add the new destination entry to the ViewModel
             destinationViewModel.addDestination(aUserId, newEntry);
-
-            // Provide user feedback and clear fields
             Toast.makeText(this, "Travel log added", Toast.LENGTH_SHORT).show();
-            locationInput.setText("");  // Clear location input
-            startDateText.setText("");   // Clear start date text
-            endDateText.setText("");     // Clear end date text
+            locationInput.setText("");
+            startDateText.setText("");
+            endDateText.setText("");
             dialog.dismiss();
+            destinationViewModel.prepopulateDatabase(aUserId);
         });
 
         dialog.show();
@@ -281,7 +277,8 @@ public class DestinationActivity extends AppCompatActivity {
         startDate = Calendar.getInstance();
         endDate = Calendar.getInstance();
 
-        openStartDatePicker2.setOnClickListener(v -> openDatePickerDialog(startDate, startDateText2));
+        openStartDatePicker2.setOnClickListener(v -> openDatePickerDialog(startDate,
+                startDateText2));
         openEndDatePicker2.setOnClickListener(v -> openDatePickerDialog(endDate, endDateText2));
 
         submitVacationTimeButton.setOnClickListener(v -> {
@@ -294,7 +291,7 @@ public class DestinationActivity extends AppCompatActivity {
     }
 
     private int calculateValues(EditText vacationInput, TextView startDateText, TextView endDateText) {
-        int durationDays = 0; // Resulting duration in days
+        int durationDays = 0;
         String resultMessage = null;
         String durationStr = vacationInput.getText().toString().trim();
         Long durationInDays = durationStr.isEmpty() ? null : Long.parseLong(durationStr);
@@ -304,39 +301,50 @@ public class DestinationActivity extends AppCompatActivity {
                     && endDateText.getText().toString().contains("Selected Date")
                     && durationInDays == null) {
 
-                // Both start and end dates provided, calculate duration
-                String calculatedDuration = userDurationViewModel.calculateMissingValue(startDate.getTime(), endDate.getTime(), null);
+
+                String calculatedDuration = userDurationViewModel
+                        .calculateMissingValue(startDate.getTime(), endDate.getTime(),
+                                null);
                 vacationInput.setText(calculatedDuration);
                 resultMessage = "Calculated Duration: " + calculatedDuration + " days";
                 durationDays = Integer.parseInt(calculatedDuration);
-                Log.d("calculateValues", "Calculated duration from start and end dates: " + durationDays);
+                Log.d("calculateValues", "Calculated duration from start and end dates: "
+                        + durationDays);
 
-            } else if (startDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
-                // Start date and duration provided, calculate end date
-                String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, durationInDays);
+            } else if (startDateText.getText().toString().contains("Selected Date")
+                    && durationInDays != null) {
+                String calculatedEndDate = userDurationViewModel
+                        .calculateMissingValue(startDate.getTime(), null, durationInDays);
                 endDateText.setText("Calculated End Date: " + calculatedEndDate);
                 resultMessage = "Calculated End Date: " + calculatedEndDate;
                 durationDays = durationInDays.intValue();
-                Log.d("calculateValues", "End date calculated from start date and duration: " + calculatedEndDate);
+                Log.d("calculateValues",
+                        "End date calculated from start date and duration: " + calculatedEndDate);
 
             } else if (endDateText.getText().toString().contains("Selected Date") && durationInDays != null) {
-                // End date and duration provided, calculate start date
-                String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), durationInDays);
+                String calculatedStartDate = userDurationViewModel
+                        .calculateMissingValue(null,
+                                endDate.getTime(), durationInDays);
                 startDateText.setText("Calculated Start Date: " + calculatedStartDate);
                 resultMessage = "Calculated Start Date: " + calculatedStartDate;
                 durationDays = durationInDays.intValue();
-                Log.d("calculateValues", "Start date calculated from end date and duration: " + calculatedStartDate);
+                Log.d("calculateValues",
+                        "Start date calculated from end date and duration: "
+                                + calculatedStartDate);
 
             } else {
-                Toast.makeText(this, "Please ensure that at least two of the fields (Start Date, End Date, Duration) are filled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,
+                        "Please ensure that at least two of the fields" +
+                                " (Start Date, End Date, Duration) are filled.",
+                        Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
             Log.e("calculateValues", "Error calculating values", e);
-            Toast.makeText(this, "Error calculating values. Please check inputs.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error calculating values. Please check inputs.",
+                    Toast.LENGTH_SHORT).show();
         }
 
-        // Display result in an AlertDialog
         if (resultMessage != null) {
             new AlertDialog.Builder(this)
                     .setTitle("Calculation Result")
@@ -345,8 +353,6 @@ public class DestinationActivity extends AppCompatActivity {
                     .create()
                     .show();
         }
-
-        // Clear input fields after showing the result dialog
         clearVacationForm(startDateText, endDateText, vacationInput);
         return durationDays;
     }
@@ -371,44 +377,45 @@ public class DestinationActivity extends AppCompatActivity {
     private Date convertToDate(TextView input) {
         Date date = new Date();
         try {
-            // Parse the string to a Date
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = input.getText().toString();
             date = dateFormat.parse(dateString);
-            // Log or use the Date object as needed
             Log.d("DateConversion", "Parsed Date: " + date);
         } catch (ParseException e) {
-            // Handle the exception if parsing fails
             Log.e("DateConversion", "Failed to parse date: " + e.getMessage());
         }
         return date;
     }
 
-    private void saveData(String finalUserId, String finalEmail, int vacationDuration, TextView startDateText, TextView endDateText) {
-        // Assuming authViewModel is already initialized and user has signed in or registered
+    private void saveData(String finalUserId, String finalEmail, int vacationDuration,
+                          TextView startDateText, TextView endDateText) {
         String vacationId = userDurationViewModel.generateVacationId(vacationDuration, new Date());
         Date startDateVal = new Date();
         Date endDateVal = new Date();
-        if (startDateText.getText().toString().contains("Selected Date") && endDateText.getText().toString().contains("Selected Date")) {
-            // Both start and end dates provided, calculate duration
+        if (startDateText.getText().toString().contains("Selected Date")
+                && endDateText.getText().toString().contains("Selected Date")) {
             startDateVal = convertToDate(startDateText);
             endDateVal = convertToDate(endDateText);
-        } else if (startDateText.getText().toString().contains("Selected Date") && vacationDuration != 0) {
-            // Start date and duration provided, calculate end date
-            String calculatedEndDate = userDurationViewModel.calculateMissingValue(startDate.getTime(), null, (long)vacationDuration);
+        } else if (startDateText.getText().toString().contains("Selected Date")
+                && vacationDuration != 0) {
+            String calculatedEndDate = userDurationViewModel
+                    .calculateMissingValue(startDate.getTime(),
+                            null, (long)vacationDuration);
             endDateText.setText(calculatedEndDate);
             startDateVal = convertToDate(startDateText);
             endDateVal = convertToDate(endDateText);
-        } else if (endDateText.getText().toString().contains("Selected Date") && vacationDuration != 0) {
-            // End date and duration provided, calculate start date
-            String calculatedStartDate = userDurationViewModel.calculateMissingValue(null, endDate.getTime(), (long)vacationDuration);
+        } else if (endDateText.getText().toString()
+                .contains("Selected Date") && vacationDuration != 0) {
+            String calculatedStartDate = userDurationViewModel.calculateMissingValue(null,
+                    endDate.getTime(), (long)vacationDuration);
             startDateText.setText(calculatedStartDate);
             startDateVal = convertToDate(startDateText);
             endDateVal = convertToDate(endDateText);
         }
-        // Now save the data with finalUserId
-        userDurationViewModel.saveDurationData(finalUserId, finalEmail, new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
-        Toast.makeText(DestinationActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+        userDurationViewModel.saveDurationData(finalUserId, finalEmail,
+                new DurationEntry(vacationId, vacationDuration, startDateVal, endDateVal));
+        Toast.makeText(DestinationActivity.this, "Data saved successfully",
+                Toast.LENGTH_SHORT).show();
     }
 
 
@@ -428,14 +435,16 @@ public class DestinationActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     date.set(selectedYear, selectedMonth, selectedDay);
-                    dateTextView.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                    dateTextView.setText("Selected Date: " + selectedDay + "/"
+                            + (selectedMonth + 1) + "/" + selectedYear);
                 }, year, month, day);
         datePickerDialog.show();
     }
 
     private void fetchPlannedDaysFromFirebase() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                .child("No user signed in").child("entry").child("duration"); // Adjust this path as needed
+                .child("No user signed in").child("entry")
+                .child("duration");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -450,19 +459,47 @@ public class DestinationActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("DestinationActivity", "Failed to fetch planned days", databaseError.toException());
+                Log.w("DestinationActivity", "Failed to fetch planned days",
+                        databaseError.toException());
             }
         });
     }
     @Override
     protected void onResume() {
         super.onResume();
-        destinationViewModel.readEntries(finalUserId); // Re-read entries on activity resume
         Intent intent = getIntent();
         finalEmail = intent.getStringExtra("username");
         finalUserId = intent.getStringExtra("userId");
+        destinationViewModel.readEntries(finalUserId);
         Intent sendintent = new Intent(DestinationActivity.this, LogisticsActivity.class);
         sendintent.putExtra("userId", finalUserId);
         sendintent.putExtra("username", finalEmail);
+        fetchDurationForCurrentUser();
+        destinationViewModel.prepopulateDatabase(finalUserId);
+        if (destinationListTextView == null)
+            Log.e("DestinationActivity", "destinationListTextView is null");
+        if (logTravelButton == null) Log.e("DestinationActivity", "logTravelButton is null");
+
+        destinationViewModel.getDestinationEntries().observe(this,
+                entries -> updateDestinationList(entries));
+        destinationViewModel.readEntries(finalUserId);
+
+        logTravelButton.setOnClickListener(v -> {
+            if (finalEmail != null) {
+                openLogTravelDialog(finalUserId);
+            } else {
+                Toast.makeText(this, "Email is not available. Please try again.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        calculateVacationTime.setOnClickListener(v -> {
+            if (finalEmail != null) {
+                openCalculateVacationDialog(finalUserId, finalEmail);
+            } else {
+                Toast.makeText(this, "Email is not available. Please try again.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
