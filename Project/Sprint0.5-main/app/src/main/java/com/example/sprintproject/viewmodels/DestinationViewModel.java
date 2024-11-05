@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
-import com.google.firebase.database.DatabaseError;  // Make sure to import DatabaseError
-
+import com.google.firebase.database.DatabaseError;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,8 @@ import java.util.List;
 public class DestinationViewModel extends ViewModel {
 
     private DestinationDatabase destinationDatabase;
-    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<DestinationEntry>> destinationEntriesLiveData
+            = new MutableLiveData<>();
 
     public DestinationViewModel() {
         destinationDatabase = DestinationDatabase.getInstance();
@@ -42,9 +42,9 @@ public class DestinationViewModel extends ViewModel {
 
             @Override
             public void DataLoadFailed(DatabaseError databaseError) {
-                Log.w("DestinationViewModel", "Failed to load entries: " + databaseError.getMessage());
-                // Optionally, set an empty list or handle the error state
-                destinationEntriesLiveData.setValue(new ArrayList<>()); // Handle as needed
+                Log.w("DestinationViewModel",
+                        "Failed to load entries: " + databaseError.getMessage());
+                destinationEntriesLiveData.setValue(new ArrayList<>());
             }
         });
     }

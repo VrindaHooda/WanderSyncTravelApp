@@ -2,7 +2,6 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,7 +15,6 @@ public class Login extends AppCompatActivity {
 
     private final ValidateViewModel validateViewModel = new ValidateViewModel();
     private final AuthViewModel authViewModel = new AuthViewModel();
-
     private EditText usernameEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -47,10 +45,12 @@ public class Login extends AppCompatActivity {
                 authViewModel.signIn(username, password, new AuthViewModel.AuthCallback() {
                     @Override
                     public void onSuccess(FirebaseUser user) {
-                        Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login successful!",
+                                Toast.LENGTH_SHORT).show();
                         String userId = authViewModel.getUser().getUid();
                         String username = authViewModel.getUser().getEmail();
-                        Intent intent1 = new Intent(Login.this, DestinationActivity.class);
+                        Intent intent1 = new Intent(Login.this,
+                                DestinationActivity.class);
                         intent1.putExtra("userId", userId);
                         intent1.putExtra("username", username);
                         startActivity(intent1);
@@ -59,11 +59,14 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String error) {
-                        Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login failed: "
+                                + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(Login.this, "Invalid input. Can't be empty or contain whitespace", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this,
+                        "Invalid input. Can't be empty or contain whitespace",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -78,7 +81,8 @@ public class Login extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (authViewModel.isAuthenticated()) {
-            Toast.makeText(Login.this, "Already logged in!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this, "Already logged in!",
+                    Toast.LENGTH_SHORT).show();
             String userId = authViewModel.getUser().getUid();
             String username = authViewModel.getUser().getEmail();
             Intent intent = new Intent(Login.this, DestinationActivity.class);
@@ -92,6 +96,5 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Remove signOut unless you want users to be logged out when this activity is destroyed
     }
 }
