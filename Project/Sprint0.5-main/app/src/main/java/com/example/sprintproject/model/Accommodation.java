@@ -5,7 +5,7 @@ public class Accommodation {
     private String location;
     private String checkInDate;
     private String checkOutDate;
-    private String numRooms;
+    private Integer numRooms;
     private String roomType;
 
     public Accommodation() {
@@ -18,20 +18,10 @@ public class Accommodation {
         this.location = location;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.numRooms = String.valueOf(numRooms);
-        this.roomType = roomType;
-    }
-
-
-    public Accommodation(String id, String location, String checkInDate, String checkOutDate,
-                         String numRooms, String roomType) {
-        this.id = id;
-        this.location = location;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
         this.numRooms = numRooms;
         this.roomType = roomType;
     }
+
 
     public String getId() {
         return id;
@@ -45,11 +35,33 @@ public class Accommodation {
     public String getCheckOutDate() {
         return checkOutDate;
     }
-    public String getNumRooms() {
+    public Integer getNumRooms() {
         return numRooms;
     }
+
     public String getRoomType() {
         return roomType;
     }
+
+    public void setCheckInDate(String checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public void setCheckOutDate(String checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setNumRooms(int numRooms) {
+        this.numRooms = numRooms;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
 }
 
