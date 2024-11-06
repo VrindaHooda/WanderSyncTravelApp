@@ -17,6 +17,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.example.sprintproject.model.Accommodation;
+
+
 public class SimpleTests {
 
     @Test
@@ -127,6 +130,56 @@ public class SimpleTests {
         UserEntry userEntry = new UserEntry("userId123", "user@example.com", oldEntry);
         userEntry.setEntry(newEntry);
         assertEquals("newVacation", userEntry.getEntry().getVacationId());
+    }
+
+    // Test 1: Verify that Accommodation fields are correctly assigned on initialization
+    @Test
+    public void testAccommodationInitialization() {
+        Accommodation accommodation = new Accommodation("Mountain Lodge", "2024-08-01", "2024-08-15", 2, "King Suite");
+
+        assertEquals("Mountain Lodge", accommodation.getLocation());
+        assertEquals("2024-08-01", accommodation.getCheckInDate());
+        assertEquals("2024-08-15", accommodation.getCheckOutDate());
+        assertEquals((Integer) 2, (Integer) accommodation.getNumRooms()); // Explicitly cast to Integer
+        assertEquals("King Suite", accommodation.getRoomType());
+    }
+
+    // Test 2: Verify that location can be updated
+    @Test
+    public void testAccommodationLocationUpdate() {
+        Accommodation accommodation = new Accommodation("Old Location", "2024-07-01", "2024-07-10", 1, "Queen Room");
+        accommodation.setLocation("New Location");
+
+        assertEquals("New Location", accommodation.getLocation());
+    }
+
+    // Test 3: Verify that check-in and check-out dates can be updated
+    @Test
+    public void testAccommodationDateUpdate() {
+        Accommodation accommodation = new Accommodation("Beach Resort", "2024-05-01", "2024-05-10", 1, "Single Room");
+        accommodation.setCheckInDate("2024-06-01");
+        accommodation.setCheckOutDate("2024-06-05");
+
+        assertEquals("2024-06-01", accommodation.getCheckInDate());
+        assertEquals("2024-06-05", accommodation.getCheckOutDate());
+    }
+
+    // Test 4: Verify that number of rooms can be updated
+    @Test
+    public void testAccommodationNumRoomsUpdate() {
+        Accommodation accommodation = new Accommodation("Mountain Lodge", "2024-08-15", "2024-08-25", 1, "Double Room");
+        accommodation.setNumRooms(3);
+
+        assertEquals((Integer) 3, (Integer) accommodation.getNumRooms()); // Explicitly cast to Integer
+    }
+
+    // Test 5: Verify that room type can be updated
+    @Test
+    public void testAccommodationRoomTypeUpdate() {
+        Accommodation accommodation = new Accommodation("City Hotel", "2024-03-10", "2024-03-15", 1, "Standard Room");
+        accommodation.setRoomType("Suite");
+
+        assertEquals("Suite", accommodation.getRoomType());
     }
 
 }
