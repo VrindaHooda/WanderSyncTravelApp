@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
@@ -29,6 +30,16 @@ public class DiningActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
+                    .commit();
+        }
+        binding = DataBindingUtil.setContentView(this, R.layout.dining_establishment_screen);
+
+        // Set the activity for binding
+        binding.setActivity(this);
 
         // Initialize data binding
         binding = DiningEstablishmentScreenBinding.inflate(getLayoutInflater());

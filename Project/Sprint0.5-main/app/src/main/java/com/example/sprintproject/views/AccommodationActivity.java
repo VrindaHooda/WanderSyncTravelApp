@@ -33,7 +33,12 @@ public class AccommodationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.bottomNavigation, NavigationFragment.class, null)
+                    .commit();
+        }
         // Set up data binding
         binding = DataBindingUtil.setContentView(this, R.layout.accommodation_screen);
         binding.setActivity(this);  // Bind this activity for the onClick handler
