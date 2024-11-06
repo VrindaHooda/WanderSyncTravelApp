@@ -41,13 +41,19 @@
             android:id="@+id/addNewAccommodationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add New Accommodation"
+            android:layout_marginBottom="112dp"
+            android:backgroundTint="@android:color/holo_blue_dark"
             android:onClick="@{() -> activity.showAddAccommodationDialog()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp"
+            android:text="Add New Accommodation"
             android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/holo_blue_dark"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
