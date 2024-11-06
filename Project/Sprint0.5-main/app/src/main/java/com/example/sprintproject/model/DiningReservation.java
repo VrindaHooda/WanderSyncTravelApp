@@ -5,8 +5,27 @@ public class DiningReservation {
     private String time;
     private String website;
     private int rating;
+    private int numPeople;
+    private String date;
 
     public DiningReservation() { }
+
+    public DiningReservation(String location, String date, String time, int numPeople, String website, int rating) {
+        this.location = location;
+        this.date = date;
+        this.time = time;
+        this.numPeople = numPeople;
+        this.website = website;
+        this.rating = rating;
+    }
+
+    public DiningReservation(String location, String date, String time, int numPeople, String website) {
+        this.location = location;
+        this.date = date;
+        this.time = time;
+        this.numPeople = numPeople;
+        this.website = website;
+    }
 
     public DiningReservation(String location, String time, String website, int rating) {
         this.location = location;
@@ -14,6 +33,7 @@ public class DiningReservation {
         this.website = website;
         this.rating = rating;
     }
+
 
     // Getters and setters
     public String getLocation() { return location; }
@@ -27,4 +47,12 @@ public class DiningReservation {
 
     public int getRating() { return rating; }
     public void setRating(int rating) { this.rating = rating; }
+
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
+
+    public int getNumPeople() { return numPeople; }
+    public void setNumPeople(int numPeople) { this.numPeople = numPeople; }
+
+
 }

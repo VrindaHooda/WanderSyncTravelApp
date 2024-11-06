@@ -1,13 +1,10 @@
 package com.example.sprintproject;
 
-import com.example.sprintproject.model.AuthRepository;
 import com.example.sprintproject.model.ContributorEntry;
-import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.model.DestinationEntry;
 import com.example.sprintproject.model.DurationEntry;
 import com.example.sprintproject.model.TravelLogEntry;
 import com.example.sprintproject.model.User;
-import com.example.sprintproject.model.UserDurationDatabase;
 import com.example.sprintproject.model.UserEntry;
 
 import org.junit.Test;
@@ -18,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.example.sprintproject.model.Accommodation;
+import com.example.sprintproject.model.DiningReservation;
 
 
 public class SimpleTests {
@@ -76,7 +74,7 @@ public class SimpleTests {
         assertEquals("test@example.com", userEntry.getEmail());
     }
 
-    // 1. Test ContributorEntry set and get methods for notes
+    //Test ContributorEntry set and get methods for notes
     @Test
     public void testContributorEntryNotes() {
         ContributorEntry entry = new ContributorEntry("user2", "Visited Paris");
@@ -84,7 +82,7 @@ public class SimpleTests {
         assertEquals("Updated notes for Paris", entry.getNotes());
     }
 
-    // 2. Test DestinationEntry location update
+    //Test DestinationEntry location update
     @Test
     public void testDestinationEntryLocationUpdate() {
         DestinationEntry entry = new DestinationEntry("2", "London", new Date(), new Date());
@@ -92,7 +90,7 @@ public class SimpleTests {
         assertEquals("Updated Location", entry.getLocation());
     }
 
-    // 3. Test DurationEntry duration calculation
+    //Test DurationEntry duration calculation
     @Test
     public void testDurationEntryCalculation() {
         // Using the string-based constructor to simplify date input
@@ -103,7 +101,7 @@ public class SimpleTests {
     }
 
 
-    // 4. Test User's password setting and retrieval
+    //Test User's password setting and retrieval
     @Test
     public void testUserPassword() {
         User user = new User("username", "initialPassword", "userId123");
@@ -111,7 +109,7 @@ public class SimpleTests {
         assertEquals("newPassword", user.getPassword());
     }
 
-    // 5. Test TravelLogEntry dates setting and retrieval
+    //Test TravelLogEntry dates setting and retrieval
     @Test
     public void testTravelLogEntryDates() {
         TravelLogEntry entry = new TravelLogEntry("Rome", "2023-06-01", "2023-06-15");
@@ -121,7 +119,7 @@ public class SimpleTests {
         assertEquals("2023-06-20", entry.getEndDate());
     }
 
-    // 6. Test UserEntry with new DurationEntry set and retrieval
+    //Test UserEntry with new DurationEntry set and retrieval
     @Test
     public void testUserEntryNewDurationEntry() {
         DurationEntry oldEntry = new DurationEntry("oldVacation", 7, new Date(), new Date());
@@ -132,31 +130,37 @@ public class SimpleTests {
         assertEquals("newVacation", userEntry.getEntry().getVacationId());
     }
 
-    // Test 1: Verify that Accommodation fields are correctly assigned on initialization
+    //Verify that Accommodation fields are correctly assigned on initialization
     @Test
     public void testAccommodationInitialization() {
-        Accommodation accommodation = new Accommodation("Mountain Lodge", "2024-08-01", "2024-08-15", 2, "King Suite");
+        Accommodation accommodation = new Accommodation("Mountain Lodge",
+                "2024-08-01", "2024-08-15", 2,
+                "King Suite");
 
         assertEquals("Mountain Lodge", accommodation.getLocation());
         assertEquals("2024-08-01", accommodation.getCheckInDate());
         assertEquals("2024-08-15", accommodation.getCheckOutDate());
-        assertEquals((Integer) 2, (Integer) accommodation.getNumRooms()); // Explicitly cast to Integer
+        assertEquals((Integer) 2, (Integer) accommodation.getNumRooms());
         assertEquals("King Suite", accommodation.getRoomType());
     }
 
-    // Test 2: Verify that location can be updated
+    //Verify that location can be updated
     @Test
     public void testAccommodationLocationUpdate() {
-        Accommodation accommodation = new Accommodation("Old Location", "2024-07-01", "2024-07-10", 1, "Queen Room");
+        Accommodation accommodation = new Accommodation("Old Location",
+                "2024-07-01", "2024-07-10", 1,
+                "Queen Room");
         accommodation.setLocation("New Location");
 
         assertEquals("New Location", accommodation.getLocation());
     }
 
-    // Test 3: Verify that check-in and check-out dates can be updated
+    //Verify that check-in and check-out dates can be updated
     @Test
     public void testAccommodationDateUpdate() {
-        Accommodation accommodation = new Accommodation("Beach Resort", "2024-05-01", "2024-05-10", 1, "Single Room");
+        Accommodation accommodation = new Accommodation("Beach Resort",
+                "2024-05-01", "2024-05-10", 1,
+                "Single Room");
         accommodation.setCheckInDate("2024-06-01");
         accommodation.setCheckOutDate("2024-06-05");
 
@@ -164,22 +168,84 @@ public class SimpleTests {
         assertEquals("2024-06-05", accommodation.getCheckOutDate());
     }
 
-    // Test 4: Verify that number of rooms can be updated
+    //Verify that number of rooms can be updated
     @Test
     public void testAccommodationNumRoomsUpdate() {
-        Accommodation accommodation = new Accommodation("Mountain Lodge", "2024-08-15", "2024-08-25", 1, "Double Room");
+        Accommodation accommodation = new Accommodation("Mountain Lodge",
+                "2024-08-15", "2024-08-25", 1,
+                "Double Room");
         accommodation.setNumRooms(3);
 
-        assertEquals((Integer) 3, (Integer) accommodation.getNumRooms()); // Explicitly cast to Integer
+        assertEquals((Integer) 3, (Integer) accommodation.getNumRooms());
     }
 
-    // Test 5: Verify that room type can be updated
+    //Verify that room type can be updated
     @Test
     public void testAccommodationRoomTypeUpdate() {
-        Accommodation accommodation = new Accommodation("City Hotel", "2024-03-10", "2024-03-15", 1, "Standard Room");
+        Accommodation accommodation = new Accommodation("City Hotel",
+                "2024-03-10", "2024-03-15", 1,
+                "Standard Room");
         accommodation.setRoomType("Suite");
 
         assertEquals("Suite", accommodation.getRoomType());
+    }
+
+    //Verify that the reservation location is set correctly.
+    @Test
+    public void testDiningReservationLocation() {
+        DiningReservation reservation = new DiningReservation("Fancy Restaurant",
+                "2024-12-15", "7:00 PM", 4, "www.restaurant.com");
+        assertEquals("Fancy Restaurant", reservation.getLocation());
+    }
+
+    //Verify that the reservation date is set correctly.
+    @Test
+    public void testDiningReservationDate() {
+        DiningReservation reservation = new DiningReservation("Cozy Cafe",
+                "2024-11-10", "6:00 PM", 2, "www.cafe.com");
+        assertEquals("2024-11-10", reservation.getDate());
+    }
+
+    //Verify that the reservation time is set correctly.
+    @Test
+    public void testDiningReservationTime() {
+        DiningReservation reservation = new DiningReservation("Gourmet Bistro",
+                "2024-11-20", "8:30 PM", 2, "www.bistro.com");
+        assertEquals("8:30 PM", reservation.getTime());
+    }
+
+    //Verify that the number of people for the reservation is set correctly.
+    @Test
+    public void testDiningReservationNumberOfPeople() {
+        DiningReservation reservation = new DiningReservation("Sushi Place",
+                "2024-11-18", "7:00 PM", 3, "www.sushiplace.com");
+        assertEquals(3, reservation.getNumPeople());
+    }
+
+    //Verify that the website URL is set correctly.
+    @Test
+    public void testDiningReservationWebsite() {
+        DiningReservation reservation = new DiningReservation("Burger Joint",
+                "2024-12-01", "5:00 PM", 5, "www.burgerjoint.com");
+        assertEquals("www.burgerjoint.com", reservation.getWebsite());
+    }
+
+    //Verify updating the reservation location.
+    @Test
+    public void testDiningReservationUpdateLocation() {
+        DiningReservation reservation = new DiningReservation("Old Restaurant",
+                "2024-12-01", "6:00 PM", 2, "www.oldrestaurant.com");
+        reservation.setLocation("New Restaurant");
+        assertEquals("New Restaurant", reservation.getLocation());
+    }
+
+    //Verify updating the number of people in the reservation.
+    @Test
+    public void testDiningReservationUpdateNumPeople() {
+        DiningReservation reservation = new DiningReservation("Steakhouse",
+                "2024-11-25", "7:30 PM", 2, "www.steakhouse.com");
+        reservation.setNumPeople(4);
+        assertEquals(4, reservation.getNumPeople());
     }
 
 }
