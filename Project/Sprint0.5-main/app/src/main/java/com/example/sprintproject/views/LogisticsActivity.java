@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-
 import com.example.sprintproject.R;
 import com.example.sprintproject.databinding.LogisticsScreenBinding;
 import com.github.mikephil.charting.charts.PieChart;
@@ -19,7 +17,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,20 +69,20 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-//        binding.invite.setOnClickListener(v -> {
-//            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
-//            startActivity(intent1);
-//        });
-//
-//        binding.viewInvites.setOnClickListener(v -> {
-//            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-//            startActivity(intent2);
-//        });
-//
-//        binding.viewNotes.setOnClickListener(v -> {
-//            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-//            startActivity(intent3);
-//        });
+        binding.invite.setOnClickListener(v -> {
+            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
+            startActivity(intent1);
+        });
+
+        binding.viewInvites.setOnClickListener(v -> {
+            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+            startActivity(intent2);
+        });
+
+        binding.viewNotes.setOnClickListener(v -> {
+            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+            startActivity(intent3);
+        });
     }
 
     private void showModifyPlansDialog() {
@@ -98,9 +95,11 @@ public class LogisticsActivity extends AppCompatActivity {
                 .setPositiveButton("Save", (dialog, which) -> {
                     String newPlan = input.getText().toString().trim();
                     if (!newPlan.isEmpty()) {
-                        Toast.makeText(LogisticsActivity.this, "Note saved: " + newPlan, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogisticsActivity.this,
+                                "Note saved: " + newPlan, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LogisticsActivity.this, "Please add a note.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogisticsActivity.this,
+                                "Please add a note.", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
