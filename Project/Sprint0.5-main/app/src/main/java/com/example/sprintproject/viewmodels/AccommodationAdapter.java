@@ -37,6 +37,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         holder.getCheckOutDate().setText(accommodation.getCheckOutDate());
         holder.getNumRooms().setText(String.valueOf(accommodation.getNumRooms()));
         holder.getRoomType().setText(accommodation.getRoomType());
+        holder.statusTextView.setText(accommodation.getReservationStatus());
     }
 
     @Override
@@ -50,6 +51,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         private TextView checkOutDate;
         private TextView numRooms;
         private TextView roomType;
+        TextView statusTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +60,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
             checkOutDate = itemView.findViewById(R.id.checkOutDate);
             numRooms = itemView.findViewById(R.id.numRooms);
             roomType = itemView.findViewById(R.id.roomType);
+            statusTextView = itemView.findViewById(R.id.statusTextView);
         }
 
         public TextView getLocation() {
