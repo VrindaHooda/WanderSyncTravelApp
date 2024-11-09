@@ -1,104 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="authViewModel"
+            type="com.example.sprintproject.viewmodels.AuthViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:text="Create Account"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="@android:color/holo_orange_dark">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:background="@android:color/holo_purple"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:gravity="center"
+            android:padding="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
-                android:id="@+id/usernameLabel"
+                android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Username"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="Create Account"
                 android:fontFamily="@font/halloween_spookies"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/usernameEditText"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:background="@android:color/holo_purple"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/usernameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Username"
+                    android:fontFamily="@font/halloween_spookies"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/usernameEditText"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp"
+                    android:autofillHints="username"
+                    android:background="@android:color/holo_orange_dark"
+                    android:hint="@string/username_hint"
+                    android:inputType="text"
+                    android:textColor="#FFEB3B"
+                    android:textStyle="italic"
+                    android:text="@={authViewModel.username}" />
+
+                <TextView
+                    android:id="@+id/passwordLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Password"
+                    android:fontFamily="@font/halloween_spookies"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:autofillHints="password"
+                    android:background="@android:color/holo_orange_dark"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword"
+                    android:textColor="#FFEB3B"
+                    android:textStyle="italic"
+                    android:text="@={authViewModel.password}" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/registerButton"
                 android:layout_width="320dp"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
-                android:autofillHints="username"
-                android:background="@android:color/holo_orange_dark"
-                android:hint="@string/username_hint"
-                android:inputType="text"
-                android:textColor="#FFEB3B"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/passwordLabel"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Password"
+                android:background="@android:color/holo_purple"
+                android:text="Register"
+                android:textSize="24sp"
                 android:fontFamily="@font/halloween_spookies"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:onClick="@{() -> authViewModel.onCreateAccountButtonClicked()}" />
 
-            <EditText
-                android:id="@+id/passwordEditText"
+            <Button
+                android:id="@+id/loginButton"
                 android:layout_width="320dp"
-                android:layout_height="48dp"
-                android:autofillHints="password"
-                android:background="@android:color/holo_orange_dark"
-                android:hint="@string/password_hint"
-                android:inputType="textPassword"
-                android:textColor="#FFEB3B"
-                android:textStyle="italic" />
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_purple"
+                android:text="Login"
+                android:textSize="24sp"
+                android:fontFamily="@font/halloween_spookies"
+                android:textColor="@android:color/white"
+                android:onClick="@{() -> authViewModel.onLoginButtonClicked()}" />
+
         </LinearLayout>
 
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@android:color/holo_purple"
-            android:text="Register"
-            android:textSize="24sp"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_purple"
-            android:text="Login"
-            android:textSize="24sp"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
