@@ -22,6 +22,8 @@ import java.util.List;
 
 public class LogisticsActivity extends AppCompatActivity {
 
+
+    //fix this
     private PieChart pieChart;
     private int totalDays;
     private int duration;
