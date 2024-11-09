@@ -2,78 +2,47 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.databinding.DataBindingUtil;
 import com.example.sprintproject.R;
+import com.example.sprintproject.databinding.CreateAccountBinding;
 import com.example.sprintproject.viewmodels.AuthViewModel;
-import com.example.sprintproject.viewmodels.ValidateViewModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class CreateAccount extends AppCompatActivity {
 
-    private final ValidateViewModel validateViewModel = new ValidateViewModel();
-    private final AuthViewModel authViewModel = new AuthViewModel();
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private EditText usernameEditText;
-    private EditText passwordEditText;
-    private Button registerButton;
-    private Button loginButton;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_account);
-        initializeViews();
-        setupListeners();
+
+        // Set up Data Binding and ViewModel
+        CreateAccountBinding binding = DataBindingUtil.setContentView(this, R.layout.create_account);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        binding.setAuthViewModel(authViewModel);
+        binding.setLifecycleOwner(this);
+
+        // Set up observers for LiveData in AuthViewModel
+        setupObservers();
     }
 
-    private void initializeViews() {
-        usernameEditText = findViewById(R.id.usernameEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        registerButton = findViewById(R.id.registerButton);
-        loginButton = findViewById(R.id.loginButton);
-    }
-
-    private void setupListeners() {
-        registerButton.setOnClickListener(view -> {
-            String username = usernameEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
-
-            if (validateViewModel.validateRegistration(username, password)) {
-                authViewModel.createUser(username, password, new AuthViewModel.AuthCallback() {
-                    @Override
-                    public void onSuccess(FirebaseUser user) {
-                        Toast.makeText(CreateAccount.this,
-                                "Account created successfully!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(CreateAccount.this, Login.class));
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        Toast.makeText(CreateAccount.this,
-                                "Account creation failed: " + error, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
-            } else {
-                Toast.makeText(CreateAccount.this,
-                        "Invalid input. Can't be empty or contain whitespace",
-                        Toast.LENGTH_SHORT).show();
+    private void setupObservers() {
+        // Observe account creation status
+        authViewModel.isAccountCreated.observe(this, isCreated -> {
+            if (isCreated) {
+                Toast.makeText(CreateAccount.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(CreateAccount.this, Login.class));
+                finish();
             }
         });
 
-        loginButton.setOnClickListener(view -> {
-            startActivity(new Intent(CreateAccount.this, Login.class));
-            finish();
+        // Observe error messages for validation or creation failure
+        authViewModel.errorMessage.observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(CreateAccount.this, error, Toast.LENGTH_SHORT).show();
+            }
         });
-    }
-
-    public boolean isAccountCreated(String email) {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        return currentUser != null && currentUser.getEmail().equals(email);
     }
 }
