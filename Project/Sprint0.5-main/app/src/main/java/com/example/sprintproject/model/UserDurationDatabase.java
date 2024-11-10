@@ -1,9 +1,6 @@
 package com.example.sprintproject.model;
 
 import android.util.Log;
-
-import com.example.sprintproject.model.Entry;
-import com.example.sprintproject.model.UserEntry;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,8 +12,7 @@ public class UserDurationDatabase {
     private DatabaseReference userDurationDatabaseReference;
 
     public interface DataStatus {
-        void DataIsLoaded(String userId, String email, Entry entry);
-        void DataNotFound(String userId); // Callback for no data
+        void DataIsLoaded(String userId, String email, DurationEntry entry);
     }
 
     private UserDurationDatabase() {
@@ -29,27 +25,17 @@ public class UserDurationDatabase {
         }
         return userDurationDatabaseinstance;
     }
-
-    public void addVacationEntry(String userId, String email, Entry entry) {
-        if (userId == null || email == null || entry == null) {
-            Log.w("UserDurationDatabase", "Invalid input: userId, email, or entry is null.");
-            return;
-        }
-
+    public void addVacationEntry(String userId, String email, DurationEntry entry) {
         UserEntry userData = new UserEntry(email, entry);
         userDurationDatabaseReference.child(userId).setValue(userData)
-                .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully for userId: " + userId + ", Email: " + email))
+                .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "Entry added successfully for userId: " + userId))
                 .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to add entry for userId: " + userId, e));
     }
+
 
     public void getVacationEntry(String userId, final DataStatus dataStatus) {
         if (dataStatus == null) {
             Log.w("UserDurationDatabase", "DataStatus callback is null");
-            return;
-        }
-
-        if (userId == null) {
-            Log.w("UserDurationDatabase", "UserId is null");
             return;
         }
 
@@ -60,7 +46,6 @@ public class UserDurationDatabase {
                 if (userData != null) {
                     dataStatus.DataIsLoaded(userId, userData.getEmail(), userData.getEntry());
                 } else {
-                    dataStatus.DataNotFound(userId);
                     Log.w("UserDurationDatabase", "No data found for userId: " + userId);
                 }
             }

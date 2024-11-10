@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Entry {
+public class DurationEntry {
 
     private String vacationId;
     private int duration;
@@ -13,10 +13,10 @@ public class Entry {
     private Date endDate;
 
 
-    public Entry() {
+    public DurationEntry() {
     }
 
-    public Entry(String vacationId, int duration, Date startDate, Date endDate) {
+    public DurationEntry(String vacationId, int duration, Date startDate, Date endDate) {
         this.vacationId = vacationId;
         this.duration = duration;
         this.startDate = startDate;
@@ -67,7 +67,7 @@ public class Entry {
         return durationInDays;
     }
 
-    public Entry(String vacationId, String startDateStr, String endDateStr) {
+    public DurationEntry(String vacationId, String startDateStr, String endDateStr) {
         this.vacationId = vacationId;
         this.startDate = parseDate(startDateStr);
         this.endDate = parseDate(endDateStr);
