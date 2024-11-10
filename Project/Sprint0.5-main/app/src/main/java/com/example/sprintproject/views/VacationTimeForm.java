@@ -1,46 +1,46 @@
 package com.example.sprintproject.views;
 
-import android.app.DatePickerDialog;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.UserDurationViewModel;
 
-import java.util.Calendar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import com.example.sprintproject.R;
+import com.example.sprintproject.databinding.VacationTimeFormBinding;
+import com.example.sprintproject.viewmodels.VacationTimeFormViewModel;
 
 public class VacationTimeForm extends AppCompatActivity {
 
-    private UserDurationViewModel userDurationViewModel;
+    private VacationTimeFormViewModel viewModel;
+    private String userId;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vacation_time_form);
 
-        Button openStartDatePicker = findViewById(R.id.openStartDatePicker2);
-        Button openEndDatePicker = findViewById(R.id.openEndDatePicker2);
-        TextView startDateText = findViewById(R.id.startDateText2);
-        TextView endDateText = findViewById(R.id.endDateText2);
+        // Set up data binding
+        VacationTimeFormBinding binding = DataBindingUtil.setContentView(this, R.layout.vacation_time_form);
 
-        openStartDatePicker.setOnClickListener(v -> openDatePicker(startDateText));
-        openEndDatePicker.setOnClickListener(v -> openDatePicker(endDateText));
+        userId = getIntent().getStringExtra("userId");
+        email = getIntent().getStringExtra("username");
+        viewModel = new VacationTimeFormViewModel();
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
+
+        // Set up observers
+        viewModel.getResultText().observe(this, result -> {
+            // Update the result display (e.g., show the result in a TextView)
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            // Display any error messages
+        });
     }
 
-    private void openDatePicker(TextView dateTextView) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-
-                    dateTextView.setText("Selected Date: " + selectedDay + "/"
-                            + (selectedMonth + 1) + "/" + selectedYear);
-                }, year, month, day);
-        datePickerDialog.show();
+    public void onCalculateClick(View view) {
+        viewModel.calculateVacationTime(userId, email);
     }
 }
-

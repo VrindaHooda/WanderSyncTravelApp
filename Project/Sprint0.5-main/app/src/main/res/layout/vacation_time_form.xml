@@ -1,50 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <EditText
-        android:id="@+id/vacationTimeInput"
+    <data>
+        <!-- Declare the ViewModel to be used for data binding -->
+        <variable
+            name="viewModel"
+            type="com.example.sprintproject.viewmodels.VacationTimeFormViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Duration" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Button to open the start date picker -->
-    <Button
-        android:id="@+id/openStartDatePicker2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Start Date" />
+        <!-- Start Date Input -->
+        <EditText
+            android:id="@+id/startDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Start Date (yyyy-mm-dd)"
+            android:inputType="text"
+            android:text="@={viewModel.startDateStr}" />
 
-    <!-- TextView to display the selected start date -->
-    <TextView
-        android:id="@+id/startDateText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Date: Not Selected"
-        android:paddingTop="10dp" />
+        <!-- End Date Input -->
+        <EditText
+            android:id="@+id/endDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="End Date (yyyy-mm-dd)"
+            android:inputType="text"
+            android:text="@={viewModel.endDateStr}" />
 
-    <!-- Button to open the end date picker -->
-    <Button
-        android:id="@+id/openEndDatePicker2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select End Date" />
+        <!-- Duration Input -->
+        <EditText
+            android:id="@+id/durationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Duration (in days)"
+            android:inputType="number"
+            android:text="@={viewModel.durationStr}" />
 
-    <!-- TextView to display the selected end date -->
-    <TextView
-        android:id="@+id/endDateText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="End Date: Not Selected"
-        android:paddingTop="10dp" />
+        <!-- Calculate Button -->
+        <Button
+            android:id="@+id/calculateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calculate"
+            android:onClick="@{() -> viewModel.calculateVacationTime()}" />
 
-    <Button
-        android:id="@+id/submitVacationTimeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
-</LinearLayout>
+        <!-- Error Message Display -->
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="@{viewModel.errorMessage != null ? View.VISIBLE : View.GONE}"
+            android:text="@{viewModel.errorMessage}" />
+
+        <!-- Result Display -->
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@{viewModel.resultText}" />
+
+    </LinearLayout>
+
+</layout>
