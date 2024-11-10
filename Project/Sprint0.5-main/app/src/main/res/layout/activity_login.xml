@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -6,54 +7,124 @@
         <variable
             name="authViewModel"
             type="com.example.sprintproject.viewmodels.AuthViewModel" />
-        <!-- Import View class for binding expressions -->
         <import type="android.view.View" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Username EditText with two-way binding -->
-        <EditText
-            android:id="@+id/usernameEditText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Username"
-            android:text="@={authViewModel.username}" />
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_orange_dark"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <!-- Password EditText with two-way binding -->
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:text="@={authViewModel.password}" />
+            <TextView
+                android:id="@+id/loginTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:text="Login"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/halloween_spookies"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
-        <!-- Login Button with data binding for onClick -->
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:onClick="@{() -> authViewModel.onLoginButtonClicked()}" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:background="@android:color/holo_purple"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <!-- Create Account Button with data binding for onClick -->
-        <Button
-            android:id="@+id/createAccountButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:onClick="@{() -> authViewModel.onCreateAccountButtonClicked()}" />
+                <TextView
+                    android:id="@+id/usernameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Username"
+                    android:fontFamily="@font/halloween_spookies"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
 
-        <!-- Error TextView to show error messages -->
-        <TextView
-            android:id="@+id/errorTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{authViewModel.errorMessage}"
-            android:textColor="@android:color/holo_red_light"
-            android:visibility="@{authViewModel.errorMessage != null ? View.VISIBLE : View.GONE}" />
-    </RelativeLayout>
+                <!-- Username EditText with two-way data binding -->
+                <EditText
+                    android:id="@+id/usernameEditText"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp"
+                    android:autofillHints="username"
+                    android:background="@android:color/holo_orange_dark"
+                    android:hint="@string/username_hint"
+                    android:inputType="text"
+                    android:textColor="#FFEB3B"
+                    android:textStyle="italic"
+                    android:text="@={authViewModel.username}" />
+
+                <TextView
+                    android:id="@+id/passwordLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Password"
+                    android:fontFamily="@font/halloween_spookies"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
+
+                <!-- Password EditText with two-way data binding -->
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:autofillHints="password"
+                    android:background="@android:color/holo_orange_dark"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword"
+                    android:textColor="#FFEB3B"
+                    android:textStyle="italic"
+                    android:text="@={authViewModel.password}" />
+            </LinearLayout>
+
+            <!-- Login Button with onClick event binding -->
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@android:color/holo_purple"
+                android:text="Login"
+                android:fontFamily="@font/halloween_spookies"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:onClick="@{() -> authViewModel.onLoginButtonClicked()}" />
+
+            <!-- Create Account Button with onClick event binding -->
+            <Button
+                android:id="@+id/createAccountButton"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_purple"
+                android:text="Create Account"
+                android:fontFamily="@font/halloween_spookies"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:onClick="@{() -> authViewModel.onCreateAccountButtonClicked()}" />
+
+            <!-- Error TextView to show error messages, visible only if there is an error message -->
+            <TextView
+                android:id="@+id/errorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@{authViewModel.errorMessage}"
+                android:textColor="@android:color/holo_red_light"
+                android:visibility="@{authViewModel.errorMessage != null ? View.VISIBLE : View.GONE}" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

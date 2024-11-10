@@ -2,13 +2,13 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.viewmodels.LogTravelViewModel;
 
@@ -26,7 +26,8 @@ public class LogTravelForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_travel_form);
 
-        logTravelViewModel = new LogTravelViewModel();
+        // Initialize ViewModel using ViewModelProvider
+        logTravelViewModel = new ViewModelProvider(this).get(LogTravelViewModel.class);
 
         // Find views
         locationEditText = findViewById(R.id.locationInput);
@@ -60,13 +61,17 @@ public class LogTravelForm extends AppCompatActivity {
             if (location.isEmpty()) {
                 Toast.makeText(LogTravelForm.this, "Please enter a location", Toast.LENGTH_SHORT).show();
             } else {
-                // Pass userId and email (you can replace these with real values from your app context)
+                // Retrieve userId and email from Intent
                 Intent intent = getIntent();
-                String userId = intent.getStringExtra("userId") ;
+                String userId = intent.getStringExtra("userId");
                 String email = intent.getStringExtra("username");
 
-                logTravelViewModel.setLocation(location);
-                logTravelViewModel.saveTravelLog(userId, email);
+                if (userId != null && email != null) {
+                    logTravelViewModel.setLocation(location);
+                    logTravelViewModel.saveTravelLog(userId, email);
+                } else {
+                    Toast.makeText(LogTravelForm.this, "Error: User data is missing", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

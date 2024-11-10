@@ -1,6 +1,8 @@
 package com.example.sprintproject.viewmodels;
 
 import android.util.Log;
+
+import androidx.databinding.InverseMethod;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -130,6 +132,10 @@ public class LogTravelViewModel extends ViewModel {
 
     public void setLocation(String location) {
         this.location.setValue(location);
+    }
+    @InverseMethod("setLocation")
+    public static String inverseSetLocation(String location) {
+        return location;
     }
 
     // Helper method to parse a date string into a Date object
