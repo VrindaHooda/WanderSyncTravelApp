@@ -1,105 +1,51 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="LogTravelViewModel"
             type="com.example.sprintproject.viewmodels.LogTravelViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark">
-
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Travel Log"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/openStartDatePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pick Start Date"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
-            android:onClick="@{() -> LogTravelViewModel.onStartDateClick()}"
-            app:layout_constraintTop_toBottomOf="@id/header"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/startDateText"
-            android:layout_margin="16dp"/>
+            android:onClick="@{() -> LogTravelViewModel.onStartDateClick()}" />
 
         <TextView
             android:id="@+id/startDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{LogTravelViewModel.startDate}"
-            android:hint="Select Start Date"
-            android:textColor="@android:color/white"
-            app:layout_constraintTop_toTopOf="@+id/openStartDatePicker"
-            app:layout_constraintStart_toEndOf="@+id/openStartDatePicker"
-            android:layout_marginStart="8dp"/>
+            android:text="@{LogTravelViewModel.startDate}" />
 
         <Button
             android:id="@+id/openEndDatePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pick End Date"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
-            android:onClick="@{() -> LogTravelViewModel.onEndDateClick()}"
-            app:layout_constraintTop_toBottomOf="@+id/openStartDatePicker"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/endDateText"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"/>
+            android:onClick="@{() -> LogTravelViewModel.onEndDateClick()}" />
 
         <TextView
             android:id="@+id/endDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Select End Date"
-            android:text="@{LogTravelViewModel.endDate}"
-            android:textColor="@android:color/white"
-            app:layout_constraintTop_toTopOf="@+id/openEndDatePicker"
-            app:layout_constraintStart_toEndOf="@+id/openEndDatePicker"
-            android:layout_marginStart="8dp"/>
+            android:text="@{LogTravelViewModel.endDate}" />
 
         <EditText
             android:id="@+id/locationInput"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@={LogTravelViewModel.location}"
-            android:hint="Enter Location"
-            android:backgroundTint="@android:color/white"
-            android:hintTextColor="@android:color/darker_gray"
-            android:textColor="@android:color/white"
-            app:layout_constraintTop_toBottomOf="@+id/openEndDatePicker"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="16dp"/>
+            android:text="@={LogTravelViewModel.location}" />
 
         <Button
             android:id="@+id/submitTravelLogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save Log"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
-            android:onClick="@{() -> LogTravelViewModel.saveTravelLog()}"
-            app:layout_constraintTop_toBottomOf="@+id/locationInput"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:onClick="@{() -> LogTravelViewModel.saveTravelLog()}" />
+    </RelativeLayout>
 </layout>

@@ -8,11 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDurationDatabase {
     private static UserDurationDatabase userDurationDatabaseinstance;
@@ -20,11 +16,6 @@ public class UserDurationDatabase {
 
     public interface DataStatus {
         void DataIsLoaded(String userId, String email, Entry entry);
-        void DataNotFound(String userId); // Callback for no data
-    }
-
-    public interface DataStatus2 {
-        void DataIsLoaded(String userId, ContributorEntryList contributorEntryList);
         void DataNotFound(String userId); // Callback for no data
     }
 
@@ -62,7 +53,6 @@ public class UserDurationDatabase {
             return;
         }
 
-
         userDurationDatabaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,72 +71,4 @@ public class UserDurationDatabase {
             }
         });
     }
-
-    public void addContributorsListEntry(String userId, ContributorEntry entry, List<ContributorEntry> contributorsList) {
-        if (userId == null || entry == null || contributorsList == null) {
-            Log.w("UserDurationDatabase", "Invalid input: userId, entry, or contributorsList is null.");
-            return;
-        }
-
-        DatabaseReference userRef = userDurationDatabaseReference.child(userId);
-
-        // Check if the userId child exists in the database
-        userRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().exists()) {
-                    // If the userId child exists, retrieve the current contributorsList and add the new entry
-                    List<ContributorEntry> existingList = task.getResult().getValue(new GenericTypeIndicator<List<ContributorEntry>>() {});
-                    if (existingList == null) {
-                        existingList = new ArrayList<>();
-                    }
-                    existingList.add(entry);
-
-                    // Update the database with the updated list
-                    userRef.setValue(existingList)
-                            .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "ContributorEntryList updated successfully for userId: " + userId))
-                            .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to update entry for userId: " + userId, e));
-                } else {
-                    // If the userId child doesn't exist, create it with the provided list
-                    contributorsList.add(entry); // add the entry to the provided list
-                    userRef.setValue(contributorsList)
-                            .addOnSuccessListener(aVoid -> Log.d("UserDurationDatabase", "ContributorEntryList created successfully for userId: " + userId))
-                            .addOnFailureListener(e -> Log.w("UserDurationDatabase", "Failed to create entry for userId: " + userId, e));
-                }
-            } else {
-                Log.w("UserDurationDatabase", "Database check failed for userId: " + userId, task.getException());
-            }
-        });
-    }
-
-    public void getContributorsList(String userId, final DataStatus2 dataStatus2) {
-        if (dataStatus2 == null) {
-            Log.w("UserDurationDatabase", "DataStatus callback is null");
-            return;
-        }
-
-        if (userId == null) {
-            Log.w("UserDurationDatabase", "UserId is null");
-            return;
-        }
-
-
-        userDurationDatabaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ContributorEntryList contributorsList = dataSnapshot.getValue(ContributorEntryList.class);
-                if (contributorsList != null) {
-                    dataStatus2.DataIsLoaded(userId, contributorsList);
-                } else {
-                    dataStatus2.DataNotFound(userId);
-                    Log.w("UserDurationDatabase", "No data found for userId: " + userId);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("UserDurationDatabase", "Failed to get data for userId: " + userId, databaseError.toException());
-            }
-        });
-    }
-
 }
