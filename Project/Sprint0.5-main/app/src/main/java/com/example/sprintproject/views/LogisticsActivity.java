@@ -71,8 +71,6 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-        /*
-
         binding.invite.setOnClickListener(v -> {
             Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
             startActivity(intent1);
@@ -87,8 +85,6 @@ public class LogisticsActivity extends AppCompatActivity {
             Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
             startActivity(intent3);
         });
-
-         */
     }
 
     private void showModifyPlansDialog() {
