@@ -69,20 +69,20 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-        binding.invite.setOnClickListener(v -> {
-            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
-            startActivity(intent1);
-        });
-
-        binding.viewInvites.setOnClickListener(v -> {
-            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-            startActivity(intent2);
-        });
-
-        binding.viewNotes.setOnClickListener(v -> {
-            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-            startActivity(intent3);
-        });
+//        binding.invite.setOnClickListener(v -> {
+//            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
+//            startActivity(intent1);
+//        });
+//
+//        binding.viewInvites.setOnClickListener(v -> {
+//            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+//            startActivity(intent2);
+//        });
+//
+//        binding.viewNotes.setOnClickListener(v -> {
+//            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+//            startActivity(intent3);
+//        });
     }
 
     private void showModifyPlansDialog() {
