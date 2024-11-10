@@ -17,7 +17,7 @@ import java.util.List;
 public class DestinationActivity extends AppCompatActivity {
 
     private DestinationViewModel destinationViewModel;
-    private DestinationActivityBinding binding;
+    private DestinationScreenBinding binding;
     private String userId;
 
     @Override

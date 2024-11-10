@@ -4,26 +4,26 @@ public class UserEntry {
 
     private String userId;
     private String email;
-    private Entry entry;
+    private DurationEntry entry;
 
     public UserEntry() {
     }
 
-    public UserEntry(String email, Entry entry) {
+    public UserEntry(String email, DurationEntry entry) {
         this.email = email;
         this.entry = entry;
     }
-    public UserEntry(String userId, String email, Entry entry) {
+    public UserEntry(String userId, String email, DurationEntry entry) {
         this.userId = userId;
         this.email = email;
         this.entry = entry;
     }
 
-    public Entry getEntry() {
+    public DurationEntry getEntry() {
         return entry;
     }
 
-    public void setEntry(Entry entry) {
+    public void setEntry(DurationEntry entry) {
         this.entry = entry;
     }
 
