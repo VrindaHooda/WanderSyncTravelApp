@@ -1,27 +1,27 @@
 package com.example.sprintproject.model;
 
 public class ContributorEntry {
-    private String contributorEmail;
+    private String userID;
     private String notes;
 
     public ContributorEntry() {
     }
 
-    public ContributorEntry(String contributorEmail, String note) {
-        this.contributorEmail = contributorEmail;
+    public ContributorEntry(String id, String note) {
+        this.userID = id;
         this.notes = note;
     }
 
-    public String getContributorEmail() {
-        return contributorEmail;
+    public String getUserId() {
+        return userID;
     }
 
     public String getNotes() {
         return notes;
     }
 
-    public void setContributorEmail(String contributorEmail) {
-        this.contributorEmail = contributorEmail;
+    public void setUserID(String id) {
+        this.userID = id;
     }
 
     public void setNotes(String note) {
