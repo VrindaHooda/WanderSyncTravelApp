@@ -1,51 +1,50 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable
-            name="LogTravelViewModel"
-            type="com.example.sprintproject.viewmodels.LogTravelViewModel" />
-    </data>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <EditText
+        android:id="@+id/locationInput"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:hint="Enter Location" />
 
-        <Button
-            android:id="@+id/openStartDatePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pick Start Date"
-            android:onClick="@{() -> LogTravelViewModel.onStartDateClick()}" />
+    <!-- Button to open the start date picker -->
+    <Button
+        android:id="@+id/openStartDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Start Date" />
 
-        <TextView
-            android:id="@+id/startDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{LogTravelViewModel.startDate}" />
+    <!-- TextView to display the selected start date -->
+    <TextView
+        android:id="@+id/startDateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Date: Not Selected"
+        android:paddingTop="10dp" />
 
-        <Button
-            android:id="@+id/openEndDatePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pick End Date"
-            android:onClick="@{() -> LogTravelViewModel.onEndDateClick()}" />
+    <!-- Button to open the end date picker -->
+    <Button
+        android:id="@+id/openEndDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select End Date" />
 
-        <TextView
-            android:id="@+id/endDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{LogTravelViewModel.endDate}" />
+    <!-- TextView to display the selected end date -->
+    <TextView
+        android:id="@+id/endDateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="End Date: Not Selected"
+        android:paddingTop="10dp" />
 
-        <EditText
-            android:id="@+id/locationInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@={LogTravelViewModel.location}" />
-
-        <Button
-            android:id="@+id/submitTravelLogButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save Log"
-            android:onClick="@{() -> LogTravelViewModel.saveTravelLog()}" />
-    </RelativeLayout>
-</layout>
+    <Button
+        android:id="@+id/submitTravelLogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+</LinearLayout>
