@@ -54,7 +54,7 @@ public class LogisticsActivity extends AppCompatActivity {
         duration = sharedPreferences.getInt("PLANNED_DAYS_KEY", 0);
         Log.d("LogisticsActivity", "Retrieved totalDays: " + totalDays + ", duration: " + duration);
 
-        binding.modifyNotes.setOnClickListener(v -> showModifyPlansDialog());
+//        binding.modifyNotes.setOnClickListener(v -> showModifyPlansDialog());
 
         updatePieChart();
 
