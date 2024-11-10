@@ -23,7 +23,7 @@ public class SimpleTests {
     @Test
     public void testContributorEntryInit() {
         ContributorEntry entry = new ContributorEntry("user1", "Notes for Paris");
-        assertEquals("user1", entry.getUserId());
+        assertEquals("user1", entry.getContributorEmail());
         assertEquals("Notes for Paris", entry.getNotes()); // Using existing `getNotes()` method
     }
 

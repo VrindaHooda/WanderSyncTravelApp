@@ -1,0 +1,38 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="AddNoteViewModel"
+            type="com.example.sprintproject.viewmodels.AddNoteViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/contributorEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter note"
+            android:text="@={AddNoteViewModel.contributorEmail}" />
+
+        <EditText
+            android:id="@+id/noteEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter note"
+            android:text="@={AddNoteViewModel.notes}" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noteEditText"
+            android:text="Save"
+            android:onClick="@{() -> AddNoteViewModel.onSaveClicked()}"
+            bind:toastMessage="@{AddNoteViewModel.toastMessage}"/>
+
+    </RelativeLayout>
+</layout>
