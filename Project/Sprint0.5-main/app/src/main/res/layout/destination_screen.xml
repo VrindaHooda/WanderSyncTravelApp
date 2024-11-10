@@ -1,110 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_orange_dark">
 
-    <!-- Data Binding to the ViewModel -->
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.sprintproject.viewmodels.DestinationViewModel" />
-    </data>
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Destination Screen"
+        android:fontFamily="@font/halloween_spookies"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark">
+        android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:fontFamily="@font/halloween_spookies"
-            android:text="Destinations"
-            android:textColor="@android:color/white"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/button_section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header">
-
-            <Button
-                android:id="@+id/btn_log_travel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/darker_gray"
-                android:fontFamily="@font/halloween_spookies"
-                android:text="Log Travel"
-                android:textSize="20sp"
-                android:onClick="@{() -> viewModel.onLogTravelClicked()}" />
-
-            <Button
-                android:id="@+id/btn_calculate_vacation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:backgroundTint="@android:color/darker_gray"
-                android:fontFamily="@font/halloween_spookies"
-                android:text="Calculate Vacation Time"
-                android:textSize="20sp"
-                android:onClick="@{() -> viewModel.onCalculateVacationClicked()}" />
-        </LinearLayout>
-
-        <!-- Data-binding to show list of destinations -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/destinationRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/button_section"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:adapter="@{viewModel.destinationAdapter}" />
-
-        <!-- Display Total Days and Planned Days -->
-        <TextView
-            android:id="@+id/totalDaysTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Days: 0 days"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="500dp" />
-
-        <TextView
-            android:id="@+id/plannedDaysTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Planned Days: 0 days"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/totalDaysTextView"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp" />
-
-        <!-- Bottom Navigation Fragment -->
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="-32dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>
