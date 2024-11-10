@@ -1,10 +1,5 @@
 package com.example.sprintproject.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class Accommodation {
     private String id;
     private String location;
@@ -66,23 +61,6 @@ public class Accommodation {
 
     public void setRoomType(String roomType) {
         this.roomType = roomType;
-    }
-
-    public String getReservationStatus() {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            Date checkoutDate = sdf.parse(checkOutDate);
-            Date currentDate = new Date();
-
-            if (checkoutDate != null && checkoutDate.after(currentDate)) {
-                return "Upcoming";
-            } else {
-                return "Expired";
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "Unknown";
-        }
     }
 
 }
