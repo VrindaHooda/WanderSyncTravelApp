@@ -4,7 +4,7 @@
             name="activity"
             type="com.example.sprintproject.views.LogisticsActivity" />
     </data>
-    <!-- create new layout -->
+    <!-- Existing layout -->
     <LinearLayout
         android:id="@+id/layoutRoot"
         android:layout_width="match_parent"
