@@ -1,8 +1,6 @@
 package com.example.sprintproject.viewmodels;
 
 import android.util.Log;
-
-import androidx.databinding.BaseObservable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -26,7 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class VacationTimeFormViewModel extends BaseObservable {
+public class VacationTimeFormViewModel extends ViewModel {
 
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private MutableLiveData<Entry> vacationEntry = new MutableLiveData<>();
