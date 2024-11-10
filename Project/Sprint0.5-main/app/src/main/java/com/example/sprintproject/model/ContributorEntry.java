@@ -3,7 +3,6 @@ package com.example.sprintproject.model;
 public class ContributorEntry {
     private String userID;
     private String notes;
-    private String location;
 
     public ContributorEntry() {
     }
@@ -11,7 +10,6 @@ public class ContributorEntry {
     public ContributorEntry(String id, String note) {
         this.userID = id;
         this.notes = note;
-        this.location = location;
     }
 
     public String getUserId() {
@@ -30,13 +28,6 @@ public class ContributorEntry {
         this.notes = note;
     }
 
-    public String getLocation() { // Getter for location
-        return location;
-    }
-
-    public void setLocation(String location) { // Setter for location
-        this.location = location;
-    }
 
 
 
