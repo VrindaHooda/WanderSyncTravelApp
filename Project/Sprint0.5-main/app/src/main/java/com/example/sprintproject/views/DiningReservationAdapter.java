@@ -8,7 +8,8 @@ import com.example.sprintproject.databinding.ReservationListItemBinding;
 import com.example.sprintproject.model.DiningReservation;
 import java.util.List;
 
-public class DiningReservationAdapter extends RecyclerView.Adapter<DiningReservationAdapter.ReservationViewHolder> {
+public class DiningReservationAdapter
+        extends RecyclerView.Adapter<DiningReservationAdapter.ReservationViewHolder> {
 
     private List<DiningReservation> reservationList;
 
@@ -20,7 +21,8 @@ public class DiningReservationAdapter extends RecyclerView.Adapter<DiningReserva
     @Override
     public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ReservationListItemBinding binding = ReservationListItemBinding.inflate(inflater, parent, false);
+        ReservationListItemBinding binding
+                = ReservationListItemBinding.inflate(inflater, parent, false);
         return new ReservationViewHolder(binding);
     }
 
