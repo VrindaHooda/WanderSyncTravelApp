@@ -18,14 +18,10 @@ public class DestinationDatabase {
     private static final String DESTINATIONS_KEY = "destinations";
     private static final String PLANNED_VACATION_DAYS_KEY = "plannedVacationDays";
 
-    public interface DataStatus {
-        void DataIsLoaded(List<DestinationEntry> entries);
-        void DataLoadFailed(DatabaseError databaseError);
-    }
-
     private DestinationDatabase() {
         databaseReference = FirebaseDatabase.getInstance().getReference(DESTINATIONS_KEY);
     }
+
 
     public static synchronized DestinationDatabase getInstance() {
         if (instance == null) {
@@ -34,42 +30,55 @@ public class DestinationDatabase {
         return instance;
     }
 
+
     public void getPlannedVacationDays(final ValueEventListener listener) {
-        databaseReference.child(PLANNED_VACATION_DAYS_KEY).addListenerForSingleValueEvent(listener);
+        databaseReference.child(PLANNED_VACATION_DAYS_KEY)
+                .addListenerForSingleValueEvent(listener);
     }
 
     public void addLogEntry(String userId, String destinationId, DestinationEntry entry) {
-        databaseReference.child(userId).child(destinationId).setValue(entry)
-                .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase", "Entry added successfully!"))
-                .addOnFailureListener(e -> Log.w("DestinationDatabase", "Failed to add entry", e));
+        databaseReference.child(userId).child(destinationId)
+                .setValue(entry)
+                .addOnSuccessListener(aVoid -> Log.d("DestinationDatabase",
+                        "Entry added successfully!"))
+                .addOnFailureListener(e -> Log.w("DestinationDatabase",
+                        "Failed to add entry", e));
     }
 
     public void prepopulateDestinationDatabase(String userId) {
-        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean hasNestedChildren = false;
+        databaseReference.child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean hasNestedChildren = false;
 
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.hasChildren()) {
-                        hasNestedChildren = true;
-                        break;
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            if (child.hasChildren()) {
+                                hasNestedChildren = true;
+                                break;
+                            }
+                        }
+                        if (hasNestedChildren) {
+                            addSampleEntries(userId);
+                        }
                     }
-                }
-                if (hasNestedChildren) {
-                    Calendar calendar = Calendar.getInstance();
-                    addEntry(userId, "1", "Paris", calendar, 2024, Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
-                    addEntry(userId, "2", "Tokyo", calendar, 2024, Calendar.APRIL, 10, Calendar.APRIL, 20);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("DestinationDatabase", "Failed to read data", databaseError.toException());
-            }
-        });
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("DestinationDatabase", "Failed to read data",
+                                databaseError.toException());
+                    }
+                });
     }
 
-    private void addEntry(String userId, String destinationId, String location, Calendar calendar, int year, int monthStart, int dayStart, int monthEnd, int dayEnd) {
+    private void addSampleEntries(String userId) {
+        addEntry(userId, "1", "Paris", 2024, Calendar.FEBRUARY, 15, Calendar.FEBRUARY, 20);
+        addEntry(userId, "2", "Tokyo", 2024, Calendar.APRIL, 10, Calendar.APRIL, 20);
+    }
+
+    private void addEntry(String userId, String destinationId, String location,
+                          int year, int monthStart, int dayStart, int monthEnd, int dayEnd) {
+        Calendar calendar = Calendar.getInstance();
         calendar.set(year, monthStart, dayStart);
         Date startDate = calendar.getTime();
         calendar.set(year, monthEnd, dayEnd);
@@ -87,16 +96,21 @@ public class DestinationDatabase {
                     DestinationEntry entry = snapshot.getValue(DestinationEntry.class);
                     entries.add(entry);
                 }
-                dataStatus.DataIsLoaded(entries);
-                Log.d("DestinationDatabase",
-                        "Data retrieved successfully: " + entries.size() + " entries found.");
+                dataStatus.dataIsLoaded(entries);
+                Log.d("DestinationDatabase", "Data retrieved successfully: "
+                        + entries.size() + " entries found.");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("DestinationDatabase", "Failed to get data", databaseError.toException());
-                dataStatus.DataLoadFailed(databaseError);
+                Log.w("DestinationDatabase", "Failed to get data",
+                        databaseError.toException());
+                dataStatus.dataLoadFailed(databaseError);
             }
         });
+    }
+    public interface DataStatus {
+        void dataIsLoaded(List<DestinationEntry> entries);
+        void dataLoadFailed(DatabaseError databaseError);
     }
 }
