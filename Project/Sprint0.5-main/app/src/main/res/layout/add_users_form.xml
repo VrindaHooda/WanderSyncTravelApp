@@ -19,7 +19,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:gravity="center"
-            android:text="Add Your Email"
+            android:text="Add User's Email"
             android:textColor="@android:color/white"
             android:fontFamily="@font/halloween_spookies"
             android:textSize="40sp"

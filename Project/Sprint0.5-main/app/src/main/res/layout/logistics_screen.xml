@@ -80,7 +80,7 @@
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/makePlan"
+                android:id="@+id/viewNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Make Plan"
