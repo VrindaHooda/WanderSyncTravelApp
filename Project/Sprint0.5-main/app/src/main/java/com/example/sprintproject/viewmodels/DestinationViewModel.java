@@ -36,12 +36,12 @@ public class DestinationViewModel extends ViewModel {
     public void readEntries(String userId) {
         destinationDatabase.getAllDestinationEntries(userId, new DestinationDatabase.DataStatus() {
             @Override
-            public void DataIsLoaded(List<DestinationEntry> entries) {
+            public void dataIsLoaded(List<DestinationEntry> entries) {
                 destinationEntriesLiveData.setValue(entries);
             }
 
             @Override
-            public void DataLoadFailed(DatabaseError databaseError) {
+            public void dataLoadFailed(DatabaseError databaseError) {
                 Log.w("DestinationViewModel",
                         "Failed to load entries: " + databaseError.getMessage());
                 destinationEntriesLiveData.setValue(new ArrayList<>());

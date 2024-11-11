@@ -3,12 +3,11 @@ package com.example.sprintproject.views;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sprintproject.R;
 import com.example.sprintproject.databinding.DiningEstablishmentScreenBinding;
 import com.example.sprintproject.model.DiningReservation;
@@ -111,7 +110,9 @@ public class DiningActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("DiningActivity", "Database error: " + databaseError.getMessage());
-                Toast.makeText(DiningActivity.this, "Failed to load reservations. Please try again later.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiningActivity.this,
+                        "Failed to load reservations. Please try again later.",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
