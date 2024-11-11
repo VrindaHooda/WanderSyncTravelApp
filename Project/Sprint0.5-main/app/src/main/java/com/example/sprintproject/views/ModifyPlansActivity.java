@@ -15,10 +15,13 @@ import java.util.Calendar;
 public class ModifyPlansActivity extends AppCompatActivity {
 
     private EditText locationInput;
-    private Button openStartDatePicker, openEndDatePicker, submitTravelLogButton;
-    private TextView startDateText, endDateText;
-
-    private Calendar startDate, endDate;
+    private Button openStartDatePicker;
+    private Button openEndDatePicker;
+    private Button submitTravelLogButton;
+    private TextView startDateText;
+    private TextView endDateText;
+    private Calendar endDate;
+    private Calendar startDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,10 +75,12 @@ public class ModifyPlansActivity extends AppCompatActivity {
 
                     if (isStartDate) {
                         startDate = calendar;
-                        startDateText.setText("Start Date: " + (month + 1) + "/" + dayOfMonth + "/" + year);
+                        startDateText.setText("Start Date: " + (month + 1)
+                                + "/" + dayOfMonth + "/" + year);
                     } else {
                         endDate = calendar;
-                        endDateText.setText("End Date: " + (month + 1) + "/" + dayOfMonth + "/" + year);
+                        endDateText.setText("End Date: " + (month + 1) + "/"
+                                + dayOfMonth + "/" + year);
                     }
                 },
                 calendar.get(Calendar.YEAR),
@@ -93,7 +98,8 @@ public class ModifyPlansActivity extends AppCompatActivity {
             return;
         }
         if (startDate == null || endDate == null) {
-            Toast.makeText(this, "Please select both start and end dates", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select both start and end dates",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
