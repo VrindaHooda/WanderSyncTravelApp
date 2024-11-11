@@ -54,8 +54,6 @@ public class LogisticsActivity extends AppCompatActivity {
         duration = sharedPreferences.getInt("PLANNED_DAYS_KEY", 0);
         Log.d("LogisticsActivity", "Retrieved totalDays: " + totalDays + ", duration: " + duration);
 
-//        binding.modifyNotes.setOnClickListener(v -> showModifyPlansDialog());
-
         updatePieChart();
 
         binding.btnGraph.setOnClickListener(v -> {
@@ -69,23 +67,30 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-//        binding.invite.setOnClickListener(v -> {
-//            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
-//            startActivity(intent1);
-//        });
-//
-//        binding.viewInvites.setOnClickListener(v -> {
-//            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
-//            startActivity(intent2);
-//        });
-//
-//        binding.viewNotes.setOnClickListener(v -> {
-//            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
-//            startActivity(intent3);
-//        });
+        binding.addNotes.setOnClickListener(v -> showAddNotesDialog());
+
+        binding.modifyPlan.setOnClickListener(v -> {
+            Intent intent4 = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
+            startActivity(intent4);
+        });
+
+        binding.inviteUsers.setOnClickListener(v -> {
+            Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
+            startActivity(intent1);
+        });
+
+        binding.viewInvites.setOnClickListener(v -> {
+            Intent intent2 = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+            startActivity(intent2);
+        });
+
+        binding.viewNotes.setOnClickListener(v -> {
+            Intent intent3 = new Intent(LogisticsActivity.this, ViewNotesActivity.class);
+            startActivity(intent3);
+        });
     }
 
-    private void showModifyPlansDialog() {
+    private void showAddNotesDialog() {
         final EditText input = new EditText(this);
         input.setHint("Type in your note here");
 
