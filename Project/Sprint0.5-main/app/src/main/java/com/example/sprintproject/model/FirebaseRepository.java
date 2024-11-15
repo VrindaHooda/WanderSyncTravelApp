@@ -2,12 +2,15 @@ package com.example.sprintproject.model;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class FirebaseRepository {
     private final FirebaseFirestore firestore;
@@ -97,6 +100,35 @@ public class FirebaseRepository {
                                 exception.printStackTrace();
                             }
                         }
+                    }
+                });
+    }
+
+    public void getTotalTravelDays(String userId, OnCompleteListener<Integer> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("destination entries")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            int totalDays = 0;
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                TravelLog travelLog = document.toObject(TravelLog.class);
+                                if (travelLog != null) {
+                                    long diffInMillies = Math.abs(travelLog.getEndDate().getTime() - travelLog.getStartDate().getTime());
+                                    int days = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                                    totalDays += days;
+                                }
+                            }
+                            listener.onComplete(Tasks.forResult(totalDays));
+                        } else {
+                            listener.onComplete(Tasks.forResult(0));
+                        }
+                    } else {
+                        // Handle failure to retrieve travel logs
+                        listener.onComplete(Tasks.forException(task.getException()));
                     }
                 });
     }

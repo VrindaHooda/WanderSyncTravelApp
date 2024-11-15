@@ -19,6 +19,9 @@
     <string name="transportation">Transportation</string>
     <string name="travel_community">Travel Community</string>
 
+    <string name="total_travel_days">Total Travel Days: %1$d</string>
+
+
     <string name="accommodations_header">Accommodations</string>
     <string name="location_hint">Location</string>
     <string name="checkin_date_hint">Check-In Date</string>

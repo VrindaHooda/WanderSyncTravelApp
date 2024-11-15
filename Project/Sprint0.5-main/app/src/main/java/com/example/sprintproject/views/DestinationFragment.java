@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ public class DestinationFragment extends Fragment {
     private DestinationAdapter destinationAdapter;
     private Button logPastTravelButton;
     private Button calculateVacationButton;
+    private TextView totalTravelDaysTextView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
 
@@ -40,6 +42,7 @@ public class DestinationFragment extends Fragment {
         destinationRecyclerView = rootView.findViewById(R.id.destinationRecyclerView);
         logPastTravelButton = rootView.findViewById(R.id.logPastTravelButton);
         calculateVacationButton = rootView.findViewById(R.id.calculateVacationButton);
+        totalTravelDaysTextView = rootView.findViewById(R.id.totalTravelDaysTextView);
 
         // Set up RecyclerView
         destinationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -63,6 +66,11 @@ public class DestinationFragment extends Fragment {
             // Update RecyclerView with the last five travel logs
             destinationAdapter.setTravelLogs(travelLogs);
         });
+
+        destinationViewModel.getTotalTravelDays(userId).observe(getViewLifecycleOwner(), totalDays -> {
+            // Update TextView with the total travel days
+            totalTravelDaysTextView.setText(getString(R.string.total_travel_days, totalDays));
+        });
     }
 
     private void openLogPastTravelForm() {
@@ -71,6 +79,8 @@ public class DestinationFragment extends Fragment {
         logPastTravelDialog.setOnSaveListener(travelLog -> {
             String userId = firebaseAuth.getCurrentUser().getUid();
             destinationViewModel.logPastTravel(userId, travelLog);
+            // Refresh the list immediately after saving
+            refreshTravelLogs(userId);
         });
         logPastTravelDialog.show(getChildFragmentManager(), "LogPastTravelDialog");
     }
@@ -87,5 +97,9 @@ public class DestinationFragment extends Fragment {
             destinationViewModel.calculateVacationTime(startDate, endDate, duration);
         });
         calculateVacationDialog.show(getChildFragmentManager(), "CalculateVacationDialog");
+    }
+
+    private void refreshTravelLogs(String userId) {
+        destinationViewModel.getLastFiveTravelLogs(userId);
     }
 }
