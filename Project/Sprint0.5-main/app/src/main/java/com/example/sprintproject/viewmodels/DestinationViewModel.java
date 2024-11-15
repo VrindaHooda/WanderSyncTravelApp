@@ -1,5 +1,6 @@
 package com.example.sprintproject.viewmodels;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.FirebaseRepository;
 import com.example.sprintproject.model.TravelLog;
 import com.example.sprintproject.model.VacationEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -18,10 +21,12 @@ import java.util.concurrent.TimeUnit;
 public class DestinationViewModel extends ViewModel {
     private FirebaseRepository firebaseRepository;
     private MutableLiveData<List<TravelLog>> travelLogs;
+    private MutableLiveData<Integer> totalTravelDays;
 
     public DestinationViewModel() {
         firebaseRepository = new FirebaseRepository();
         travelLogs = new MutableLiveData<>();
+        totalTravelDays = new MutableLiveData<>();
     }
 
     public LiveData<List<TravelLog>> getLastFiveTravelLogs(String userId) {
@@ -42,6 +47,7 @@ public class DestinationViewModel extends ViewModel {
 
     public void logPastTravel(String userId, TravelLog travelLog) {
         firebaseRepository.saveTravelLog(userId, travelLog);
+        refreshTotalTravelDays(userId);
     }
 
     public void saveVacationEntry(String userId, VacationEntry vacationEntry) {
@@ -66,5 +72,21 @@ public class DestinationViewModel extends ViewModel {
 
         // Update LiveData to notify the View
         // You can use another LiveData to update the calculated values in the form if needed
+    }
+
+    public LiveData<Integer> getTotalTravelDays(String userId) {
+        refreshTotalTravelDays(userId);
+        return totalTravelDays;
+    }
+
+    private void refreshTotalTravelDays(String userId) {
+        firebaseRepository.getTotalTravelDays(userId, new OnCompleteListener<Integer>() {
+            @Override
+            public void onComplete(@NonNull Task<Integer> task) {
+                if (task.isSuccessful()) {
+                    totalTravelDays.setValue(task.getResult());
+                }
+            }
+        });
     }
 }
