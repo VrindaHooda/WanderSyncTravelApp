@@ -36,27 +36,69 @@
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/header"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/month_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Month (MM)"
+            app:layout_constraintTop_toBottomOf="@id/location_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/day_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Day (DD)"
+            app:layout_constraintTop_toBottomOf="@id/month_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/year_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Year (YYYY)"
+            app:layout_constraintTop_toBottomOf="@id/day_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <EditText
             android:id="@+id/time_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Time"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/location_input"
+            app:layout_constraintTop_toBottomOf="@id/year_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <EditText
             android:id="@+id/website_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Website"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/time_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <RatingBar
             android:id="@+id/rating_input"
@@ -64,10 +106,10 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="1.0"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/website_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
 
         <Button
             android:id="@+id/add_reservation_button"
@@ -89,12 +131,16 @@
             app:layout_constraintTop_toBottomOf="@id/add_reservation_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            android:layout_marginTop="16dp" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
