@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!-- dialog_log_past_travel.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:padding="16dp">
+
+<EditText
+    android:id="@+id/locationInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Location" />
+
+<EditText
+    android:id="@+id/startDateInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Start Date (yyyy-MM-dd)"
+    android:inputType="date" />
+
+<EditText
+    android:id="@+id/endDateInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="End Date (yyyy-MM-dd)"
+    android:inputType="date" />
+
+<Button
+    android:id="@+id/saveButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Save"
+    android:layout_gravity="end"
+    android:layout_marginTop="16dp" />
+
+</LinearLayout>

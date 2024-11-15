@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_destination.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/logPastTravelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Past Travel"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/calculateVacationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate Vacation Time"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:layout_toEndOf="@id/logPastTravelButton" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/destinationRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/logPastTravelButton"
+        android:layout_marginTop="16dp" />
+
+</RelativeLayout>
+
