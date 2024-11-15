@@ -2,10 +2,7 @@ package com.example.sprintproject;
 
 import com.example.sprintproject.model.ContributorEntry;
 import com.example.sprintproject.model.DestinationEntry;
-import com.example.sprintproject.model.DurationEntry;
-import com.example.sprintproject.model.TravelLogEntry;
 import com.example.sprintproject.model.User;
-import com.example.sprintproject.model.UserEntry;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
