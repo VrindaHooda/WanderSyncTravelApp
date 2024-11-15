@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DiningActivity extends AppCompatActivity {
@@ -65,19 +66,25 @@ public class DiningActivity extends AppCompatActivity {
         String website = binding.websiteInput.getText().toString().trim();
         int rating = (int) binding.ratingInput.getRating();
 
+        int month = Integer.parseInt(binding.monthInput.getText().toString().trim());
+        int day = Integer.parseInt(binding.dayInput.getText().toString().trim());
+        int year = Integer.parseInt(binding.yearInput.getText().toString().trim());
+
         if (TextUtils.isEmpty(location) || TextUtils.isEmpty(time) || TextUtils.isEmpty(website)) {
-            // Show an error message if fields are empty
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Generate a unique ID for the reservation
+        if (!isValidTime(time)) {
+            Toast.makeText(this, "Invalid time format. Use HH:mm.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String reservationId = databaseRef.push().getKey();
         if (reservationId != null) {
-            DiningReservation reservation = new DiningReservation(location, time, website, rating);
+            DiningReservation reservation = new DiningReservation(location, month, day, year, time, 0, website, rating);
             databaseRef.child(reservationId).setValue(reservation);
 
-            // Clear input fields after adding the reservation
             binding.locationInput.setText("");
             binding.timeInput.setText("");
             binding.websiteInput.setText("");
@@ -85,35 +92,55 @@ public class DiningActivity extends AppCompatActivity {
         }
     }
 
+
+
+    private boolean isValidTime(String time) {
+        String timeRegex = "^([01]\\d|2[0-3]):([0-5]\\d)$";
+        return time.matches(timeRegex);
+    }
+
+    private boolean isDateInPast(int year, int month, int day) {
+        Calendar today = Calendar.getInstance();
+        Calendar reservationDate = Calendar.getInstance();
+        reservationDate.set(year, month - 1, day);
+        return reservationDate.before(today);
+    }
+
     private void fetchReservationsFromDatabase() {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                reservations.clear(); // Clear the list to avoid duplicates
+                reservations.clear();
 
-                // Loop through all the children in the database
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DiningReservation reservation = snapshot.getValue(DiningReservation.class);
-
                     if (reservation != null) {
                         reservations.add(reservation);
                     }
                 }
 
-                // Sort reservations by date and time if needed
-                reservations.sort((r1, r2) -> r1.getTime().compareTo(r2.getTime()));
+                // Sort reservations by year, month, day, and time
+                reservations.sort((r1, r2) -> {
+                    Calendar cal1 = Calendar.getInstance();
+                    cal1.set(r1.getYear(), r1.getMonth() - 1, r1.getDay());
+                    Calendar cal2 = Calendar.getInstance();
+                    cal2.set(r2.getYear(), r2.getMonth() - 1, r2.getDay());
 
-                // Notify the adapter that data has changed
+                    if (cal1.equals(cal2)) {
+                        return r1.getTime().compareTo(r2.getTime());
+                    }
+                    return cal1.compareTo(cal2);
+                });
+
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("DiningActivity", "Database error: " + databaseError.getMessage());
-                Toast.makeText(DiningActivity.this,
-                        "Failed to load reservations. Please try again later.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiningActivity.this, "Failed to load reservations.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }
