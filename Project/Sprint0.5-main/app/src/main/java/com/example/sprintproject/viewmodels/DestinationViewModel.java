@@ -25,6 +25,9 @@ public class DestinationViewModel extends ViewModel {
     }
 
     public LiveData<List<TravelLog>> getLastFiveTravelLogs(String userId) {
+        // Prepopulate travel logs if none exist
+        firebaseRepository.prepopulateTravelLogsIfNoneExist(userId);
+
         firebaseRepository.getLastFiveTravelLogs(userId, task -> {
             if (task.isSuccessful()) {
                 List<TravelLog> logs = new ArrayList<>();
