@@ -2,12 +2,15 @@ package com.example.sprintproject.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import androidx.fragment.app.Fragment;
+
 import com.example.sprintproject.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +68,22 @@ public class NavigationFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        ImageButton logoutButton = view.findViewById(R.id.logout);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sign out the user
+                FirebaseAuth.getInstance().signOut();
+
+                // Redirect to the login screen
+                Intent intent = new Intent(getActivity(), Login.class);
+                if (getActivity() != null) {
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+        });
+
 
         ImageButton transportationButton = view.findViewById(R.id.transportation);
         transportationButton.setOnClickListener(new View.OnClickListener() {

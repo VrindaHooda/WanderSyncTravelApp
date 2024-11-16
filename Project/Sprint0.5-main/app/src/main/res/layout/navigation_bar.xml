@@ -67,6 +67,14 @@
                 android:background="@android:color/holo_purple"
                 android:onClick="buttonClick"
                 android:src="@drawable/destination" />
+            <ImageButton
+                android:id="@+id/logout"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_purple"
+                android:onClick="buttonClick"
+                android:src="@drawable/logout" />
+
 
         </LinearLayout>
 
