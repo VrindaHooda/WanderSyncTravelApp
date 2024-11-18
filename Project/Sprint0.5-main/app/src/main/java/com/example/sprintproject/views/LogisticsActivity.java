@@ -69,10 +69,10 @@ public class LogisticsActivity extends AppCompatActivity {
 
         binding.addNotes.setOnClickListener(v -> showAddNotesDialog());
 
-        binding.modifyPlan.setOnClickListener(v -> {
-            Intent intent4 = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
-            startActivity(intent4);
-        });
+//        binding.modifyPlan.setOnClickListener(v -> {
+//            Intent intent4 = new Intent(LogisticsActivity.this, ModifyPlansActivity.class);
+//            startActivity(intent4);
+//        });
 
         binding.inviteUsers.setOnClickListener(v -> {
             Intent intent1 = new Intent(LogisticsActivity.this, AddUserActivity.class);
