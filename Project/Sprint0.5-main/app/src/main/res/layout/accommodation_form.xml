@@ -3,50 +3,76 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
 
     <EditText
         android:id="@+id/form_locationInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Location"
-        android:inputType="text" />
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="16sp"
+        android:inputType="text"
+        android:layout_marginTop="8dp" />
 
     <EditText
         android:id="@+id/form_checkInDateInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Check-In Date"
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="16sp"
         android:focusable="false"
-        android:inputType="date" />
+        android:inputType="date"
+        android:layout_marginTop="8dp" />
 
     <EditText
         android:id="@+id/form_checkOutDateInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Check-Out Date"
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="16sp"
         android:focusable="false"
-        android:inputType="date" />
+        android:inputType="date"
+        android:layout_marginTop="8dp" />
 
     <EditText
         android:id="@+id/form_numRoomsInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Number of Rooms"
-        android:inputType="number" />
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="16sp"
+        android:inputType="number"
+        android:layout_marginTop="8dp" />
 
     <Spinner
         android:id="@+id/form_roomTypeSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/room_types"
-        android:prompt="@string/room_type_prompt" />
+        android:prompt="@string/room_type_prompt"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/form_addAccommodationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Accommodation"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:backgroundTint="@color/colorHighlight"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>

@@ -3,41 +3,57 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <TextView
         android:id="@+id/checkInDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Check-In Date"
-        android:textSize="14sp" />
+        android:textSize="16sp"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/checkOutDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Check-Out Date"
-        android:textSize="14sp" />
+        android:textSize="16sp"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:layout_marginTop="4dp" />
 
     <TextView
         android:id="@+id/numRooms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Number of Rooms"
-        android:textSize="14sp" />
+        android:textSize="16sp"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:layout_marginTop="4dp" />
 
     <TextView
         android:id="@+id/roomType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Room Type"
-        android:textSize="14sp" />
+        android:textSize="16sp"
+        android:textColor="@color/colorDarkContrast"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:layout_marginTop="4dp" />
+
 </LinearLayout>
