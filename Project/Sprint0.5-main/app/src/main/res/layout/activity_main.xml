@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.MainActivity"
-    android:background = "@drawable/caafda8b_4c59_42e6_8f19_d8648b67f334">
+    android:background = "@drawable/wandersyncsplashscreen">
 
     <ImageView
         android:id="@+id/splash_logo"
