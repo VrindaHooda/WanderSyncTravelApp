@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -11,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark">
+        android:background="@color/colorNeutral">
 
         <!-- Header TextView -->
         <TextView
@@ -20,9 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Logistics"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white"
-            android:textSize="35sp"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textColor="@color/colorDarkContrast"
+            android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Show Graph"
-            android:backgroundTint="@android:color/holo_blue_light"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorHighlight"
+            android:textColor="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/pieChart"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Add Notes"
                 app:srcCompat="@drawable/baseline_add_24"
+                android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -77,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Modify Plan"
                 app:srcCompat="@drawable/baseline_border_color_24"
+                android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -85,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Make Plan"
                 app:srcCompat="@drawable/baseline_trip_origin_24"
+                android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -93,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="View Invites"
                 app:srcCompat="@drawable/baseline_view_list_24"
+                android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -101,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Invite Users"
                 app:srcCompat="@drawable/baseline_alternate_email_24"
+                android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
         </LinearLayout>
 
@@ -111,8 +119,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Contributors"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textColor="@color/colorDarkContrast"
             android:textSize="24sp"
             app:layout_constraintTop_toBottomOf="@id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_log_past_travel.xml -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -10,8 +11,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark">
+        android:layout_height="wrap_content"
+        android:background="@color/colorNeutral"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/header"
@@ -19,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Dining Reservations"
-            android:fontFamily="@font/halloween_spookies"
-            android:textColor="@android:color/white"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textColor="@color/colorDarkContrast"
             android:textSize="35sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,10 +35,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Location"
-            android:layout_marginTop="16dp"
+            android:inputType="text"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp" />
 
@@ -45,6 +52,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Month (MM)"
+            android:inputType="number"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/location_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +69,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Day (DD)"
+            android:inputType="number"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/month_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +86,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Year (YYYY)"
+            android:inputType="number"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/day_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,6 +103,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Time"
+            android:inputType="time"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/year_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +120,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Website"
+            android:inputType="text"
+            android:textColor="@color/colorDarkContrast"
+            android:textColorHint="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/time_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +149,9 @@
             android:layout_height="wrap_content"
             android:text="Add Reservation"
             android:onClick="@{() -> activity.addReservation()}"
+            android:backgroundTint="@color/colorHighlight"
+            android:textColor="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
             app:layout_constraintTop_toBottomOf="@id/rating_input"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,6 +173,7 @@
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorHighlight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

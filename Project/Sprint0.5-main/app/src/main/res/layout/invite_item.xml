@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@android:color/white">
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
 
     <!-- Text for Invite -->
     <TextView
@@ -14,17 +14,20 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Trip to Paris"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="20sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <!-- Accept Button -->
     <Button
         android:id="@+id/acceptButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_green_dark"
+        android:backgroundTint="@color/colorHighlight"
         android:text="Accept"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorNeutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <!-- Decline Button -->
     <Button
@@ -32,7 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:backgroundTint="@android:color/holo_red_dark"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Decline"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorNeutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 </LinearLayout>
