@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="light_orange">#FFE4B5</color>
+    <!-- Primary color -->
+    <color name="colorPrimary">#E07A5F</color>
+    <!-- Accent color -->
+    <color name="colorAccent">#F2CC8F</color>
+    <!-- Neutral color -->
+    <color name="colorNeutral">#F4F1DE</color>
+    <!-- Highlight color -->
+    <color name="colorHighlight">#81B29A</color>
+    <!-- Dark contrast color -->
+    <color name="colorDarkContrast">#3D405B</color>
 </resources>
