@@ -6,19 +6,22 @@
 
     <!-- item_contributor.xml -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:orientation="horizontal"
+        android:background="@color/colorNeutral"
         tools:ignore="MissingConstraints">
 
         <Button
             android:id="@+id/btn_contributor"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorHighlight"
             android:text="Notes"
-            android:textSize="16sp" />
+            android:textColor="@color/colorNeutral"
+            android:textSize="16sp"
+            android:fontFamily="@font/playwritefrmoderne" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

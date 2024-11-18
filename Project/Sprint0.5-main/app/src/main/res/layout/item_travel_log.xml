@@ -4,31 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
 
     <TextView
         android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="18sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <TextView
         android:id="@+id/startDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Date" />
+        android:text="Start Date"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <TextView
         android:id="@+id/endDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End Date" />
+        android:text="End Date"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
     <TextView
         android:id="@+id/durationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Duration: 0 days" />
+        android:text="Duration: 0 days"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne" />
 
 </LinearLayout>

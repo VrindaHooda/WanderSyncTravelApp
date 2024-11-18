@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_dark">
+    android:background="@color/colorNeutral">
 
     <TextView
         android:id="@+id/header"
@@ -12,18 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Transportation"
-        android:fontFamily="@font/halloween_spookies"
-        android:textColor="@android:color/white"
-        android:textSize="35sp"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
