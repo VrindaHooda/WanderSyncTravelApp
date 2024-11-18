@@ -1,7 +1,6 @@
 package com.example.sprintproject;
 
 import com.example.sprintproject.model.ContributorEntry;
-import com.example.sprintproject.model.DestinationEntry;
 import com.example.sprintproject.model.User;
 
 import org.junit.Test;

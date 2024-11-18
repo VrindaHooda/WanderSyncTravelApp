@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.ViewHolder> {
     private List<TravelLog> travelLogs = new ArrayList<>();
@@ -52,19 +53,26 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         private final TextView locationTextView;
         private final TextView startDateTextView;
         private final TextView endDateTextView;
+        private final TextView durationTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             locationTextView = itemView.findViewById(R.id.locationTextView);
             startDateTextView = itemView.findViewById(R.id.startDateTextView);
             endDateTextView = itemView.findViewById(R.id.endDateTextView);
+            durationTextView = itemView.findViewById(R.id.durationTextView);
         }
 
         public void bind(TravelLog travelLog) {
             locationTextView.setText(travelLog.getLocation());
-            startDateTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(travelLog.getStartDate()));
-            endDateTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(travelLog.getEndDate()));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            startDateTextView.setText(dateFormat.format(travelLog.getStartDate()));
+            endDateTextView.setText(dateFormat.format(travelLog.getEndDate()));
+
+            // Calculate and set the duration
+            long diffInMillies = Math.abs(travelLog.getEndDate().getTime() - travelLog.getStartDate().getTime());
+            int duration = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            durationTextView.setText("Duration: " + duration + " days");
         }
     }
 }
-

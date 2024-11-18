@@ -7,14 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.TravelLog;
+import com.example.sprintproject.viewmodels.DestinationViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +30,9 @@ public class LogPastTravelDialog extends DialogFragment {
     private EditText startDateInput;
     private EditText endDateInput;
     private Button saveButton;
+    private TextView durationTextView;
     private OnSaveListener onSaveListener;
+    private DestinationViewModel destinationViewModel;
 
     @Nullable
     @Override
@@ -39,9 +44,12 @@ public class LogPastTravelDialog extends DialogFragment {
         startDateInput = rootView.findViewById(R.id.startDateInput);
         endDateInput = rootView.findViewById(R.id.endDateInput);
         saveButton = rootView.findViewById(R.id.saveButton);
-        startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
+        durationTextView = rootView.findViewById(R.id.durationTextView);
 
-        // Attach DatePickerDialog to End Date Input
+        // Initialize ViewModel
+        destinationViewModel = new ViewModelProvider(requireActivity()).get(DestinationViewModel.class);
+
+        startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
         endDateInput.setOnClickListener(v -> showDatePickerDialog(endDateInput));
 
         // Set up Save Button Listener
@@ -59,8 +67,28 @@ public class LogPastTravelDialog extends DialogFragment {
             }
         });
 
+        // Observe calculated duration
+        destinationViewModel.getCalculatedDuration().observe(getViewLifecycleOwner(), duration -> {
+            if (duration != null) {
+                durationTextView.setText(getString(R.string.travel_duration, duration));
+            }
+        });
+
+        startDateInput.setOnFocusChangeListener((v, hasFocus) -> calculateDurationIfNeeded());
+        endDateInput.setOnFocusChangeListener((v, hasFocus) -> calculateDurationIfNeeded());
+
         return rootView;
     }
+
+    private void calculateDurationIfNeeded() {
+        Date startDate = parseDate(startDateInput.getText().toString());
+        Date endDate = parseDate(endDateInput.getText().toString());
+
+        if (startDate != null && endDate != null) {
+            destinationViewModel.calculateVacationTime(startDate, endDate, null);
+        }
+    }
+
     private void showDatePickerDialog(EditText dateInputField) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -74,6 +102,7 @@ public class LogPastTravelDialog extends DialogFragment {
                     // Format the selected date and set it to the EditText field
                     String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                     dateInputField.setText(formattedDate);
+                    calculateDurationIfNeeded();
                 },
                 year,
                 month,
@@ -82,7 +111,6 @@ public class LogPastTravelDialog extends DialogFragment {
 
         datePickerDialog.show();
     }
-
 
     public void setOnSaveListener(OnSaveListener onSaveListener) {
         this.onSaveListener = onSaveListener;
@@ -102,5 +130,3 @@ public class LogPastTravelDialog extends DialogFragment {
         }
     }
 }
-
-

@@ -132,4 +132,14 @@ public class FirebaseRepository {
                     }
                 });
     }
+
+    public void calculateDuration(Date startDate, Date endDate, OnCompleteListener<Integer> listener) {
+        if (startDate != null && endDate != null) {
+            long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+            int duration = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            listener.onComplete(Tasks.forResult(duration));
+        } else {
+            listener.onComplete(Tasks.forException(new IllegalArgumentException("Start date or end date cannot be null")));
+        }
+    }
 }
