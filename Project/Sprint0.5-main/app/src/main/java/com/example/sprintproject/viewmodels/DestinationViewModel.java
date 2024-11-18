@@ -22,12 +22,14 @@ public class DestinationViewModel extends ViewModel {
     private FirebaseRepository firebaseRepository;
     private MutableLiveData<List<TravelLog>> travelLogs;
     private MutableLiveData<Integer> totalTravelDays;
+    private MutableLiveData<Integer> totalPlannedDays;
     private MutableLiveData<Integer> calculatedDuration;
 
     public DestinationViewModel() {
         firebaseRepository = new FirebaseRepository();
         travelLogs = new MutableLiveData<>();
         totalTravelDays = new MutableLiveData<>();
+        totalPlannedDays = new MutableLiveData<>();
         calculatedDuration = new MutableLiveData<>();
     }
 
@@ -54,6 +56,7 @@ public class DestinationViewModel extends ViewModel {
 
     public void saveVacationEntry(String userId, VacationEntry vacationEntry) {
         firebaseRepository.saveVacationEntry(userId, vacationEntry);
+        refreshTotalPlannedDays(userId);
     }
 
     public void calculateVacationTime(Date startDate, Date endDate, Integer duration) {
@@ -86,6 +89,11 @@ public class DestinationViewModel extends ViewModel {
         return totalTravelDays;
     }
 
+    public LiveData<Integer> getTotalPlannedDays(String userId) {
+        refreshTotalPlannedDays(userId);
+        return totalPlannedDays;
+    }
+
     public LiveData<Integer> getCalculatedDuration() {
         return calculatedDuration;
     }
@@ -99,5 +107,20 @@ public class DestinationViewModel extends ViewModel {
                 }
             }
         });
+    }
+
+    private void refreshTotalPlannedDays(String userId) {
+        firebaseRepository.getTotalPlannedDays(userId, new OnCompleteListener<Integer>() {
+            @Override
+            public void onComplete(@NonNull Task<Integer> task) {
+                if (task.isSuccessful()) {
+                    totalPlannedDays.setValue(task.getResult());
+                }
+            }
+        });
+    }
+
+    public void resetCalculatedDuration() {
+        calculatedDuration.setValue(null);
     }
 }

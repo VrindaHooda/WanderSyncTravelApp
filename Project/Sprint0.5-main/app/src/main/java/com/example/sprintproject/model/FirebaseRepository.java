@@ -142,4 +142,31 @@ public class FirebaseRepository {
             listener.onComplete(Tasks.forException(new IllegalArgumentException("Start date or end date cannot be null")));
         }
     }
+
+    public void getTotalPlannedDays(String userId, OnCompleteListener<Integer> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("vacation entries")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            int totalPlannedDays = 0;
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                VacationEntry vacationEntry = document.toObject(VacationEntry.class);
+                                if (vacationEntry != null) {
+                                    totalPlannedDays += vacationEntry.getDuration();
+                                }
+                            }
+                            listener.onComplete(Tasks.forResult(totalPlannedDays));
+                        } else {
+                            listener.onComplete(Tasks.forResult(0));
+                        }
+                    } else {
+                        // Handle failure to retrieve vacation entries
+                        listener.onComplete(Tasks.forException(task.getException()));
+                    }
+                });
+    }
 }

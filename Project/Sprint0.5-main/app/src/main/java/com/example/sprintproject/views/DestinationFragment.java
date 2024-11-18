@@ -26,6 +26,7 @@ public class DestinationFragment extends Fragment {
     private Button logPastTravelButton;
     private Button calculateVacationButton;
     private TextView totalTravelDaysTextView;
+    private TextView totalPlannedDaysTextView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
 
@@ -40,6 +41,7 @@ public class DestinationFragment extends Fragment {
 
         // Initialize Views
         destinationRecyclerView = rootView.findViewById(R.id.destinationRecyclerView);
+        totalPlannedDaysTextView = rootView.findViewById(R.id.totalPlannedDaysTextView);
         logPastTravelButton = rootView.findViewById(R.id.logPastTravelButton);
         calculateVacationButton = rootView.findViewById(R.id.calculateVacationButton);
         totalTravelDaysTextView = rootView.findViewById(R.id.totalTravelDaysTextView);
@@ -73,6 +75,11 @@ public class DestinationFragment extends Fragment {
         destinationViewModel.getTotalTravelDays(userId).observe(getViewLifecycleOwner(), totalDays -> {
             // Update TextView with the total travel days
             totalTravelDaysTextView.setText(getString(R.string.total_travel_days, totalDays));
+        });
+
+        destinationViewModel.getTotalPlannedDays(userId).observe(getViewLifecycleOwner(), totalPlannedDays -> {
+            // Update TextView with the total planned days
+            totalPlannedDaysTextView.setText(getString(R.string.total_planned_days, totalPlannedDays));
         });
     }
 

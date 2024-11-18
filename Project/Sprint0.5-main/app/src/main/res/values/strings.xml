@@ -21,6 +21,7 @@
 
     <string name="total_travel_days">Total Travel Days: %1$d</string>
     <string name="travel_duration">Duration: %1$d days</string>
+    <string name="total_planned_days">Total Planned Days: %1$d</string>
 
 
     <string name="accommodations_header">Accommodations</string>
