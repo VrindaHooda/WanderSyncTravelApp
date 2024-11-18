@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- activity_destination.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/holo_orange_dark">
+    android:background="@color/colorNeutral">
+
     <TextView
         android:id="@+id/destinationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
-        android:fontFamily="@font/halloween_spooky"
-        android:text="DESTINATION SCREEN"
-        android:textColor="@android:color/white"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:text="Destination Screen"
+        android:textColor="@color/colorDarkContrast"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@id/destinationTitle"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:layout_above="@id/bottomNavigation" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorHighlight"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-32dp" />
+        tools:layout_editor_absoluteY="0dp" />
 
 </RelativeLayout>
