@@ -12,9 +12,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.VacationEntry;
+import com.example.sprintproject.viewmodels.DestinationViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +32,7 @@ public class CalculateVacationDialog extends DialogFragment {
     private Button saveButton;
     private OnSaveListener onSaveListener;
     private OnCalculateListener onCalculateListener;
+    private DestinationViewModel destinationViewModel;
 
     @Nullable
     @Override
@@ -42,9 +45,11 @@ public class CalculateVacationDialog extends DialogFragment {
         durationInput = rootView.findViewById(R.id.durationInput);
         calculateButton = rootView.findViewById(R.id.calculateButton);
         saveButton = rootView.findViewById(R.id.saveButton);
-        startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
 
-        // Attach DatePickerDialog to End Date Input
+        // Initialize ViewModel
+        destinationViewModel = new ViewModelProvider(requireActivity()).get(DestinationViewModel.class);
+
+        startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
         endDateInput.setOnClickListener(v -> showDatePickerDialog(endDateInput));
 
         // Set up Calculate Button Listener
@@ -53,8 +58,27 @@ public class CalculateVacationDialog extends DialogFragment {
             Date endDate = parseDate(endDateInput.getText().toString());
             Integer duration = parseInteger(durationInput.getText().toString());
 
-            if (onCalculateListener != null) {
-                onCalculateListener.onCalculate(startDate, endDate, duration);
+            if (startDate != null && endDate != null) {
+                destinationViewModel.calculateVacationTime(startDate, endDate, null);
+            } else if (startDate != null && duration != null) {
+                destinationViewModel.calculateVacationTime(startDate, null, duration);
+            } else if (endDate != null && duration != null) {
+                destinationViewModel.calculateVacationTime(null, endDate, duration);
+            } else {
+                Toast.makeText(getContext(), "Please provide at least two inputs to calculate the third", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Observe ViewModel for calculated duration
+        destinationViewModel.getCalculatedDuration().observe(getViewLifecycleOwner(), calculatedDuration -> {
+            if (calculatedDuration != null) {
+                if (startDateInput.getText().toString().isEmpty() && !endDateInput.getText().toString().isEmpty()) {
+                    startDateInput.setText(formatDate(calculateStartDate(endDateInput.getText().toString(), calculatedDuration)));
+                } else if (endDateInput.getText().toString().isEmpty() && !startDateInput.getText().toString().isEmpty()) {
+                    endDateInput.setText(formatDate(calculateEndDate(startDateInput.getText().toString(), calculatedDuration)));
+                } else if (durationInput.getText().toString().isEmpty()) {
+                    durationInput.setText(String.valueOf(calculatedDuration));
+                }
             }
         });
 
@@ -75,6 +99,7 @@ public class CalculateVacationDialog extends DialogFragment {
 
         return rootView;
     }
+
     private void showDatePickerDialog(EditText dateInputField) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -131,5 +156,31 @@ public class CalculateVacationDialog extends DialogFragment {
             return null;
         }
     }
-}
 
+    private String formatDate(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return format.format(date);
+    }
+
+    private Date calculateStartDate(String endDateString, int duration) {
+        Date endDate = parseDate(endDateString);
+        if (endDate != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(endDate);
+            calendar.add(Calendar.DAY_OF_YEAR, -duration);
+            return calendar.getTime();
+        }
+        return null;
+    }
+
+    private Date calculateEndDate(String startDateString, int duration) {
+        Date startDate = parseDate(startDateString);
+        if (startDate != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_YEAR, duration);
+            return calendar.getTime();
+        }
+        return null;
+    }
+}
