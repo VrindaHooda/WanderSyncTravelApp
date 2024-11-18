@@ -2,34 +2,37 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorNeutral">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/adduser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:gravity="center"
             android:text="Add User's Email"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/halloween_spookies"
-            android:textSize="40sp"
+            android:textColor="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textSize="32sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:background="@android:color/holo_purple"
+            android:background="@color/colorHighlight"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -39,47 +42,47 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="Username"
-                android:fontFamily="@font/halloween_spookies"
-                android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:fontFamily="@font/playwritefrmoderne"
+                android:textColor="@color/colorDarkContrast"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/emailenterable"
-                android:layout_width="320dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp"
                 android:autofillHints="username"
-                android:background="@android:color/holo_orange_dark"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="Enter your email"
                 android:inputType="textEmailAddress"
-                android:textColor="#FFEB3B"
+                android:textColor="@color/colorDarkContrast"
+                android:textColorHint="@color/colorDarkContrast"
+                android:fontFamily="@font/playwritefrmoderne"
                 android:textStyle="italic" />
-
 
         </LinearLayout>
 
         <Button
             android:id="@+id/adduserbtn"
-            android:layout_width="320dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/holo_purple"
+            android:backgroundTint="@color/colorHighlight"
             android:text="Add User"
-            android:fontFamily="@font/halloween_spookies"
-            android:textSize="24sp"
-            android:textColor="@android:color/white" />
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textSize="20sp"
+            android:textColor="@color/colorDarkContrast" />
+
         <Button
             android:id="@+id/exitbtn"
-            android:layout_width="320dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/holo_purple"
+            android:backgroundTint="@color/colorHighlight"
             android:text="Exit"
-            android:fontFamily="@font/halloween_spookies"
-            android:textSize="24sp"
-            android:textColor="@android:color/white" />
-
-
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textSize="20sp"
+            android:textColor="@color/colorDarkContrast" />
 
     </LinearLayout>
 
