@@ -22,11 +22,13 @@ public class DestinationViewModel extends ViewModel {
     private FirebaseRepository firebaseRepository;
     private MutableLiveData<List<TravelLog>> travelLogs;
     private MutableLiveData<Integer> totalTravelDays;
+    private MutableLiveData<Integer> calculatedDuration;
 
     public DestinationViewModel() {
         firebaseRepository = new FirebaseRepository();
         travelLogs = new MutableLiveData<>();
         totalTravelDays = new MutableLiveData<>();
+        calculatedDuration = new MutableLiveData<>();
     }
 
     public LiveData<List<TravelLog>> getLastFiveTravelLogs(String userId) {
@@ -56,27 +58,36 @@ public class DestinationViewModel extends ViewModel {
 
     public void calculateVacationTime(Date startDate, Date endDate, Integer duration) {
         if (startDate != null && endDate != null) {
-            long diff = endDate.getTime() - startDate.getTime();
-            duration = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+            firebaseRepository.calculateDuration(startDate, endDate, new OnCompleteListener<Integer>() {
+                @Override
+                public void onComplete(@NonNull Task<Integer> task) {
+                    if (task.isSuccessful()) {
+                        calculatedDuration.setValue(task.getResult());
+                    }
+                }
+            });
         } else if (startDate != null && duration != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(startDate);
             calendar.add(Calendar.DAY_OF_YEAR, duration);
             endDate = calendar.getTime();
+            calculateVacationTime(startDate, endDate, null);
         } else if (endDate != null && duration != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(endDate);
             calendar.add(Calendar.DAY_OF_YEAR, -duration);
             startDate = calendar.getTime();
+            calculateVacationTime(startDate, endDate, null);
         }
-
-        // Update LiveData to notify the View
-        // You can use another LiveData to update the calculated values in the form if needed
     }
 
     public LiveData<Integer> getTotalTravelDays(String userId) {
         refreshTotalTravelDays(userId);
         return totalTravelDays;
+    }
+
+    public LiveData<Integer> getCalculatedDuration() {
+        return calculatedDuration;
     }
 
     private void refreshTotalTravelDays(String userId) {

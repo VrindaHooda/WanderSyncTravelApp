@@ -25,4 +25,10 @@
         android:layout_height="wrap_content"
         android:text="End Date" />
 
+    <TextView
+        android:id="@+id/durationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration: 0 days" />
+
 </LinearLayout>

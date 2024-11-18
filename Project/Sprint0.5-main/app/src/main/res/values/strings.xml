@@ -20,6 +20,7 @@
     <string name="travel_community">Travel Community</string>
 
     <string name="total_travel_days">Total Travel Days: %1$d</string>
+    <string name="travel_duration">Duration: %1$d days</string>
 
 
     <string name="accommodations_header">Accommodations</string>

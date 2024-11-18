@@ -64,7 +64,10 @@ public class DestinationFragment extends Fragment {
         String userId = firebaseAuth.getCurrentUser().getUid();
         destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
             // Update RecyclerView with the last five travel logs
-            destinationAdapter.setTravelLogs(travelLogs);
+            if (travelLogs != null) {
+                destinationAdapter.setTravelLogs(travelLogs);
+                destinationAdapter.notifyDataSetChanged();
+            }
         });
 
         destinationViewModel.getTotalTravelDays(userId).observe(getViewLifecycleOwner(), totalDays -> {
@@ -100,6 +103,12 @@ public class DestinationFragment extends Fragment {
     }
 
     private void refreshTravelLogs(String userId) {
-        destinationViewModel.getLastFiveTravelLogs(userId);
+        destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
+            // Update RecyclerView with the refreshed travel logs
+            if (travelLogs != null) {
+                destinationAdapter.setTravelLogs(travelLogs);
+                destinationAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
