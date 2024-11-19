@@ -98,6 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginRight="32dp"
             android:background="@color/colorHighlight"
             android:fontFamily="@font/playwritefrmoderne"
             android:padding="12dp"
