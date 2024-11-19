@@ -3,6 +3,7 @@ package com.example.sprintproject.model;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -167,6 +168,60 @@ public class FirebaseRepository {
                         // Handle failure to retrieve vacation entries
                         listener.onComplete(Tasks.forException(task.getException()));
                     }
+                });
+    }
+
+    // Add a new plan
+    public void savePlan(String userId, Plan plan, OnCompleteListener<DocumentReference> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("plans")
+                .add(plan)
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    e.printStackTrace();
+                });
+    }
+
+    // Get all plans for a user
+    public void getPlans(String userId, OnCompleteListener<QuerySnapshot> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("plans")
+                .get()
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    e.printStackTrace();
+                });
+    }
+
+    // Update an existing plan
+    public void updatePlan(String userId, String planId, Plan updatedPlan, OnCompleteListener<Void> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("plans")
+                .document(planId)
+                .set(updatedPlan)
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    e.printStackTrace();
+                });
+    }
+
+    // Delete a plan
+    public void deletePlan(String userId, String planId, OnCompleteListener<Void> listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("plans")
+                .document(planId)
+                .delete()
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    e.printStackTrace();
                 });
     }
 }

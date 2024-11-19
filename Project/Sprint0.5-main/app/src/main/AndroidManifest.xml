@@ -43,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".views.LogisticsActivity"
+            android:name=".views.MakePlansActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
@@ -99,11 +99,6 @@
         </activity>
         <activity
             android:name=".model.DiningReservation"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".views.ModifyPlansActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
