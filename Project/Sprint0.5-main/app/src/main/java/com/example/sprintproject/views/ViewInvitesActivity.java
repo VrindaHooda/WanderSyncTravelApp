@@ -33,7 +33,7 @@ public class ViewInvitesActivity extends AppCompatActivity {
         inviteListView.setAdapter((ListAdapter) inviteAdapter);
         Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ViewInvitesActivity.this, LogisticsActivity.class);
+            Intent intent = new Intent(ViewInvitesActivity.this, Logistics.class);
             startActivity(intent);
             finish();
         });
