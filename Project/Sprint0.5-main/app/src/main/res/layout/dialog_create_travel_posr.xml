@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/startDateInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Start Date (yyyy-mm-dd)"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/endDateInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="End Date (yyyy-mm-dd)"
+        app:layout_constraintTop_toBottomOf="@id/startDateInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/destinationInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Destination"
+        app:layout_constraintTop_toBottomOf="@id/endDateInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/accommodationsInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Accommodations"
+        app:layout_constraintTop_toBottomOf="@id/destinationInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/diningReservationsInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Dining Reservations"
+        app:layout_constraintTop_toBottomOf="@id/accommodationsInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/notesInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Additional Notes"
+        app:layout_constraintTop_toBottomOf="@id/diningReservationsInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/savePostButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Post"
+        app:layout_constraintTop_toBottomOf="@id/notesInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
