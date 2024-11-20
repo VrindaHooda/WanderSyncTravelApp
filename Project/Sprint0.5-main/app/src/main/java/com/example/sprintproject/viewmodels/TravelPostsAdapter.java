@@ -35,6 +35,29 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
         holder.durationTextView.setText("Duration: " + post.get("duration"));
         holder.destinationsTextView.setText("Destinations: " + post.get("destination"));
         holder.notesTextView.setText("Notes: " + post.get("notes"));
+        boolean isBoosted = (boolean) post.getOrDefault("isBoosted", false);
+        if (isBoosted) {
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.sky_blue)); // Add color in colors.xml
+        } else {
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(android.R.color.transparent));
+        }
+        String details = isBoosted
+                ? "[BOOSTED] Destination: " + post.get("destination")
+                : "Destination: " + post.get("destination");
+        holder.destinationsTextView.setText(details);
+
+    }
+    public void addPost(Map<String, Object> newPost) {
+        boolean isBoosted = (boolean) newPost.getOrDefault("isBoosted", false);
+
+        if (isBoosted) {
+            // Add boosted post to the top
+            travelPosts.add(0, newPost);
+        } else {
+            // Add regular post to the end
+            travelPosts.add(newPost);
+        }
+        notifyDataSetChanged(); // Refresh RecyclerView
     }
 
     @Override

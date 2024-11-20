@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
+import com.example.sprintproject.viewmodels.TravelPost;
 import com.example.sprintproject.viewmodels.TravelPostsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -78,8 +80,12 @@ public class TravelCommunityActivity extends AppCompatActivity {
                             travelPosts.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 travelPosts.add(document.getData());
+                                Map<String, Object> post = document.getData();
+                                post.putIfAbsent("isBoosted", false); // Default to non-boosted
+                                travelPosts.add(post);
                             }
                             TravelPostsAdapter adapter = new TravelPostsAdapter(travelPosts);
+                            adapter.notifyDataSetChanged();
                             travelPostsRecyclerView.setAdapter(adapter);
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -90,6 +96,7 @@ public class TravelCommunityActivity extends AppCompatActivity {
 
     private void createNewTravelPost() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_travel_posr, null);
+        CheckBox boostPostCheckbox = dialogView.findViewById(R.id.boostPostCheckbox);
 
         EditText startDateInput = dialogView.findViewById(R.id.startDateInput);
         EditText endDateInput = dialogView.findViewById(R.id.endDateInput);
@@ -134,6 +141,17 @@ public class TravelCommunityActivity extends AppCompatActivity {
             newPost.put("accommodations", accommodations);
             newPost.put("diningReservations", diningReservations);
             newPost.put("notes", notes);
+            boolean isBoosted = boostPostCheckbox.isChecked();
+
+            TravelPost travelPost = new RegularTravelPost(newPost);
+            if (isBoosted) {
+                travelPost = new BoostedTravelPost(travelPost);
+
+            }
+
+
+            newPost.put("isBoosted", travelPost.isBoosted());
+
 
             db.collection("travelCommunity")
                     .add(newPost)
