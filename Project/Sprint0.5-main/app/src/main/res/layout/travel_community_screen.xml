@@ -33,17 +33,18 @@
         android:id="@+id/createPostButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="180dp"
         android:text="Create Post"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="76dp"
         android:background="@color/colorHighlight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
