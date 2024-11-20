@@ -15,6 +15,7 @@ public class ViewNotesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.view_notes);
 
         notesListView = findViewById(R.id.notes_list_view);
