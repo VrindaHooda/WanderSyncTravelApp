@@ -10,4 +10,5 @@
     <color name="colorHighlight">#81B29A</color>
     <!-- Dark contrast color -->
     <color name="colorDarkContrast">#3D405B</color>
+    <color name="sky_blue">#87CEEB</color>
 </resources>
