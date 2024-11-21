@@ -35,7 +35,6 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart = findViewById(R.id.pieChart);
         btnGraph = findViewById(R.id.btn_graph);
         makePlan = findViewById(R.id.makePlan);
-        modifyPlan = findViewById(R.id.modifyPlan);
         viewInvites = findViewById(R.id.viewInvites);
 
         // Initially hide the pie chart
@@ -61,12 +60,6 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-        modifyPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Implement functionality for modifying a plan
-            }
-        });
 
         viewInvites.setOnClickListener(new View.OnClickListener() {
             @Override
