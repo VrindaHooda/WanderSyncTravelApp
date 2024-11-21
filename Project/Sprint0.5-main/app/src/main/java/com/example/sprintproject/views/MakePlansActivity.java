@@ -34,12 +34,11 @@ public class MakePlansActivity extends AppCompatActivity {
     private PlansAdapter plansAdapter;
     private EditText editTextDuration, editTextNotes;
     private EditText editTextLocation, editTextTransportation, editTextDiningReservations, editTextAccommodations, editTextCollaborators;
-    private Button buttonAddPlan, buttonAddDestination;
+    private Button buttonAddPlan, buttonAddDestination, buttonExit;
     private String userId = "exampleUserId"; // Replace with actual user ID logic
     private List<Destination> destinations = new ArrayList<>();
     private List<String> collaborators = new ArrayList<>();
     private FirebaseRepository firebaseRepository;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class MakePlansActivity extends AppCompatActivity {
         editTextCollaborators = findViewById(R.id.editTextCollaborators);
         buttonAddPlan = findViewById(R.id.buttonAddPlan);
         buttonAddDestination = findViewById(R.id.buttonAddDestination);
+        buttonExit = findViewById(R.id.buttonExit);
 
         // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -157,7 +157,13 @@ public class MakePlansActivity extends AppCompatActivity {
             }
         });
 
-
+        // Set up Exit button click listener
+        buttonExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Close the activity
+            }
+        });
     }
 
     private void clearInputFields() {
@@ -166,7 +172,6 @@ public class MakePlansActivity extends AppCompatActivity {
         editTextCollaborators.setText("");
         destinations.clear();
     }
-
 
     private void clearDestinationFields() {
         editTextLocation.setText("");
@@ -185,7 +190,6 @@ public class MakePlansActivity extends AppCompatActivity {
         }
         return list;
     }
-
 
     // PlansAdapter class for RecyclerView
     class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
