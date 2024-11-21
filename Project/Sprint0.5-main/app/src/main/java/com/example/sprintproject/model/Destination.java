@@ -1,14 +1,20 @@
 package com.example.sprintproject.model;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class Destination {
-
+    private String id;
     private String location;
     private List<String> accommodations;
     private List<String> diningReservations;
     private String transportation;
+
+    private Date startDate;
+    private Date endDate;
+
 
     // Default constructor
     public Destination() {
@@ -21,6 +27,26 @@ public class Destination {
         this.diningReservations = diningReservations;
         this.transportation = transportation;
     }
+
+    public Destination(String location, List<String> accommodations, List<String> diningReservations, String transportation, Date startDate, Date endDate) {
+        this.location = location;
+        this.accommodations = accommodations;
+        this.diningReservations = diningReservations;
+        this.transportation = transportation;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Destination(String id, String location, Date startDate, Date endDate) {
+        this.id = id;
+        this.location = location;
+        this.accommodations = new ArrayList<>(); // Default
+        this.diningReservations = new ArrayList<>(); // Default
+        this.transportation = ""; // Default
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
 
     // Getters and setters
     public String getLocation() {
@@ -55,6 +81,23 @@ public class Destination {
         this.transportation = transportation;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+
     // toString method for easier debugging and logging
     @Override
     public String toString() {
@@ -63,6 +106,8 @@ public class Destination {
                 ", accommodations=" + accommodations +
                 ", diningReservations=" + diningReservations +
                 ", transportation='" + transportation + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 '}';
     }
 
