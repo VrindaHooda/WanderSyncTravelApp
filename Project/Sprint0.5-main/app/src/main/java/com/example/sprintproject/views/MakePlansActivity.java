@@ -23,6 +23,10 @@ import com.example.sprintproject.viewmodels.LogisticsViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.sprintproject.model.FirebaseRepository;
+import com.google.firebase.auth.FirebaseAuth;
+
+
 public class MakePlansActivity extends AppCompatActivity {
     private LogisticsViewModel logisticsViewModel;
     private ProgressBar progressBar;
@@ -34,11 +38,15 @@ public class MakePlansActivity extends AppCompatActivity {
     private String userId = "exampleUserId"; // Replace with actual user ID logic
     private List<Destination> destinations = new ArrayList<>();
     private List<String> collaborators = new ArrayList<>();
+    private FirebaseRepository firebaseRepository;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_plans);
+
+        firebaseRepository = new FirebaseRepository();
 
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
@@ -118,20 +126,47 @@ public class MakePlansActivity extends AppCompatActivity {
 
                 if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
                     int duration = Integer.parseInt(durationText);
-                    if (!collaboratorsText.isEmpty()) {
-                        collaborators = parseList(collaboratorsText);
-                    }
+                    List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
+
+                    // Create a new Plan object
                     Plan newPlan = new Plan(duration, destinations, notes, collaborators);
-                    logisticsViewModel.addPlan(userId, newPlan);
-                    destinations.clear();
-                    collaborators.clear();
-                    Toast.makeText(MakePlansActivity.this, "Plan added successfully", Toast.LENGTH_SHORT).show();
+
+                    // Add the Plan to Firestore and send invites
+                    firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
+                        @Override
+                        public void onPlanAdded(String planId) {
+                            // Send invites to collaborators
+                            for (String collaboratorId : collaborators) {
+                                firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
+                            }
+                            Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            Toast.makeText(MakePlansActivity.this, "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    // Clear input fields after the plan is added
+                    clearInputFields();
                 } else {
                     Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
     }
+
+    private void clearInputFields() {
+        editTextDuration.setText("");
+        editTextNotes.setText("");
+        editTextCollaborators.setText("");
+        destinations.clear();
+    }
+
 
     private void clearDestinationFields() {
         editTextLocation.setText("");
@@ -150,41 +185,42 @@ public class MakePlansActivity extends AppCompatActivity {
         }
         return list;
     }
-}
 
-// PlansAdapter class for RecyclerView
-class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
-    private List<Plan> plans;
 
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
-        notifyDataSetChanged();
-    }
+    // PlansAdapter class for RecyclerView
+    class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
+        private List<Plan> plans;
 
-    @Override
-    public PlanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.item_plan, null);
-        return new PlanViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(PlanViewHolder holder, int position) {
-        Plan plan = plans.get(position);
-        holder.bind(plan);
-    }
-
-    @Override
-    public int getItemCount() {
-        return plans != null ? plans.size() : 0;
-    }
-
-    class PlanViewHolder extends RecyclerView.ViewHolder {
-
-        public PlanViewHolder(View itemView) {
-            super(itemView);
+        public void setPlans(List<Plan> plans) {
+            this.plans = plans;
+            notifyDataSetChanged();
         }
 
-        public void bind(Plan plan) {
+        @Override
+        public PlanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = View.inflate(parent.getContext(), R.layout.item_plan, null);
+            return new PlanViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(PlanViewHolder holder, int position) {
+            Plan plan = plans.get(position);
+            holder.bind(plan);
+        }
+
+        @Override
+        public int getItemCount() {
+            return plans != null ? plans.size() : 0;
+        }
+
+        class PlanViewHolder extends RecyclerView.ViewHolder {
+
+            public PlanViewHolder(View itemView) {
+                super(itemView);
+            }
+
+            public void bind(Plan plan) {
+            }
         }
     }
 }
