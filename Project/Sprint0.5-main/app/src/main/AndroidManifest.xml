@@ -88,12 +88,7 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".views.ViewInvitesActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".views.ViewNotesActivity"
+            android:name=".views.LogisticsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
