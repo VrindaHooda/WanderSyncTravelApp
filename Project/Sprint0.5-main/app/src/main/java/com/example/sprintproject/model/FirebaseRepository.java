@@ -1,5 +1,7 @@
 package com.example.sprintproject.model;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -11,6 +13,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class FirebaseRepository {
@@ -224,4 +228,44 @@ public class FirebaseRepository {
                     e.printStackTrace();
                 });
     }
+
+    public void sendInvite(String userId, String planId, String senderId, String tripName) {
+        Map<String, Object> invite = new HashMap<>();
+        invite.put("planId", planId);
+        invite.put("senderId", senderId);
+        invite.put("tripName", tripName);
+        invite.put("status", "Pending");
+
+        firestore.collection("users")
+                .document(userId)
+                .collection("invites")
+                .add(invite)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("FirebaseRepository", "Invite sent successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseRepository", "Failed to send invite", e);
+                });
+    }
+
+    public void addPlan(String userId, Plan plan, PlanCallback callback) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("plans")
+                .add(plan)
+                .addOnSuccessListener(documentReference -> {
+                    String planId = documentReference.getId(); // Get generated document ID
+                    callback.onPlanAdded(planId);
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFailure(e.getMessage());
+                });
+    }
+
+    // Callback interface for adding plans
+    public interface PlanCallback {
+        void onPlanAdded(String planId);
+        void onFailure(String error);
+    }
+
 }

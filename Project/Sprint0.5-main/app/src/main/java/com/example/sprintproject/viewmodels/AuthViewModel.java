@@ -90,4 +90,10 @@ public class AuthViewModel extends ViewModel {
         void onSuccess(FirebaseUser user);
         void onFailure(String error);
     }
+
+    public String getLoggedInUserId() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null ? user.getUid() : null;
+    }
+
 }
