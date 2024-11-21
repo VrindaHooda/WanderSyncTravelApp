@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="@color/colorNeutral">
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <!-- Text for Invite -->
     <TextView
-        android:id="@+id/inviteText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Trip to Paris"
-        android:textColor="@color/colorDarkContrast"
-        android:textSize="20sp"
-        android:fontFamily="@font/playwritefrmoderne" />
-
-    <!-- Accept Button -->
-    <Button
-        android:id="@+id/acceptButton"
+        android:id="@+id/trip_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorHighlight"
-        android:text="Accept"
-        android:textColor="@color/colorNeutral"
-        android:textSize="16sp"
-        android:fontFamily="@font/playwritefrmoderne" />
+        android:text="Trip Name"
+        android:textStyle="bold"
+        android:textSize="18sp" />
 
-    <!-- Decline Button -->
-    <Button
-        android:id="@+id/declineButton"
+    <TextView
+        android:id="@+id/status_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Decline"
-        android:textColor="@color/colorNeutral"
-        android:textSize="16sp"
-        android:fontFamily="@font/playwritefrmoderne" />
+        android:text="Status"
+        android:layout_marginTop="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/accept_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Accept"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/decline_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Decline"
+            android:layout_weight="1" />
+    </LinearLayout>
 </LinearLayout>
