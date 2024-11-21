@@ -64,9 +64,11 @@ public class LogisticsActivity extends AppCompatActivity {
         viewInvites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Implement functionality for viewing invites
+                Intent intent = new Intent(LogisticsActivity.this, ViewInvitesActivity.class);
+                startActivity(intent);
             }
         });
+
     }
 
     private void setupPieChart() {
