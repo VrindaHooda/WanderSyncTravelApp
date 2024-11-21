@@ -79,7 +79,6 @@ public class TravelCommunityActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             travelPosts.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                travelPosts.add(document.getData());
                                 Map<String, Object> post = document.getData();
                                 post.putIfAbsent("isBoosted", false); // Default to non-boosted
                                 travelPosts.add(post);
@@ -148,9 +147,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 travelPost = new BoostedTravelPost(travelPost);
 
             }
-
-
             newPost.put("isBoosted", travelPost.isBoosted());
+
 
 
             db.collection("travelCommunity")
