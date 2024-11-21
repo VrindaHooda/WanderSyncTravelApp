@@ -75,14 +75,6 @@
                 android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/modifyPlan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Make Plan"
-                app:srcCompat="@drawable/baseline_trip_origin_24"
-                android:backgroundTint="@color/colorHighlight"
-                android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/viewInvites"
