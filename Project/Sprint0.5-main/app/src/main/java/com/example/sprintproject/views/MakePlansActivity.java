@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.example.sprintproject.model.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MakePlansActivity extends AppCompatActivity {
@@ -35,10 +36,12 @@ public class MakePlansActivity extends AppCompatActivity {
     private EditText editTextDuration, editTextNotes;
     private EditText editTextLocation, editTextTransportation, editTextDiningReservations, editTextAccommodations, editTextCollaborators;
     private Button buttonAddPlan, buttonAddDestination, buttonExit;
-    private String userId = "exampleUserId"; // Replace with actual user ID logic
+    private String userId; // Replace with actual user ID logic
     private List<Destination> destinations = new ArrayList<>();
     private List<String> collaborators = new ArrayList<>();
     private FirebaseRepository firebaseRepository;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class MakePlansActivity extends AppCompatActivity {
         setContentView(R.layout.make_plans);
 
         firebaseRepository = new FirebaseRepository();
+        // Initialize Firebase Auth and Firestore
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
@@ -68,6 +74,7 @@ public class MakePlansActivity extends AppCompatActivity {
 
         // Initialize ViewModel
         logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        userId = firebaseAuth.getCurrentUser().getUid();
 
         // Observe LiveData from ViewModel
         logisticsViewModel.getPlansLiveData().observe(this, new Observer<List<Plan>>() {
