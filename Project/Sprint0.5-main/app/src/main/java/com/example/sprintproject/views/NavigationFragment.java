@@ -63,7 +63,7 @@ public class NavigationFragment extends Fragment {
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MakePlansActivity.class);
+                Intent intent = new Intent(getActivity(), LogisticsActivity.class);
                 assert getActivity() != null;
                 getActivity().startActivity(intent);
             }

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="activity"
-            type="com.example.sprintproject.views.Logistics" />
+            type="com.example.sprintproject.views.LogisticsActivity" />
     </data>
 
     <!-- Main Layout -->
@@ -67,16 +67,7 @@
             android:layout_marginTop="16dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addNotes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Add Notes"
-                app:srcCompat="@drawable/baseline_add_24"
-                android:backgroundTint="@color/colorHighlight"
-                android:layout_margin="8dp"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/modifyPlan"
+                android:id="@+id/makePlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Modify Plan"
@@ -85,7 +76,7 @@
                 android:layout_margin="8dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/viewNotes"
+                android:id="@+id/modifyPlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Make Plan"
@@ -102,29 +93,7 @@
                 android:backgroundTint="@color/colorHighlight"
                 android:layout_margin="8dp"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/inviteUsers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Invite Users"
-                app:srcCompat="@drawable/baseline_alternate_email_24"
-                android:backgroundTint="@color/colorHighlight"
-                android:layout_margin="8dp"/>
         </LinearLayout>
-
-        <!-- Contributors TextView -->
-        <TextView
-            android:id="@+id/contributors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Contributors"
-            android:fontFamily="@font/playwritefrmoderne"
-            android:textColor="@color/colorDarkContrast"
-            android:textSize="24sp"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Bottom Navigation Fragment Container -->
         <androidx.fragment.app.FragmentContainerView
