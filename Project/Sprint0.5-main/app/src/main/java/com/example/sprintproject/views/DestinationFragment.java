@@ -1,5 +1,6 @@
 package com.example.sprintproject.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,11 +76,13 @@ public class DestinationFragment extends Fragment {
         destinationViewModel.getTotalTravelDays(userId).observe(getViewLifecycleOwner(), totalDays -> {
             // Update TextView with the total travel days
             totalTravelDaysTextView.setText(getString(R.string.total_travel_days, totalDays));
+            passPastDataToActivity(totalDays);
         });
 
         destinationViewModel.getTotalPlannedDays(userId).observe(getViewLifecycleOwner(), totalPlannedDays -> {
             // Update TextView with the total planned days
             totalPlannedDaysTextView.setText(getString(R.string.total_planned_days, totalPlannedDays));
+            passPlannedDataToActivity(totalPlannedDays);
         });
     }
 
@@ -117,5 +120,29 @@ public class DestinationFragment extends Fragment {
                 destinationAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    interface OnDataPassListener {
+        void onPastDataPass(int data);
+        void onPlannedDataPass(int data);
+    }
+
+    OnDataPassListener dataPassListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            dataPassListener = (OnDataPassListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnDataPassListener");
+        }
+    }
+
+    private void passPastDataToActivity(int pastDays) {
+        dataPassListener.onPastDataPass(pastDays);
+    }
+    private void passPlannedDataToActivity(int plannedDays) {
+        dataPassListener.onPlannedDataPass(plannedDays);
     }
 }

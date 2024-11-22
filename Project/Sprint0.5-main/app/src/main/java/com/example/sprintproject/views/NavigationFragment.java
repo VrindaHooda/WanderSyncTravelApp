@@ -60,14 +60,12 @@ public class NavigationFragment extends Fragment {
         View view = inflater.inflate(R.layout.navigation_bar, container, false);
 
         ImageButton logisticsButton = view.findViewById(R.id.logistics);
-        logisticsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LogisticsActivity.class);
-                assert getActivity() != null;
-                getActivity().startActivity(intent);
+        logisticsButton.setOnClickListener(v -> {
+            if (getActivity() instanceof DestinationActivity) {
+                ((DestinationActivity) getActivity()).navigateToLogisticsActivity();
             }
         });
+
         ImageButton logoutButton = view.findViewById(R.id.logout);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
