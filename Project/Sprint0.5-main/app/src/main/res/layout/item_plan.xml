@@ -16,7 +16,8 @@
         android:text="Duration:"
         android:textStyle="bold"
         android:textColor="@color/colorDarkContrast"
-        android:paddingBottom="8dp"
+        android:padding="10dp"
+        android:textSize="16dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -25,7 +26,8 @@
         android:layout_height="wrap_content"
         android:text="Notes:"
         android:textColor="@color/colorDarkContrast"
-        android:paddingBottom="8dp"
+        android:padding="10dp"
+        android:textSize="16dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -34,7 +36,8 @@
         android:layout_height="wrap_content"
         android:text="Destinations:"
         android:textColor="@color/colorDarkContrast"
-        android:paddingBottom="8dp"
+        android:padding="10dp"
+        android:textSize="16dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <LinearLayout
@@ -53,21 +56,20 @@
         android:text="Collaborators:"
         android:textColor="@color/colorDarkContrast"
         android:layout_marginTop="16dp"
-        android:paddingBottom="8dp"
+        android:padding="10dp"
+        android:textSize="16dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <Button
-        android:id="@+id/buttonAddPlan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/buttonUpdatePlan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="32dp"
         android:background="@color/colorHighlight"
         android:fontFamily="@font/playwritefrmoderne"
         android:padding="10dp"
-        android:textSize="8dp"
         android:text="Update Plan"
-        android:textColor="@color/colorDarkContrast" />
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="8dp" />
 
 </LinearLayout>
