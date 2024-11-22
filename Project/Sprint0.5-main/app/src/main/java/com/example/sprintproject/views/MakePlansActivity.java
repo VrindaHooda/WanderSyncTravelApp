@@ -33,9 +33,16 @@ public class MakePlansActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private PlansAdapter plansAdapter;
-    private EditText editTextDuration, editTextNotes;
-    private EditText editTextLocation, editTextTransportation, editTextDiningReservations, editTextAccommodations, editTextCollaborators;
-    private Button buttonAddPlan, buttonAddDestination, buttonExit;
+    private EditText editTextDuration;
+    private EditText editTextNotes;
+    private EditText editTextLocation;
+    private EditText editTextTransportation;
+    private EditText editTextDiningReservations;
+    private EditText editTextAccommodations;
+    private EditText editTextCollaborators;
+    private Button buttonAddPlan;
+    private Button buttonAddDestination;
+    private Button buttonExit;
     private String userId; // Replace with actual user ID logic
     private List<Destination> destinations = new ArrayList<>();
     private List<String> collaborators = new ArrayList<>();
@@ -112,13 +119,16 @@ public class MakePlansActivity extends AppCompatActivity {
                 String diningReservations = editTextDiningReservations.getText().toString();
                 String accommodations = editTextAccommodations.getText().toString();
 
-                if (!location.isEmpty() && !transportation.isEmpty() && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
-                    Destination destination = new Destination(location, parseList(accommodations), parseList(diningReservations), transportation);
+                if (!location.isEmpty() && !transportation.isEmpty()
+                        && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
+                    Destination destination = new Destination(location, parseList(accommodations),
+                            parseList(diningReservations), transportation);
                     destinations.add(destination);
                     Toast.makeText(MakePlansActivity.this, "Destination added", Toast.LENGTH_SHORT).show();
                     clearDestinationFields();
                 } else {
-                    Toast.makeText(MakePlansActivity.this, "All destination fields are required", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakePlansActivity.this,
+                            "All destination fields are required", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -134,7 +144,7 @@ public class MakePlansActivity extends AppCompatActivity {
 
                 if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
                     int duration = Integer.parseInt(durationText);
-                    List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
+                    List<String> collaborators = parseList(collaboratorsText);
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
 
                     // Create a new Plan object
@@ -148,19 +158,23 @@ public class MakePlansActivity extends AppCompatActivity {
                             for (String collaboratorId : collaborators) {
                                 firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
                             }
-                            Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MakePlansActivity.this,
+                                    "Plan added and invites sent", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailure(String error) {
-                            Toast.makeText(MakePlansActivity.this, "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MakePlansActivity.this,
+                                    "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
 
                     // Clear input fields after the plan is added
                     clearInputFields();
                 } else {
-                    Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakePlansActivity.this,
+                            "All fields are required and at least one destination must be added",
+                            Toast.LENGTH_SHORT).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -175,6 +189,11 @@ public class MakePlansActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Clears the input fields for the plan form.
+     * This method resets the text fields for duration, notes, collaborators,
+     * and clears the destinations list.
+     */
     private void clearInputFields() {
         editTextDuration.setText("");
         editTextNotes.setText("");
@@ -182,6 +201,11 @@ public class MakePlansActivity extends AppCompatActivity {
         destinations.clear();
     }
 
+    /**
+     * Clears the input fields for the destination form.
+     * This method resets the text fields for location, transportation,
+     * dining reservations, and accommodations.
+     */
     private void clearDestinationFields() {
         editTextLocation.setText("");
         editTextTransportation.setText("");
@@ -189,6 +213,12 @@ public class MakePlansActivity extends AppCompatActivity {
         editTextAccommodations.setText("");
     }
 
+    /**
+     * Parses a comma-separated input string into a list of strings.
+     *
+     * @param input the input string containing items separated by commas
+     * @return a list of trimmed strings parsed from the input, or an empty list if the input is empty
+     */
     private List<String> parseList(String input) {
         List<String> list = new ArrayList<>();
         if (!input.isEmpty()) {
@@ -204,6 +234,11 @@ public class MakePlansActivity extends AppCompatActivity {
     class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
         private List<Plan> plans;
 
+        /**
+         * Sets the list of plans and notifies the adapter to update the data.
+         *
+         * @param plans the list of {@link Plan} objects to display
+         */
         public void setPlans(List<Plan> plans) {
             this.plans = plans;
             notifyDataSetChanged();
@@ -228,10 +263,22 @@ public class MakePlansActivity extends AppCompatActivity {
 
         class PlanViewHolder extends RecyclerView.ViewHolder {
 
+            /**
+             * Constructs a new {@code PlanViewHolder}.
+             *
+             * @param itemView the view representing a single item in the RecyclerView
+             */
             public PlanViewHolder(View itemView) {
                 super(itemView);
             }
 
+            /**
+             * Binds a {@link Plan} object to the item view.
+             * This method populates the views with the plan's duration, notes, collaborators,
+             * and destination details.
+             *
+             * @param plan the {@link Plan} object to bind
+             */
             public void bind(Plan plan) {
                 // Get references to the TextView fields in the layout
                 EditText planDurationTextView = itemView.findViewById(R.id.textViewDuration);
@@ -259,8 +306,10 @@ public class MakePlansActivity extends AppCompatActivity {
                         destinationsBuilder.append("Destination ").append(i + 1).append(":\n")
                                 .append("- Location: ").append(destination.getLocation()).append("\n")
                                 .append("- Transportation: ").append(destination.getTransportation()).append("\n")
-                                .append("- Accommodations: ").append(String.join(", ", destination.getAccommodations())).append("\n")
-                                .append("- Dining Reservations: ").append(String.join(", ", destination.getDiningReservations())).append("\n\n");
+                                .append("- Accommodations: ").append(String.join(", ",
+                                        destination.getAccommodations())).append("\n")
+                                .append("- Dining Reservations: ").append(String.join(", ",
+                                        destination.getDiningReservations())).append("\n\n");
                     }
                 } else {
                     destinationsBuilder.append("No destinations added.");

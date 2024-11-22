@@ -18,12 +18,24 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class FirebaseRepository {
+    /**
+     * The Firestore database instance.
+     */
     private final FirebaseFirestore firestore;
 
+    /**
+     * Constructs a {@code FirebaseRepository} and initializes the Firestore instance.
+     */
     public FirebaseRepository() {
         firestore = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Saves a travel log for a specified user.
+     *
+     * @param userId    the user ID
+     * @param travelLog the {@code TravelLog} object to save
+     */
     public void saveTravelLog(String userId, TravelLog travelLog) {
         firestore.collection("users")
                 .document(userId)
@@ -37,6 +49,12 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Retrieves the last five travel logs for a specified user.
+     *
+     * @param userId   the user ID
+     * @param listener the {@code OnCompleteListener} to handle the result
+     */
     public void getLastFiveTravelLogs(String userId, OnCompleteListener<QuerySnapshot> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -47,6 +65,12 @@ public class FirebaseRepository {
                 .addOnCompleteListener(listener);
     }
 
+    /**
+     * Saves a vacation entry for a specified user.
+     *
+     * @param userId        the user ID
+     * @param vacationEntry the {@code VacationEntry} object to save
+     */
     public void saveVacationEntry(String userId, VacationEntry vacationEntry) {
         firestore.collection("users")
                 .document(userId)
@@ -60,6 +84,11 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Prepopulates travel logs for a user if none exist in their Firestore collection.
+     *
+     * @param userId the user ID
+     */
     public void prepopulateTravelLogsIfNoneExist(String userId) {
         firestore.collection("users")
                 .document(userId)
@@ -109,6 +138,12 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Retrieves the total planned days for all vacation entries of a specified user.
+     *
+     * @param userId   the user ID
+     * @param listener the {@code OnCompleteListener} to handle the result
+     */
     public void getTotalTravelDays(String userId, OnCompleteListener<Integer> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -122,7 +157,8 @@ public class FirebaseRepository {
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 TravelLog travelLog = document.toObject(TravelLog.class);
                                 if (travelLog != null) {
-                                    long diffInMillies = Math.abs(travelLog.getEndDate().getTime() - travelLog.getStartDate().getTime());
+                                    long diffInMillies = Math.abs(travelLog.getEndDate().getTime()
+                                            - travelLog.getStartDate().getTime());
                                     int days = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
                                     totalDays += days;
                                 }
@@ -138,16 +174,31 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Calculates the duration in days between two dates.
+     *
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @param listener  the {@code OnCompleteListener} to handle the result
+     *                  with the calculated duration in days or an exception if the input is invalid
+     */
     public void calculateDuration(Date startDate, Date endDate, OnCompleteListener<Integer> listener) {
         if (startDate != null && endDate != null) {
             long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
             int duration = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
             listener.onComplete(Tasks.forResult(duration));
         } else {
-            listener.onComplete(Tasks.forException(new IllegalArgumentException("Start date or end date cannot be null")));
+            listener.onComplete(Tasks.forException(new IllegalArgumentException(
+                    "Start date or end date cannot be null")));
         }
     }
 
+    /**
+     * Retrieves the total planned days for all vacation entries of a specified user.
+     *
+     * @param userId   the user ID
+     * @param listener the {@code OnCompleteListener} to handle the result
+     */
     public void getTotalPlannedDays(String userId, OnCompleteListener<Integer> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -176,6 +227,13 @@ public class FirebaseRepository {
     }
 
     // Add a new plan
+    /**
+     * Saves a plan for a specified user.
+     *
+     * @param userId    the user ID
+     * @param plan      the {@code Plan} object to save
+     * @param listener  the {@code OnCompleteListener} to handle the result
+     */
     public void savePlan(String userId, Plan plan, OnCompleteListener<DocumentReference> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -189,6 +247,12 @@ public class FirebaseRepository {
     }
 
     // Get all plans for a user
+    /**
+     * Retrieves all plans for a specified user.
+     *
+     * @param userId   the user ID
+     * @param listener the {@code OnCompleteListener} to handle the result
+     */
     public void getPlans(String userId, OnCompleteListener<QuerySnapshot> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -202,6 +266,14 @@ public class FirebaseRepository {
     }
 
     // Update an existing plan
+    /**
+     * Updates an existing plan for a specified user.
+     *
+     * @param userId    the user ID
+     * @param planId    the unique ID of the plan to update
+     * @param updatedPlan the updated {@code Plan} object
+     * @param listener  the {@code OnCompleteListener} to handle the result of the update operation
+     */
     public void updatePlan(String userId, String planId, Plan updatedPlan, OnCompleteListener<Void> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -216,6 +288,13 @@ public class FirebaseRepository {
     }
 
     // Delete a plan
+    /**
+     * Deletes an existing plan for a specified user.
+     *
+     * @param userId   the user ID
+     * @param planId   the unique ID of the plan to delete
+     * @param listener the {@code OnCompleteListener} to handle the result of the delete operation
+     */
     public void deletePlan(String userId, String planId, OnCompleteListener<Void> listener) {
         firestore.collection("users")
                 .document(userId)
@@ -229,6 +308,14 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Sends an invite for a trip plan to another user.
+     *
+     * @param userId   the ID of the user receiving the invite
+     * @param planId   the unique ID of the plan being shared
+     * @param senderId the ID of the user sending the invite
+     * @param tripName the name of the trip
+     */
     public void sendInvite(String userId, String planId, String senderId, String tripName) {
         Map<String, Object> invite = new HashMap<>();
         invite.put("planId", planId);
@@ -248,6 +335,13 @@ public class FirebaseRepository {
                 });
     }
 
+    /**
+     * Adds a plan for a specified user and invokes a callback with the generated plan ID or an error message.
+     *
+     * @param userId   the user ID
+     * @param plan     the {@code Plan} object to add
+     * @param callback the {@code PlanCallback} to handle success or failure
+     */
     public void addPlan(String userId, Plan plan, PlanCallback callback) {
         firestore.collection("users")
                 .document(userId)
@@ -263,8 +357,22 @@ public class FirebaseRepository {
     }
 
     // Callback interface for adding plans
+    /**
+     * A callback interface for handling the result of adding a plan.
+     */
     public interface PlanCallback {
+        /**
+         * Called when a plan is successfully added.
+         *
+         * @param planId the generated ID of the newly added plan
+         */
         void onPlanAdded(String planId);
+
+        /**
+         * Called when there is an error adding a plan.
+         *
+         * @param error the error message
+         */
         void onFailure(String error);
     }
 

@@ -16,22 +16,49 @@ public class AuthViewModel extends ViewModel {
     private String userId;
     private String username;
 
+    /**
+     * Returns a {@link LiveData} object to observe the authenticated user's ID.
+     *
+     * @return the LiveData object containing the user ID
+     */
     public LiveData<String> getUserIdLiveData() {
         return userIdLiveData;
     }
 
+    /**
+     * Returns a {@link LiveData} object to observe the authenticated user's email.
+     *
+     * @return the LiveData object containing the user's email
+     */
     public LiveData<String> getEmailLiveData() {
         return emailLiveData;
     }
 
+    /**
+     * Checks if a user is currently authenticated.
+     *
+     * @return {@code true} if a user is authenticated; {@code false} otherwise
+     */
     public boolean isAuthenticated() {
         return myFirebaseAuth.getCurrentUser() != null;
     }
 
+    /**
+     * Retrieves the currently authenticated {@link FirebaseUser}.
+     *
+     * @return the authenticated Firebase user, or {@code null} if no user is logged in
+     */
     public FirebaseUser getUser() {
         return myFirebaseAuth.getCurrentUser();
     }
 
+    /**
+     * Creates a new user account with the specified email and password.
+     *
+     * @param email    the email for the new account
+     * @param password the password for the new account
+     * @param callback the {@link AuthCallback} to handle success or failure
+     */
     public void createUser(String email, String password, AuthCallback callback) {
         myFirebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -54,6 +81,13 @@ public class AuthViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Authenticates a user with the specified email and password.
+     *
+     * @param email    the email of the user
+     * @param password the password of the user
+     * @param callback the {@link AuthCallback} to handle success or failure
+     */
     public void signIn(String email, String password, AuthCallback callback) {
         myFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -80,20 +114,44 @@ public class AuthViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Logs out the currently authenticated user and clears the LiveData objects.
+     */
     public void signOut() {
         myFirebaseAuth.signOut();
         userIdLiveData.setValue(null);
         emailLiveData.setValue(null);
     }
 
-    public interface AuthCallback {
-        void onSuccess(FirebaseUser user);
-        void onFailure(String error);
-    }
-
+    /**
+     * Retrieves the user ID of the currently logged-in user.
+     *
+     * @return the user ID, or {@code null} if no user is logged in
+     */
     public String getLoggedInUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return user != null ? user.getUid() : null;
+    }
+
+    /**
+     * The {@code AuthCallback} interface defines callback methods to handle
+     * the result of authentication operations such as user registration and login.
+     */
+    public interface AuthCallback {
+
+        /**
+         * Called when an authentication operation is successful.
+         *
+         * @param user the authenticated {@link FirebaseUser}
+         */
+        void onSuccess(FirebaseUser user);
+
+        /**
+         * Called when an authentication operation fails.
+         *
+         * @param error the error message
+         */
+        void onFailure(String error);
     }
 
 }

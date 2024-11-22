@@ -25,6 +25,13 @@ public class NavigationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Default constructor for the {@code NavigationFragment} class.
+     *
+     * This constructor is required for the Android framework to instantiate
+     * the fragment. It is intentionally left empty as no custom initialization
+     * is needed during instantiation.
+     */
     public NavigationFragment() {
     }
 

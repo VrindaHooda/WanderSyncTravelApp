@@ -36,7 +36,8 @@ public class CalculateVacationDialog extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_calculate_vacation, container, false);
 
         // Initialize Views
@@ -65,7 +66,8 @@ public class CalculateVacationDialog extends DialogFragment {
             } else if (endDate != null && duration != null) {
                 destinationViewModel.calculateVacationTime(null, endDate, duration);
             } else {
-                Toast.makeText(getContext(), "Please provide at least two inputs to calculate the third", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        "Please provide at least two inputs to calculate the third", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -73,9 +75,12 @@ public class CalculateVacationDialog extends DialogFragment {
         destinationViewModel.getCalculatedDuration().observe(getViewLifecycleOwner(), calculatedDuration -> {
             if (calculatedDuration != null) {
                 if (startDateInput.getText().toString().isEmpty() && !endDateInput.getText().toString().isEmpty()) {
-                    startDateInput.setText(formatDate(calculateStartDate(endDateInput.getText().toString(), calculatedDuration)));
-                } else if (endDateInput.getText().toString().isEmpty() && !startDateInput.getText().toString().isEmpty()) {
-                    endDateInput.setText(formatDate(calculateEndDate(startDateInput.getText().toString(), calculatedDuration)));
+                    startDateInput.setText(formatDate(calculateStartDate(
+                            endDateInput.getText().toString(), calculatedDuration)));
+                } else if (endDateInput.getText().toString().isEmpty()
+                        && !startDateInput.getText().toString().isEmpty()) {
+                    endDateInput.setText(formatDate(calculateEndDate(
+                            startDateInput.getText().toString(), calculatedDuration)));
                 } else if (durationInput.getText().toString().isEmpty()) {
                     durationInput.setText(String.valueOf(calculatedDuration));
                 }
@@ -100,6 +105,11 @@ public class CalculateVacationDialog extends DialogFragment {
         return rootView;
     }
 
+    /**
+     * Shows a DatePicker dialog for selecting a date and sets the selected date in the input field.
+     *
+     * @param dateInputField the {@link EditText} field to populate with the selected date
+     */
     private void showDatePickerDialog(EditText dateInputField) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -111,7 +121,8 @@ public class CalculateVacationDialog extends DialogFragment {
                 getContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     // Format the selected date and set it to the EditText field
-                    String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    String formattedDate = String.format(Locale.getDefault(),
+                            "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                     dateInputField.setText(formattedDate);
                 },
                 year,
@@ -122,22 +133,12 @@ public class CalculateVacationDialog extends DialogFragment {
         datePickerDialog.show();
     }
 
-    public void setOnSaveListener(OnSaveListener onSaveListener) {
-        this.onSaveListener = onSaveListener;
-    }
-
-    public void setOnCalculateListener(OnCalculateListener onCalculateListener) {
-        this.onCalculateListener = onCalculateListener;
-    }
-
-    public interface OnSaveListener {
-        void onSave(VacationEntry vacationEntry);
-    }
-
-    public interface OnCalculateListener {
-        void onCalculate(Date startDate, Date endDate, Integer duration);
-    }
-
+    /**
+     * Parses a date string in the format "yyyy-MM-dd" into a {@link Date} object.
+     *
+     * @param dateString the date string to parse
+     * @return the parsed {@link Date} object, or {@code null} if parsing fails
+     */
     private Date parseDate(String dateString) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -148,6 +149,12 @@ public class CalculateVacationDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Parses a string into an {@link Integer}.
+     *
+     * @param intString the string to parse
+     * @return the parsed {@link Integer}, or {@code null} if parsing fails
+     */
     private Integer parseInteger(String intString) {
         try {
             return Integer.parseInt(intString);
@@ -157,11 +164,24 @@ public class CalculateVacationDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Formats a {@link Date} object into a string in the format "yyyy-MM-dd".
+     *
+     * @param date the {@link Date} object to format
+     * @return the formatted date string
+     */
     private String formatDate(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return format.format(date);
     }
 
+    /**
+     * Calculates the start date given an end date and duration in days.
+     *
+     * @param endDateString the end date as a string in the format "yyyy-MM-dd"
+     * @param duration      the duration in days
+     * @return the calculated start {@link Date}, or {@code null} if the end date is invalid
+     */
     private Date calculateStartDate(String endDateString, int duration) {
         Date endDate = parseDate(endDateString);
         if (endDate != null) {
@@ -173,6 +193,14 @@ public class CalculateVacationDialog extends DialogFragment {
         return null;
     }
 
+
+    /**
+     * Calculates the end date given a start date and duration in days.
+     *
+     * @param startDateString the start date as a string in the format "yyyy-MM-dd"
+     * @param duration        the duration in days
+     * @return the calculated end {@link Date}, or {@code null} if the start date is invalid
+     */
     private Date calculateEndDate(String startDateString, int duration) {
         Date startDate = parseDate(startDateString);
         if (startDate != null) {
@@ -182,5 +210,45 @@ public class CalculateVacationDialog extends DialogFragment {
             return calendar.getTime();
         }
         return null;
+    }
+
+    /**
+     * Sets the listener for save actions.
+     *
+     * @param onSaveListener the {@link OnSaveListener} to set
+     */
+    public void setOnSaveListener(OnSaveListener onSaveListener) {
+        this.onSaveListener = onSaveListener;
+    }
+
+    /**
+     * Sets the listener for calculate actions.
+     *
+     * @param onCalculateListener the {@link OnCalculateListener} to set
+     */
+    public void setOnCalculateListener(OnCalculateListener onCalculateListener) {
+        this.onCalculateListener = onCalculateListener;
+    }
+
+    public interface OnSaveListener {
+
+        /**
+         * Called when a vacation entry is saved.
+         *
+         * @param vacationEntry the saved {@link VacationEntry}
+         */
+        void onSave(VacationEntry vacationEntry);
+    }
+
+    public interface OnCalculateListener {
+
+        /**
+         * Called when vacation details are calculated.
+         *
+         * @param startDate the calculated start {@link Date}
+         * @param endDate   the calculated end {@link Date}
+         * @param duration  the calculated duration in days
+         */
+        void onCalculate(Date startDate, Date endDate, Integer duration);
     }
 }

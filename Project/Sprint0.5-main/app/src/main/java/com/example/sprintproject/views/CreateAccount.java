@@ -30,6 +30,9 @@ public class CreateAccount extends AppCompatActivity {
         setupListeners();
     }
 
+    /**
+     * Initializes the views for username input, password input, and action buttons.
+     */
     private void initializeViews() {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -37,6 +40,10 @@ public class CreateAccount extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
     }
 
+    /**
+     * Sets up the event listeners for the register and login buttons.
+     * Handles user input validation and account creation.
+     */
     private void setupListeners() {
         registerButton.setOnClickListener(view -> {
             String username = usernameEditText.getText().toString().trim();
@@ -72,6 +79,12 @@ public class CreateAccount extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks if an account with the specified email has been created.
+     *
+     * @param email the email address to check
+     * @return {@code true} if an account with the specified email exists; {@code false} otherwise
+     */
     public boolean isAccountCreated(String email) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         return currentUser != null && currentUser.getEmail().equals(email);

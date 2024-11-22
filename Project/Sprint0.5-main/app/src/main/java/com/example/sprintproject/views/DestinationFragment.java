@@ -33,7 +33,8 @@ public class DestinationFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_destination, container, false);
 
         // Initialize Firebase Auth and Firestore
@@ -63,6 +64,9 @@ public class DestinationFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Observes changes in the {@link DestinationViewModel} and updates the UI accordingly.
+     */
     private void observeViewModel() {
         String userId = firebaseAuth.getCurrentUser().getUid();
         destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
@@ -86,6 +90,10 @@ public class DestinationFragment extends Fragment {
         });
     }
 
+    /**
+     * Opens a form dialog to log past travel data. Saves the travel log to the ViewModel
+     * and refreshes the list after saving.
+     */
     private void openLogPastTravelForm() {
         // Open a form dialog to log past travel
         LogPastTravelDialog logPastTravelDialog = new LogPastTravelDialog();
@@ -98,6 +106,9 @@ public class DestinationFragment extends Fragment {
         logPastTravelDialog.show(getChildFragmentManager(), "LogPastTravelDialog");
     }
 
+    /**
+     * Opens a form dialog to calculate vacation time and save the resulting vacation entry.
+     */
     private void openCalculateVacationForm() {
         // Open a form dialog to calculate vacation time
         CalculateVacationDialog calculateVacationDialog = new CalculateVacationDialog();
@@ -112,6 +123,11 @@ public class DestinationFragment extends Fragment {
         calculateVacationDialog.show(getChildFragmentManager(), "CalculateVacationDialog");
     }
 
+    /**
+     * Refreshes the list of travel logs in the RecyclerView by observing updated data.
+     *
+     * @param userId the user ID for which to refresh travel logs
+     */
     private void refreshTravelLogs(String userId) {
         destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
             // Update RecyclerView with the refreshed travel logs

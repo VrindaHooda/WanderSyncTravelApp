@@ -29,6 +29,9 @@ public class Login extends AppCompatActivity {
         setupListeners();
     }
 
+    /**
+     * Initializes the views for the login form.
+     */
     private void initializeViews() {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -36,6 +39,9 @@ public class Login extends AppCompatActivity {
         createAccountButton = findViewById(R.id.createAccountButton);
     }
 
+    /**
+     * Sets up the event listeners for the login and create account buttons.
+     */
     private void setupListeners() {
         loginButton.setOnClickListener(view -> {
             String username = usernameEditText.getText().toString().trim();

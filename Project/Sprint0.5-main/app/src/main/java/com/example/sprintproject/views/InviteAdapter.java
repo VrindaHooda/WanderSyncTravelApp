@@ -25,18 +25,37 @@ public class InviteAdapter extends BaseAdapter {
     private FirebaseFirestore firestore;
     private String userId;
 
-    public InviteAdapter(Context context, List<Map<String, String>> invites, FirebaseFirestore firestore, String userId) {
+    /**
+     * Constructs a new {@code InviteAdapter}.
+     *
+     * @param context  the application context
+     * @param invites  the list of invites
+     * @param firestore the Firestore instance for database operations
+     * @param userId   the ID of the user
+     */
+    public InviteAdapter(Context context, List<Map<String,
+            String>> invites, FirebaseFirestore firestore, String userId) {
         this.context = context;
         this.invites = invites;
         this.firestore = firestore;
         this.userId = userId;
     }
 
+    /**
+     * Accepts an invite by updating its status to "Accepted" in Firebase.
+     *
+     * @param inviteId the ID of the invite to accept
+     */
     public void acceptInvite(String inviteId) {
         DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
         inviteRef.child("status").setValue("Accepted");
     }
 
+    /**
+     * Declines an invite by removing it from Firebase.
+     *
+     * @param inviteId the ID of the invite to decline
+     */
     public void declineInvite(String inviteId) {
         DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
         inviteRef.removeValue();

@@ -23,7 +23,9 @@ public class LogisticsActivity extends AppCompatActivity {
 
     private PieChart pieChart;
     private Button btnGraph;
-    private FloatingActionButton makePlan, modifyPlan, viewInvites;
+    private FloatingActionButton makePlan;
+    private FloatingActionButton modifyPlan;
+    private FloatingActionButton viewInvites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,6 @@ public class LogisticsActivity extends AppCompatActivity {
     }
 
     private void setupPieChart(int plannedDays, int pastDays) {
-
         // Create dummy data for the pie chart
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(plannedDays, "Planned Days"));

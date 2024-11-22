@@ -55,6 +55,11 @@ public class AccommodationActivity extends AppCompatActivity {
         binding.addNewAccommodationButton.setOnClickListener(view -> showAddAccommodationDialog());
     }
 
+    /**
+     * Displays a dialog for adding a new accommodation. Includes inputs for
+     * location, check-in date, check-out date, number of rooms, and room type.
+     * The new accommodation is saved to Firebase and added to the RecyclerView.
+     */
     public void showAddAccommodationDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.accommodation_form, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
