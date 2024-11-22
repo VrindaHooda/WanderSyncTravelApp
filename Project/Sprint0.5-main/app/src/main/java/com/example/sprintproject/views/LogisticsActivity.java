@@ -18,7 +18,9 @@ public class LogisticsActivity extends AppCompatActivity {
 
     private PieChart pieChart;
     private Button btnGraph;
-    private FloatingActionButton makePlan, modifyPlan, viewInvites;
+    private FloatingActionButton makePlan;
+    private FloatingActionButton modifyPlan;
+    private FloatingActionButton viewInvites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,11 @@ public class LogisticsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Configures and populates a pie chart with dummy data.
+     * This method creates a pie chart with three categories: Logistics, Planning, and Invites,
+     * and assigns data values to each category. It then sets up the chart's dataset and refreshes it.
+     */
     private void setupPieChart() {
         // Create dummy data for the pie chart
         ArrayList<PieEntry> entries = new ArrayList<>();

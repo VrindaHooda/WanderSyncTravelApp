@@ -36,7 +36,8 @@ public class LogPastTravelDialog extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_log_past_travel, container, false);
 
         // Initialize Views
@@ -80,6 +81,9 @@ public class LogPastTravelDialog extends DialogFragment {
         return rootView;
     }
 
+    /**
+     * Calculates the duration of the travel if both start and end dates are available.
+     */
     private void calculateDurationIfNeeded() {
         Date startDate = parseDate(startDateInput.getText().toString());
         Date endDate = parseDate(endDateInput.getText().toString());
@@ -89,6 +93,11 @@ public class LogPastTravelDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Displays a date picker dialog and sets the selected date in the specified input field.
+     *
+     * @param dateInputField the input field to populate with the selected date
+     */
     private void showDatePickerDialog(EditText dateInputField) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -100,7 +109,8 @@ public class LogPastTravelDialog extends DialogFragment {
                 getContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     // Format the selected date and set it to the EditText field
-                    String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    String formattedDate = String.format(Locale.getDefault(),
+                            "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                     dateInputField.setText(formattedDate);
                     calculateDurationIfNeeded();
                 },
@@ -112,14 +122,12 @@ public class LogPastTravelDialog extends DialogFragment {
         datePickerDialog.show();
     }
 
-    public void setOnSaveListener(OnSaveListener onSaveListener) {
-        this.onSaveListener = onSaveListener;
-    }
-
-    public interface OnSaveListener {
-        void onSave(TravelLog travelLog);
-    }
-
+    /**
+     * Parses a date string in "yyyy-MM-dd" format into a {@link Date} object.
+     *
+     * @param dateString the date string to parse
+     * @return the parsed {@link Date} object, or {@code null} if parsing fails
+     */
     private Date parseDate(String dateString) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -128,5 +136,24 @@ public class LogPastTravelDialog extends DialogFragment {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Sets the listener for the save action.
+     *
+     * @param onSaveListener the {@link OnSaveListener} to notify when the save button is clicked
+     */
+    public void setOnSaveListener(OnSaveListener onSaveListener) {
+        this.onSaveListener = onSaveListener;
+    }
+
+    public interface OnSaveListener {
+
+        /**
+         * Called when the user saves the travel log.
+         *
+         * @param travelLog the {@link TravelLog} object containing the entered details
+         */
+        void onSave(TravelLog travelLog);
     }
 }

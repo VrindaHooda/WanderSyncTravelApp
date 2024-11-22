@@ -1,10 +1,8 @@
 package com.example.sprintproject.views;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,6 +43,15 @@ public class ViewInvitesActivity extends AppCompatActivity {
         fetchInvites();
     }
 
+    /**
+     * Fetches invites for the current user from the Firestore database and updates the invites list.
+     *
+     * This method listens for real-time updates to the "invites" collection in Firestore
+     * for the specified user and populates the local list of invites. Each invite is stored
+     * as a {@link Map} with details such as plan ID, trip name, and status.
+     *
+     * <p>If an error occurs during the fetching process, it logs the error to the console.</p>
+     */
     private void fetchInvites() {
         firestore.collection("users")
                 .document(userId)

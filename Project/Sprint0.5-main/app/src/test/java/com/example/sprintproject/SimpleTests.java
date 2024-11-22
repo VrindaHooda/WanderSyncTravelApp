@@ -13,6 +13,9 @@ import com.example.sprintproject.model.DiningReservation;
 
 public class SimpleTests {
 
+    /**
+     * Tests the initialization of a {@link ContributorEntry} object.
+     */
     @Test
     public void testContributorEntryInit() {
         ContributorEntry entry = new ContributorEntry("user1", "Notes for Paris");
@@ -20,6 +23,9 @@ public class SimpleTests {
         assertEquals("Notes for Paris", entry.getNotes()); // Using existing `getNotes()` method
     }
 
+    /**
+     * Tests the initialization of a {@link Destination} object.
+     */
     @Test
     public void testDestinationEntry() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -34,6 +40,9 @@ public class SimpleTests {
     }
 
 
+    /**
+     * Tests initializing a {@link DurationEntry} object.
+     */
     @Test
     public void testDurationEntryInit() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,6 +55,9 @@ public class SimpleTests {
         assertEquals(endDate, entry.getEndDate());
     }
 
+    /**
+     * Tests the initialization of a {@link TravelLogEntry} object.
+     */
     @Test
     public void testTravelLogEntryInit() {
         TravelLogEntry entry = new TravelLogEntry("Paris", "2023-12-01", "2023-12-10");
@@ -53,6 +65,9 @@ public class SimpleTests {
         assertEquals("2023-12-01", entry.getStartDate());
     }
 
+    /**
+     * Tests the initialization of a {@link User} object.
+     */
     @Test
     public void testUserInit() {
         User user = new User("user1", "password123", "user@example.com");
@@ -60,6 +75,9 @@ public class SimpleTests {
         assertEquals("user@example.com", user.getUserId());
     }
 
+    /**
+     * Tests the initialization of a {@link UserEntry} object with a {@link DurationEntry}.
+     */
     @Test
     public void testUserEntryInit() {
         DurationEntry entry = new DurationEntry("vacationId1", 5, new Date(), new Date());
@@ -68,6 +86,9 @@ public class SimpleTests {
         assertEquals("test@example.com", userEntry.getEmail());
     }
 
+    /**
+     * Tests setting and updating the notes field of a {@link ContributorEntry}.
+     */
     @Test
     public void testContributorEntryNotes() {
         ContributorEntry entry = new ContributorEntry("user2", "Visited Paris");
@@ -75,6 +96,9 @@ public class SimpleTests {
         assertEquals("Updated notes for Paris", entry.getNotes());
     }
 
+    /**
+     * Tests updating the location field of a {@link Destination}.
+     */
     @Test
     public void testDestinationEntryLocationUpdate() {
         Destination entry = new Destination("2", "London", new Date(), new Date());
@@ -82,12 +106,18 @@ public class SimpleTests {
         assertEquals("Updated Location", entry.getLocation());
     }
 
+    /**
+     * Tests the calculation of the duration in days for a {@link DurationEntry}.
+     */
     @Test
     public void testDurationEntryCalculation() {
         DurationEntry entry = new DurationEntry("vacation1", "2023-12-01", "2023-12-10");
         assertEquals(9, entry.getDuration());
     }
 
+    /**
+     * Tests updating the password field of a {@link User}.
+     */
     @Test
     public void testUserPassword() {
         User user = new User("username", "initialPassword", "userId123");
@@ -95,6 +125,9 @@ public class SimpleTests {
         assertEquals("newPassword", user.getPassword());
     }
 
+    /**
+     * Tests updating the start and end dates of a {@link TravelLogEntry}.
+     */
     @Test
     public void testTravelLogEntryDates() {
         TravelLogEntry entry = new TravelLogEntry("Rome", "2023-06-01", "2023-06-15");
@@ -104,6 +137,9 @@ public class SimpleTests {
         assertEquals("2023-06-20", entry.getEndDate());
     }
 
+    /**
+     * Tests replacing an old {@link DurationEntry} with a new one in a {@link UserEntry}.
+     */
     @Test
     public void testUserEntryNewDurationEntry() {
         DurationEntry oldEntry = new DurationEntry("oldVacation", 7, new Date(), new Date());
@@ -114,6 +150,9 @@ public class SimpleTests {
         assertEquals("newVacation", userEntry.getEntry().getVacationId());
     }
 
+    /**
+     * Tests the initialization of an {@link Accommodation} object with all fields.
+     */
     @Test
     public void testAccommodationInitialization() {
         Accommodation accommodation = new Accommodation("Mountain Lodge",
@@ -127,6 +166,9 @@ public class SimpleTests {
         assertEquals("King Suite", accommodation.getRoomType());
     }
 
+    /**
+     * Tests updating the location field of an {@link Accommodation} object.
+     */
     @Test
     public void testAccommodationLocationUpdate() {
         Accommodation accommodation = new Accommodation("Old Location",
@@ -137,6 +179,9 @@ public class SimpleTests {
         assertEquals("New Location", accommodation.getLocation());
     }
 
+    /**
+     * Tests updating the check-in and check-out dates of an {@link Accommodation} object.
+     */
     @Test
     public void testAccommodationDateUpdate() {
         Accommodation accommodation = new Accommodation("Beach Resort",
@@ -149,6 +194,9 @@ public class SimpleTests {
         assertEquals("2024-06-05", accommodation.getCheckOutDate());
     }
 
+    /**
+     * Tests updating the number of rooms for an {@link Accommodation} object.
+     */
     @Test
     public void testAccommodationNumRoomsUpdate() {
         Accommodation accommodation = new Accommodation("Mountain Lodge",
@@ -159,6 +207,9 @@ public class SimpleTests {
         assertEquals((Integer) 3, (Integer) accommodation.getNumRooms());
     }
 
+    /**
+     * Tests updating the room type of an {@link Accommodation} object.
+     */
     @Test
     public void testAccommodationRoomTypeUpdate() {
         Accommodation accommodation = new Accommodation("City Hotel",
@@ -169,6 +220,9 @@ public class SimpleTests {
         assertEquals("Suite", accommodation.getRoomType());
     }
 
+    /**
+     * Tests retrieving the location field from a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationLocation() {
         DiningReservation reservation = new DiningReservation("Fancy Restaurant",
@@ -176,6 +230,9 @@ public class SimpleTests {
         assertEquals("Fancy Restaurant", reservation.getLocation());
     }
 
+    /**
+     * Tests retrieving the date field from a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationDate() {
         DiningReservation reservation = new DiningReservation("Cozy Cafe",
@@ -183,6 +240,9 @@ public class SimpleTests {
         assertEquals("2024-11-10", reservation.getDate());
     }
 
+    /**
+     * Tests retrieving the time field from a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationTime() {
         DiningReservation reservation = new DiningReservation("Gourmet Bistro",
@@ -190,6 +250,9 @@ public class SimpleTests {
         assertEquals("8:30 PM", reservation.getTime());
     }
 
+    /**
+     * Tests retrieving the number of people field from a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationNumberOfPeople() {
         DiningReservation reservation = new DiningReservation("Sushi Place",
@@ -197,6 +260,9 @@ public class SimpleTests {
         assertEquals(3, reservation.getNumPeople());
     }
 
+    /**
+     * Tests retrieving the website field from a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationWebsite() {
         DiningReservation reservation = new DiningReservation("Burger Joint",
@@ -204,6 +270,9 @@ public class SimpleTests {
         assertEquals("www.burgerjoint.com", reservation.getWebsite());
     }
 
+    /**
+     * Tests updating the location field of a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationUpdateLocation() {
         DiningReservation reservation = new DiningReservation("Old Restaurant",
@@ -212,6 +281,9 @@ public class SimpleTests {
         assertEquals("New Restaurant", reservation.getLocation());
     }
 
+    /**
+     * Tests updating the number of people field of a {@link DiningReservation} object.
+     */
     @Test
     public void testDiningReservationUpdateNumPeople() {
         DiningReservation reservation = new DiningReservation("Steakhouse",

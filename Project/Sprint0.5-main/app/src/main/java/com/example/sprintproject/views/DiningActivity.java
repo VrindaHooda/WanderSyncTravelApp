@@ -60,6 +60,10 @@ public class DiningActivity extends AppCompatActivity {
         fetchReservationsFromDatabase();
     }
 
+    /**
+     * Adds a new dining reservation to Firebase Realtime Database.
+     * Validates user input and clears the form after successfully adding a reservation.
+     */
     public void addReservation() {
         String location = binding.locationInput.getText().toString().trim();
         String time = binding.timeInput.getText().toString().trim();
@@ -93,12 +97,25 @@ public class DiningActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Validates the time input to ensure it matches the "HH:mm" format.
+     *
+     * @param time the time string to validate
+     * @return {@code true} if the time format is valid; {@code false} otherwise
+     */
     private boolean isValidTime(String time) {
         String timeRegex = "^([01]\\d|2[0-3]):([0-5]\\d)$";
         return time.matches(timeRegex);
     }
 
+    /**
+     * Checks if the given date is in the past compared to the current date.
+     *
+     * @param year  the year of the date
+     * @param month the month of the date
+     * @param day   the day of the date
+     * @return {@code true} if the date is in the past; {@code false} otherwise
+     */
     private boolean isDateInPast(int year, int month, int day) {
         Calendar today = Calendar.getInstance();
         Calendar reservationDate = Calendar.getInstance();
@@ -106,6 +123,9 @@ public class DiningActivity extends AppCompatActivity {
         return reservationDate.before(today);
     }
 
+    /**
+     * Fetches dining reservations from Firebase Realtime Database and updates the RecyclerView.
+     */
     private void fetchReservationsFromDatabase() {
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
