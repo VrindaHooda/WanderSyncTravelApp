@@ -30,7 +30,8 @@
         android:hint="Duration (days)"
         android:inputType="number"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -39,7 +40,8 @@
         android:layout_height="wrap_content"
         android:hint="Notes"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -48,7 +50,8 @@
         android:layout_height="wrap_content"
         android:hint="Location"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -57,7 +60,8 @@
         android:layout_height="wrap_content"
         android:hint="Transportation"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -66,7 +70,8 @@
         android:layout_height="wrap_content"
         android:hint="Dining Reservations (comma-separated)"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -75,7 +80,8 @@
         android:layout_height="wrap_content"
         android:hint="Accommodations (comma-separated)"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <EditText
@@ -84,7 +90,8 @@
         android:layout_height="wrap_content"
         android:hint="Collaborators' Emails (comma-separated)"
         android:textColor="@color/colorDarkContrast"
-        android:padding="12dp"
+        android:padding="8dp"
+        android:textSize="12dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
     <LinearLayout
