@@ -9,7 +9,7 @@
     android:layout_marginBottom="16dp"
     android:fontFamily="@font/playwritefrmoderne">
 
-    <TextView
+    <EditText
         android:id="@+id/textViewDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:paddingBottom="8dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
-    <TextView
+    <EditText
         android:id="@+id/textViewNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:paddingBottom="8dp"
         android:fontFamily="@font/playwritefrmoderne" />
 
-    <TextView
+    <EditText
         android:id="@+id/textViewDestinations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         <!-- Each destination will be added dynamically here -->
     </LinearLayout>
 
-    <TextView
+    <EditText
         android:id="@+id/textViewCollaborators"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
