@@ -127,6 +127,7 @@ public class MakePlansActivity extends AppCompatActivity {
         buttonAddPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String durationText = editTextDuration.getText().toString();
                 String notes = editTextNotes.getText().toString();
                 String collaboratorsText = editTextCollaborators.getText().toString();
@@ -161,6 +162,7 @@ public class MakePlansActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
                 }
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -231,7 +233,42 @@ public class MakePlansActivity extends AppCompatActivity {
             }
 
             public void bind(Plan plan) {
+                // Get references to the TextView fields in the layout
+                EditText planDurationTextView = itemView.findViewById(R.id.textViewDuration);
+                EditText planNotesTextView = itemView.findViewById(R.id.textViewNotes);
+                EditText planCollaboratorsTextView = itemView.findViewById(R.id.textViewCollaborators);
+                EditText planDestinationsTextView = itemView.findViewById(R.id.textViewDestinations);
+
+                // Set the values for the duration and notes
+                planDurationTextView.setText(String.format("Duration: %d days", plan.getDuration()));
+                planNotesTextView.setText(String.format("Notes: " + plan.getNotes()));
+
+                // Bind the collaborators list
+                if (plan.getCollaborators() != null && !plan.getCollaborators().isEmpty()) {
+                    planCollaboratorsTextView.setText("Collaborators: " + String.join(", ", plan.getCollaborators()));
+                } else {
+                    planCollaboratorsTextView.setText("Collaborators: None");
+                }
+
+                // Bind the destinations list
+                StringBuilder destinationsBuilder = new StringBuilder();
+                List<Destination> destinations = plan.getDestinations();
+                if (destinations != null && !destinations.isEmpty()) {
+                    for (int i = 0; i < destinations.size(); i++) {
+                        Destination destination = destinations.get(i);
+                        destinationsBuilder.append("Destination ").append(i + 1).append(":\n")
+                                .append("- Location: ").append(destination.getLocation()).append("\n")
+                                .append("- Transportation: ").append(destination.getTransportation()).append("\n")
+                                .append("- Accommodations: ").append(String.join(", ", destination.getAccommodations())).append("\n")
+                                .append("- Dining Reservations: ").append(String.join(", ", destination.getDiningReservations())).append("\n\n");
+                    }
+                } else {
+                    destinationsBuilder.append("No destinations added.");
+                }
+                planDestinationsTextView.setText(destinationsBuilder.toString());
             }
+
+
         }
     }
 }
