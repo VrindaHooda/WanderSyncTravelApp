@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.AuthRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthViewModel extends ViewModel {
     private final FirebaseAuth myFirebaseAuth = AuthRepository.getAuthRepository();
@@ -15,6 +19,8 @@ public class AuthViewModel extends ViewModel {
     private MutableLiveData<String> emailLiveData = new MutableLiveData<>();
     private String userId;
     private String username;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     public LiveData<String> getUserIdLiveData() {
         return userIdLiveData;
@@ -43,6 +49,22 @@ public class AuthViewModel extends ViewModel {
                             this.username = user.getEmail();
                             userIdLiveData.setValue(userId);
                             emailLiveData.setValue(username);
+                        }
+                        if (user != null) {
+                            // Create a user object
+                            Map<String, Object> userData = new HashMap<>();
+                            userData.put("uid", user.getUid());
+                            userData.put("email", user.getEmail());
+
+                            // Store user data in Firestore
+                            db.collection("users").document(user.getUid())
+                                    .set(userData)
+                                    .addOnSuccessListener(aVoid -> {
+                                        System.out.println("User data saved successfully");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        System.out.println("Error saving user data: " + e.getMessage());
+                                    });
                         }
                         callback.onSuccess(user);
                     } else {
