@@ -142,16 +142,19 @@ public class MakePlansActivity extends AppCompatActivity {
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
 
                     // Create a new Plan object
-                    Plan newPlan = new Plan(duration, destinations, notes, collaborators);
+                    Plan newPlan = new Plan(duration, destinations, notes, collaborators, "");
 
                     // Add the Plan to Firestore and send invites
                     firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
                         @Override
                         public void onPlanAdded(Plan plan) {
                             // Send invites to collaborators after plan is successfully added
+                            String planId = plan.getId();
+                            Log.d("AddPlan", "Generated planId: " + planId);
                             for (String collaboratorId : collaborators) {
-                                firebaseRepository.sendInvite(collaboratorId, plan.getId(), userId, notes);  // Get the planId from the Plan object
+                                firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);  // Get the planId from the Plan object
                             }
+                            plansAdapter.addPlanToList(plan);
                             Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
                         }
 
@@ -255,6 +258,8 @@ public class MakePlansActivity extends AppCompatActivity {
         return list;
     }
 
+    // public string Get clicked plan (userID, buttonID)
+
 
     // PlansAdapter class for RecyclerView
     class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
@@ -263,6 +268,11 @@ public class MakePlansActivity extends AppCompatActivity {
         public void setPlans(List<Plan> plans) {
             this.plans = plans;
             notifyDataSetChanged();
+        }
+
+        public void addPlanToList(Plan plan) {
+            plans.add(plan); // Add the new plan to the list
+            notifyItemInserted(plans.size() - 1); // Notify adapter to update UI
         }
 
         @Override
@@ -274,6 +284,7 @@ public class MakePlansActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(PlanViewHolder holder, int position) {
             Plan plan = plans.get(position);
+            Log.d("MakePlansActivity", "Binding plan: " + plan);
             holder.bind(plan);
         }
 
@@ -295,6 +306,12 @@ public class MakePlansActivity extends AppCompatActivity {
                 EditText planCollaboratorsTextView = itemView.findViewById(R.id.textViewCollaborators);
                 EditText planDestinationsTextView = itemView.findViewById(R.id.textViewDestinations);
                 Button buttonUpdatePlan = itemView.findViewById(R.id.buttonUpdatePlan);
+
+                buttonUpdatePlan.setTag(plan.getId());
+                Log.d("Set Tag", "Line 303 Plan ID: " + plan.getId());
+                Log.d("Set Tag", "Line 303 Plan Duration: " + plan.getDuration());
+                Log.d("Set Tag", "Line 303 Plan Collaborators: " + plan.getCollaborators());
+                Log.d("Set Tag", "Line 303 Plan Destinations: " + plan.getDestinations());
 
                 // Set the values for the duration and notes
                 planDurationTextView.setText(String.format("Duration: %d days", plan.getDuration()));
@@ -324,83 +341,91 @@ public class MakePlansActivity extends AppCompatActivity {
                 }
                 planDestinationsTextView.setText(destinationsBuilder.toString());
 
-                buttonUpdatePlan.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("MakePlansActivity", "Update button clicked");
+                buttonUpdatePlan.setOnClickListener(v -> {
+                    Log.d("MakePlansActivity", "Update button clicked");
 
-                        progressBar.setVisibility(View.VISIBLE);
-                        Log.d("MakePlansActivity", "Progress bar visible");
+                    progressBar.setVisibility(View.VISIBLE);
+                    Log.d("MakePlansActivity", "Progress bar visible");
 
-                        // Capture the updated values from the EditText fields
-                        String durationText = planDurationTextView.getText().toString(); // Get updated duration
-                        String notes = planNotesTextView.getText().toString(); // Get updated notes
-                        String collaboratorsText = planCollaboratorsTextView.getText().toString(); // Get updated collaborators
-                        String destinationsText = planDestinationsTextView.getText().toString(); // Get updated destinations
+                    // Capture the updated values from the EditText fields
+                    String durationText = planDurationTextView.getText().toString(); // Get updated duration
+                    String notes = planNotesTextView.getText().toString(); // Get updated notes
+                    String collaboratorsText = planCollaboratorsTextView.getText().toString(); // Get updated collaborators
+                    String destinationsText = planDestinationsTextView.getText().toString(); // Get updated destinations
 
-                        Log.d("MakePlansActivity", "Captured input fields: duration=" + durationText + ", notes=" + notes + ", collaborators=" + collaboratorsText + ", destinations=" + destinationsText);
+                    Log.d("MakePlansActivity", "Captured input fields: duration=" + durationText + ", notes=" + notes + ", collaborators=" + collaboratorsText + ", destinations=" + destinationsText);
 
-                        // Validate that the fields are not empty
-                        if (!durationText.isEmpty() && !notes.isEmpty() && !destinationsText.isEmpty()) {
-                            Log.d("MakePlansActivity", "Input fields are valid");
+                    // Validate that the fields are not empty
+                    if (!durationText.isEmpty() && !notes.isEmpty() && !destinationsText.isEmpty()) {
+                        Log.d("MakePlansActivity", "Input fields are valid");
 
-                            // Extract the numeric value from the duration text (e.g., "13" from "Duration: 13 days")
-                            int duration = 0;
-                            try {
-                                String durationNumber = durationText.replaceAll("[^0-9]", ""); // Remove non-digit characters
-                                duration = Integer.parseInt(durationNumber);
-                                Log.d("MakePlansActivity", "Parsed duration: " + duration);
-                            } catch (NumberFormatException e) {
-                                Log.e("MakePlansActivity", "Error parsing duration: " + durationText, e);
-                                Toast.makeText(MakePlansActivity.this, "Invalid duration value", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                                return;  // Exit the method early if parsing fails
-                            }
-
-                            // Parse collaborators and destinations
-                            List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
-                            List<Destination> updatedDestinations = parseDestinations(destinationsText); // Parse destinations from the updated text
-
-                            Log.d("MakePlansActivity", "Parsed values: duration=" + duration + ", collaborators=" + collaborators + ", destinations=" + updatedDestinations);
-
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
-                            String planId = plan != null ? plan.getId() : null; // Ensure plan is not null before calling getId()
-
-                            if (planId == null) {
-                                Log.e("MakePlansActivity", "Plan ID is null, cannot update plan");
-                                Toast.makeText(MakePlansActivity.this, "Plan ID is missing. Please try again.", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                                return; // Exit early if planId is null
-                            }
-
-                            Log.d("MakePlansActivity", "User ID: " + userId + ", Plan ID: " + planId);
-
-                            // Create a new Plan object with the updated values
-                            Plan updatedPlan = new Plan(duration, updatedDestinations, notes, collaborators);
-
-                            Log.d("MakePlansActivity", "Created updated Plan object: " + updatedPlan);
-
-                            // Use LogisticsViewModel's updatePlan method to update the plan
-                            logisticsViewModel.updatePlan(userId, planId, updatedPlan);
-                            Log.d("MakePlansActivity", "Calling ViewModel to update plan");
-
-                            // Clear input fields after the plan is updated
-                            clearInputFields();
-                            Log.d("MakePlansActivity", "Cleared input fields");
-
-                        } else {
-                            Log.d("MakePlansActivity", "Input fields are empty or invalid");
-                            Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
+                        // Extract the numeric value from the duration text (e.g., "13" from "Duration: 13 days")
+                        int duration = 0;
+                        try {
+                            String durationNumber = durationText.replaceAll("[^0-9]", ""); // Remove non-digit characters
+                            duration = Integer.parseInt(durationNumber);
+                            Log.d("MakePlansActivity", "Parsed duration: " + duration);
+                        } catch (NumberFormatException e) {
+                            Log.e("MakePlansActivity", "Error parsing duration: " + durationText, e);
+                            Toast.makeText(MakePlansActivity.this, "Invalid duration value", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                            return;  // Exit the method early if parsing fails
                         }
 
-                        progressBar.setVisibility(View.GONE);
-                        Log.d("MakePlansActivity", "Progress bar hidden");
+                        // Parse collaborators and destinations
+                        List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
+                        List<Destination> updatedDestinations = parseDestinations(destinationsText); // Parse destinations from the updated text
+
+                        Log.d("MakePlansActivity", "Parsed values: duration=" + duration + ", collaborators=" + collaborators + ", destinations=" + updatedDestinations);
+
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
+                        Log.d("MakePlansActivity", "Retrieved User ID: " + userId);
+
+                        String planId = (String) buttonUpdatePlan.getTag(); // Ensure plan is not null before calling getId()
+                        Log.d("MakePlansActivity", "Retrieved Plan ID: " + planId);
+
+                        if (planId == null) {
+                            Log.e("MakePlansActivity", "Plan ID is null, cannot update plan");
+                            Toast.makeText(MakePlansActivity.this, "Plan ID is missing. Please try again.", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                            return; // Exit early if planId is null
+                        }
+
+                        Log.d("MakePlansActivity", "User ID: " + userId + ", Plan ID: " + planId);
+
+                        // Create a new Plan object with the updated values
+                        Plan updatedPlan = new Plan();
+                        updatedPlan.setId(planId);
+                        updatedPlan.setDuration(duration);
+                        updatedPlan.setCollaborators(collaborators);
+                        updatedPlan.setDestinations(destinations);
+
+
+                        Log.d("MakePlansActivity", "Created updated Plan object: " + updatedPlan);
+
+                        Log.d("Update Plan", "Plan ID: " + planId); // Log to ensure planId is correctly set
+
+                        if (planId != null && !planId.isEmpty()) {
+                            logisticsViewModel.updatePlan(userId, planId, updatedPlan);
+                        } else {
+                            Log.e("Update Error", "Plan ID is null or empty");
+                        }
+                        Log.d("MakePlansActivity", "Calling ViewModel to update plan");
+
+                        // Clear input fields after the plan is updated
+                        clearInputFields();
+                        Log.d("MakePlansActivity", "Cleared input fields");
+
+                    } else {
+                        Log.d("MakePlansActivity", "Input fields are empty or invalid");
+                        Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
                     }
+
+                    progressBar.setVisibility(View.GONE);
+                    Log.d("MakePlansActivity", "Progress bar hidden");
                 });
 
             }
-
-
         }
     }
 }

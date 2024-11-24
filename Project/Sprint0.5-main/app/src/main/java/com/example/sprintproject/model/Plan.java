@@ -13,11 +13,12 @@ public class Plan {
     public Plan() {
     }
 
-    public Plan(int duration, List<Destination> destinations, String notes, List<String> collaborators) {
+    public Plan(int duration, List<Destination> destinations, String notes, List<String> collaborators, String id) {
         this.duration = duration;
         this.destinations = destinations;
         this.notes = notes;
         this.collaborators = collaborators;
+        this.id = id;
     }
 
     public String getId() {

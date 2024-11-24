@@ -274,7 +274,9 @@ public class FirebaseRepository {
                 .addOnSuccessListener(documentReference -> {
                     // Firestore automatically generates a planId, no need for explicit setId here.
                     String planId = documentReference.getId();
-                    plan.setId(planId);  // Still set the ID on the Plan object if needed for the next operations.
+                    Log.d("AddPlan", "Before setting ID: " + plan.toString());  // Log before setting the ID
+                    plan.setId(planId);
+                    Log.d("AddPlan", "After setting ID: " + plan.toString());   // Log after setting the ID
 
                     // Handle post-add actions
                     callback.onPlanAdded(plan);
