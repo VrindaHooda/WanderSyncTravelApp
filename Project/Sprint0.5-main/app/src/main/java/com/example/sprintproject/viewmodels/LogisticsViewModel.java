@@ -72,13 +72,23 @@ public class LogisticsViewModel extends ViewModel {
     }
 
     public void updatePlan(String userId, String planId, Plan updatedPlan) {
+        // Show loading indicator
         isLoading.setValue(true);
-        firebaseRepository.updatePlan(userId, planId, updatedPlan, task -> {
-            isLoading.setValue(false);
-            if (task.isSuccessful()) {
-                fetchPlans(userId); // Refresh the plans after updating
-            } else {
-                errorMessage.setValue("Failed to update plan.");
+
+        // Use the updated updatePlan method from the FirebaseRepository
+        firebaseRepository.updatePlan(userId, planId, updatedPlan, new FirebaseRepository.PlanCallback() {
+            @Override
+            public void onPlanAdded(Plan plan) {
+                // Successfully updated plan, refresh the plans list
+                isLoading.setValue(false);
+                fetchPlans(userId);  // Refresh the plans after updating
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // Failure in updating plan, set the error message
+                isLoading.setValue(false);
+                errorMessage.setValue("Failed to update plan: " + error);
             }
         });
     }

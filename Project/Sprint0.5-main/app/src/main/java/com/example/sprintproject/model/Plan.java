@@ -3,6 +3,7 @@ package com.example.sprintproject.model;
 import java.util.List;
 
 public class Plan {
+    private String id;
     private int duration;
     private List<Destination> destinations;
     private String notes;
@@ -17,6 +18,14 @@ public class Plan {
         this.destinations = destinations;
         this.notes = notes;
         this.collaborators = collaborators;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getDuration() {

@@ -202,16 +202,23 @@ public class FirebaseRepository {
     }
 
     // Update an existing plan
-    public void updatePlan(String userId, String planId, Plan updatedPlan, OnCompleteListener<Void> listener) {
+    public void updatePlan(String userId, String planId, Plan updatedPlan, PlanCallback callback) {
         firestore.collection("users")
                 .document(userId)
                 .collection("plans")
                 .document(planId)
                 .set(updatedPlan)
-                .addOnCompleteListener(listener)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onPlanAdded(updatedPlan); // Successfully updated the plan
+                    } else {
+                        callback.onFailure("Failed to update plan"); // Handle failure
+                    }
+                })
                 .addOnFailureListener(e -> {
-                    // Handle failure
+                    // Log failure in case addOnCompleteListener doesn't catch it
                     e.printStackTrace();
+                    callback.onFailure(e.getMessage());
                 });
     }
 
@@ -249,22 +256,39 @@ public class FirebaseRepository {
     }
 
     public void addPlan(String userId, Plan plan, PlanCallback callback) {
+        if (plan == null || userId == null) {
+            callback.onFailure("Invalid plan or user ID");
+            return;
+        }
+
+        // Validate plan fields before proceeding (optional)
+        if (plan.getDestinations() == null || plan.getDestinations().isEmpty()) {
+            callback.onFailure("Plan must contain at least one destination.");
+            return;
+        }
+
         firestore.collection("users")
                 .document(userId)
                 .collection("plans")
                 .add(plan)
                 .addOnSuccessListener(documentReference -> {
-                    String planId = documentReference.getId(); // Get generated document ID
-                    callback.onPlanAdded(planId);
+                    // Firestore automatically generates a planId, no need for explicit setId here.
+                    String planId = documentReference.getId();
+                    plan.setId(planId);  // Still set the ID on the Plan object if needed for the next operations.
+
+                    // Handle post-add actions
+                    callback.onPlanAdded(plan);
                 })
                 .addOnFailureListener(e -> {
-                    callback.onFailure(e.getMessage());
+                    // Log the error for debugging
+                    Log.e("AddPlanError", "Error adding plan: " + e.getMessage());
+                    callback.onFailure("Failed to add plan: " + e.getMessage());
                 });
     }
 
     // Callback interface for adding plans
     public interface PlanCallback {
-        void onPlanAdded(String planId);
+        void onPlanAdded(Plan plan);
         void onFailure(String error);
     }
 
