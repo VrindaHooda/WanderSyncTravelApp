@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.ViewHolder> {
@@ -75,18 +78,30 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
      * @param newPost the new travel post to add
      */
     public void addPost(Map<String, Object> newPost) {
-        boolean isBoosted = (boolean) newPost.getOrDefault("isBoosted", false);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (isBoosted) {
-            // Add boosted post to the top
-            travelPosts.add(0, newPost);
-        } else {
-            // Add regular post to the end
-            travelPosts.add(newPost);
+        try {
+            Date newPostDate = formatter.parse((String) newPost.get("startDate"));
+
+            // Find the correct position to insert the new post
+            int position = 0;
+            while (position < travelPosts.size()) {
+                Map<String, Object> existingPost = travelPosts.get(position);
+                Date existingPostDate = formatter.parse((String) existingPost.get("startDate"));
+
+                if (newPostDate.before(existingPostDate)) {
+                    break;
+                }
+                position++;
+            }
+
+            // Insert the new post at the correct position
+            travelPosts.add(position, newPost);
+            notifyDataSetChanged();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        notifyDataSetChanged(); // Refresh RecyclerView
     }
-
     /**
      * Returns the total number of travel posts in the list.
      *
