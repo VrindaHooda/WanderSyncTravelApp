@@ -70,6 +70,9 @@ public class TravelCommunityActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches travel posts from Firebase Firestore and displays them in the RecyclerView.
+     */
     private void fetchTravelPosts() {
         db.collection("travelCommunity")
                 .get()
@@ -93,6 +96,9 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Opens a dialog for creating a new travel post, validates the inputs, and saves it to Firestore.
+     */
     private void createNewTravelPost() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_travel_posr, null);
         CheckBox boostPostCheckbox = dialogView.findViewById(R.id.boostPostCheckbox);
@@ -160,11 +166,19 @@ public class TravelCommunityActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         Log.w(TAG, "Error adding document", e);
-                        Toast.makeText(TravelCommunityActivity.this, "Failed to create post.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TravelCommunityActivity.this,
+                                "Failed to create post.", Toast.LENGTH_SHORT).show();
                     });
         });
     }
 
+    /**
+     * Calculates the duration of a trip in days based on the start and end dates.
+     *
+     * @param startDate the start date in "yyyy-MM-dd" format
+     * @param endDate   the end date in "yyyy-MM-dd" format
+     * @return the number of days between the start and end dates, or -1 if parsing fails
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private long calculateTripDuration(String startDate, String endDate) {
         try {

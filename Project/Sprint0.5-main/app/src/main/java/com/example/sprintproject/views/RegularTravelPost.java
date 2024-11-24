@@ -5,6 +5,12 @@ import java.util.Map;
 public class RegularTravelPost implements TravelPost {
     private final Map<String, Object> postDetails;
 
+    /**
+     * Constructs a new {@code RegularTravelPost} instance with the specified post details.
+     *
+     * @param postDetails a map containing the details of the travel post,
+     * such as destination, duration, and other related data
+     */
     public RegularTravelPost(Map<String, Object> postDetails) {
         this.postDetails = postDetails;
     }

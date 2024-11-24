@@ -19,6 +19,11 @@ public class DiningReservationAdapter
 
     private List<DiningReservation> reservationList;
 
+    /**
+     * Constructs a new {@code DiningReservationAdapter}.
+     *
+     * @param reservationList the list of {@link DiningReservation} objects to display
+     */
     public DiningReservationAdapter(List<DiningReservation> reservationList) {
         this.reservationList = reservationList;
     }
@@ -75,11 +80,21 @@ public class DiningReservationAdapter
     static class ReservationViewHolder extends RecyclerView.ViewHolder {
         private final ReservationListItemBinding binding;
 
+        /**
+         * Constructs a new {@code ReservationViewHolder}.
+         *
+         * @param binding the data binding object for the list item layout
+         */
         public ReservationViewHolder(ReservationListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
+        /**
+         * Binds a {@link DiningReservation} object to the list item layout.
+         *
+         * @param reservation the {@link DiningReservation} to bind
+         */
         public void bind(DiningReservation reservation) {
             binding.setReservation(reservation);
             binding.executePendingBindings();

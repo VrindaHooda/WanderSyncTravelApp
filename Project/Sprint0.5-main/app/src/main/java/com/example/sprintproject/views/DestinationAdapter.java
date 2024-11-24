@@ -21,10 +21,18 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     private List<TravelLog> travelLogs = new ArrayList<>();
 
     // Constructor
+    /**
+     * Constructs a {@code DestinationAdapter} with no initial data.
+     */
     public DestinationAdapter() {
     }
 
     // Set data method
+    /**
+     * Sets the travel logs to display in the adapter and refreshes the RecyclerView.
+     *
+     * @param travelLogs the list of {@link TravelLog} objects to display
+     */
     public void setTravelLogs(List<TravelLog> travelLogs) {
         this.travelLogs = travelLogs;
         notifyDataSetChanged();
@@ -55,6 +63,11 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         private final TextView endDateTextView;
         private final TextView durationTextView;
 
+        /**
+         * Constructs a {@code ViewHolder} and initializes the views for a travel log item.
+         *
+         * @param itemView the view for the travel log item
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             locationTextView = itemView.findViewById(R.id.locationTextView);
@@ -63,6 +76,11 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             durationTextView = itemView.findViewById(R.id.durationTextView);
         }
 
+        /**
+         * Binds a {@link TravelLog} object to the views in the ViewHolder.
+         *
+         * @param travelLog the {@link TravelLog} to bind
+         */
         public void bind(TravelLog travelLog) {
             locationTextView.setText(travelLog.getLocation());
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
