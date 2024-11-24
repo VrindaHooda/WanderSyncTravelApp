@@ -2,12 +2,14 @@ package com.example.sprintproject.views;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.adapters.InviteAdapter;
+import com.example.sprintproject.views.InviteAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +34,7 @@ public class ViewInvitesActivity extends AppCompatActivity {
         // Initialize Firestore and get the logged-in user ID
         firestore = FirebaseFirestore.getInstance();
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Button buttonExit2 = findViewById(R.id.buttonExit2);
 
         // Initialize the ListView and Adapter
         ListView inviteListView = findViewById(R.id.invite_list_view);
@@ -41,6 +44,14 @@ public class ViewInvitesActivity extends AppCompatActivity {
 
         // Fetch invites from Firestore
         fetchInvites();
+
+        // Set up Exit button click listener
+        buttonExit2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Close the activity
+            }
+        });
     }
 
     /**
