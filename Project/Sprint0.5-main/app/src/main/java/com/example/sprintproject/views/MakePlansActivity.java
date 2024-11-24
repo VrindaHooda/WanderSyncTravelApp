@@ -24,6 +24,7 @@ import com.example.sprintproject.viewmodels.LogisticsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.sprintproject.model.FirebaseRepository;
@@ -151,59 +152,64 @@ public class MakePlansActivity extends AppCompatActivity {
                 String collaboratorsText = editTextCollaborators.getText().toString();
 
                 if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
-                    int duration = Integer.parseInt(durationText);
-                    Log.d("Data", "Collaborators: " + collaboratorsText);
-                    List<String> collaboratorsEmailList = parseCollaboratorsList(collaboratorsText);// Helper function for parsing collaborators
-                    List<String> collaboratorsIdList = new ArrayList<>();
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
+                    int duration;
+                    try {
+                        duration = Integer.parseInt(durationText);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(MakePlansActivity.this, "Invalid duration", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        return;
+                    }
 
-                    // Create a new Plan object
+                    Log.d("Data", "Collaborators: " + collaboratorsText);
+                    List<String> collaboratorsEmailList = parseCollaboratorsList(collaboratorsText);
+                    List<String> collaboratorsIdList = new ArrayList<>();
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
                     Plan newPlan = new Plan(duration, destinations, notes, collaborators);
 
-                    // Add the Plan to Firestore and send invites
                     firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
                         @Override
                         public void onPlanAdded(String planId) {
+                            // Fetch all collaborator IDs
+                            AtomicInteger counter = new AtomicInteger(collaboratorsEmailList.size());
 
-                            for (String collaboratorEmail: collaboratorsEmailList) {
-                                Log.d("Data", "collaborator email: " + collaboratorEmail);
+                            for (String collaboratorEmail : collaboratorsEmailList) {
                                 getUidByEmail(collaboratorEmail, uid -> {
                                     if (uid != null) {
-                                        // Do something with the UID
-                                        String collaboratorId = id.getId();
-                                        collaboratorsIdList.add(collaboratorId);
-                                        System.out.println("Fetched UID: " + uid);
-                                    } else {
-                                        System.out.println("No user found or an error occurred.");
+                                        collaboratorsIdList.add(uid);
+                                    }
+                                    if (counter.decrementAndGet() == 0) {
+                                        // All UIDs fetched, send invites
+                                        for (String collaboratorId : collaboratorsIdList) {
+                                            Log.w("Id", "CollaboratorId " + collaboratorId);
+                                            firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
+                                        }
+                                        Toast.makeText(MakePlansActivity.this,
+                                                "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.GONE);
+                                        clearInputFields();
                                     }
                                 });
                             }
-                            // Send invites to collaborators
-                            for (String collaboratorId : collaboratorsIdList) {
-                                Log.w("Id", "CollaboratorId " + collaboratorId);
-                                firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
-                            }
-                            Toast.makeText(MakePlansActivity.this,
-                                    "Plan added and invites sent", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailure(String error) {
                             Toast.makeText(MakePlansActivity.this,
                                     "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
-
-                    // Clear input fields after the plan is added
-                    clearInputFields();
                 } else {
                     Toast.makeText(MakePlansActivity.this,
                             "All fields are required and at least one destination must be added",
                             Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
-                progressBar.setVisibility(View.GONE);
             }
         });
+
 
         // Set up Exit button click listener
         buttonExit.setOnClickListener(new View.OnClickListener() {
