@@ -1,6 +1,7 @@
 package com.example.sprintproject.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,15 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Destination;
+import com.example.sprintproject.model.Id;
 import com.example.sprintproject.model.Plan;
 import com.example.sprintproject.viewmodels.LogisticsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.sprintproject.model.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class MakePlansActivity extends AppCompatActivity {
@@ -49,6 +54,8 @@ public class MakePlansActivity extends AppCompatActivity {
     private FirebaseRepository firebaseRepository;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
+    private Id id;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +66,7 @@ public class MakePlansActivity extends AppCompatActivity {
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        id = Id.getInstance();
 
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
@@ -144,7 +152,9 @@ public class MakePlansActivity extends AppCompatActivity {
 
                 if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
                     int duration = Integer.parseInt(durationText);
-                    List<String> collaborators = parseList(collaboratorsText);
+                    Log.d("Data", "Collaborators: " + collaboratorsText);
+                    List<String> collaboratorsEmailList = parseCollaboratorsList(collaboratorsText);// Helper function for parsing collaborators
+                    List<String> collaboratorsIdList = new ArrayList<>();
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
 
                     // Create a new Plan object
@@ -154,8 +164,23 @@ public class MakePlansActivity extends AppCompatActivity {
                     firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
                         @Override
                         public void onPlanAdded(String planId) {
+
+                            for (String collaboratorEmail: collaboratorsEmailList) {
+                                Log.d("Data", "collaborator email: " + collaboratorEmail);
+                                getUidByEmail(collaboratorEmail, uid -> {
+                                    if (uid != null) {
+                                        // Do something with the UID
+                                        String collaboratorId = id.getId();
+                                        collaboratorsIdList.add(collaboratorId);
+                                        System.out.println("Fetched UID: " + uid);
+                                    } else {
+                                        System.out.println("No user found or an error occurred.");
+                                    }
+                                });
+                            }
                             // Send invites to collaborators
-                            for (String collaboratorId : collaborators) {
+                            for (String collaboratorId : collaboratorsIdList) {
+                                Log.w("Id", "CollaboratorId " + collaboratorId);
                                 firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
                             }
                             Toast.makeText(MakePlansActivity.this,
@@ -189,11 +214,60 @@ public class MakePlansActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Clears the input fields for the plan form.
-     * This method resets the text fields for duration, notes, collaborators,
-     * and clears the destinations list.
-     */
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public interface FirestoreCallback {
+        void onCallback(String uid);
+    }
+
+    public void getUidByEmail(String email, FirestoreCallback callback) {
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                String uid = document.getString("uid");
+                                Log.d("Data", "User UID: " + uid);
+
+                                // Use the singleton instance
+                                Id id = Id.getInstance();
+                                id.setId(uid);
+                                System.out.println("User Id: " + id.getId());
+
+                                // Pass the UID back to the caller via the callback
+                                callback.onCallback(uid);
+                                return; // Assuming only one match needed
+                            }
+                        } else {
+                            System.out.println("No user found with this email");
+                            callback.onCallback(null);
+                        }
+                    } else {
+                        System.out.println("Error fetching user: " + task.getException());
+                        callback.onCallback(null);
+                    }
+                });
+    }
+
+
+    private List<String> parseCollaboratorsList(String input) {
+        List<String> collaboratorsList = new ArrayList<>();
+
+        if (input != null && !input.trim().isEmpty()) {
+            String[] collaboratorsArray = input.split(",[ \t]*");
+            for (String collaborator : collaboratorsArray) {
+                if (!collaborator.isEmpty()) {
+                    collaboratorsList.add(collaborator.trim());
+                }
+            }
+        }
+        Log.d("Data", "Collaborators List: " + collaboratorsList);
+        return collaboratorsList;
+    }
+
     private void clearInputFields() {
         editTextDuration.setText("");
         editTextNotes.setText("");
