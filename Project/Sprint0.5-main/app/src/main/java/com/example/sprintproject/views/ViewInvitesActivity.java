@@ -24,6 +24,7 @@ public class ViewInvitesActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private String userId;
     private List<Map<String, String>> invites;
+    private List<String> documentNames;
     private InviteAdapter inviteAdapter;
 
     @Override
@@ -39,7 +40,8 @@ public class ViewInvitesActivity extends AppCompatActivity {
         // Initialize the ListView and Adapter
         ListView inviteListView = findViewById(R.id.invite_list_view);
         invites = new ArrayList<>();
-        inviteAdapter = new InviteAdapter(this, invites, firestore, userId);
+        documentNames = new ArrayList<>();
+        inviteAdapter = new InviteAdapter(this, invites, firestore, userId, documentNames);
         inviteListView.setAdapter(inviteAdapter);
 
         // Fetch invites from Firestore
@@ -81,6 +83,10 @@ public class ViewInvitesActivity extends AppCompatActivity {
                             invite.put("tripName", doc.getString("tripName"));
                             invite.put("status", doc.getString("status"));
                             invites.add(invite);
+
+                            String fullPath = doc.getReference().getPath();
+                            String documentName = fullPath.substring(fullPath.lastIndexOf("/") + 1);
+                            documentNames.add(documentName);
                         }
                         inviteAdapter.notifyDataSetChanged();
                     }
