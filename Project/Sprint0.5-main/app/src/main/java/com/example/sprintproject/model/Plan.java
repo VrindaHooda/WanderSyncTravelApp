@@ -1,14 +1,15 @@
 package com.example.sprintproject.model;
 
-import java.util.List;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 public class Plan {
+    private String id;
     private int duration;
-    private List<Destination> destinations;
+    private ArrayList<Destination> destinations;
     private String notes;
-    private List<String> collaborators;
-    private String planName;
-    private String location;
+    private ArrayList<String> collaborators;
 
     // Default constructor required for Firestore
     /**
@@ -17,20 +18,21 @@ public class Plan {
     public Plan() {
     }
 
-    /**
-     * Constructs a {@code Plan} with the specified details.
-     *
-     * @param duration      the duration of the plan in days
-     * @param destinations  a list of destinations included in the plan
-     * @param notes         notes or additional details about the plan
-     * @param collaborators a list of collaborator IDs for the plan
-     */
-    public Plan(int duration, List<Destination> destinations,
-                String notes, List<String> collaborators) {
+    public Plan(int duration, ArrayList<Destination> destinations, String notes, ArrayList<String> collaborators, String id) {
         this.duration = duration;
         this.destinations = destinations;
+        Log.d("Hello", this.destinations.toString());
         this.notes = notes;
         this.collaborators = collaborators;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 
@@ -69,21 +71,11 @@ public class Plan {
         this.duration = duration;
     }
 
-    /**
-     * Returns the list of destinations included in the plan.
-     *
-     * @return the list of destinations
-     */
-    public List<Destination> getDestinations() {
+    public ArrayList<Destination> getDestinations() {
         return destinations;
     }
 
-    /**
-     * Sets the list of destinations included in the plan.
-     *
-     * @param destinations the destinations to set
-     */
-    public void setDestinations(List<Destination> destinations) {
+    public void setDestinations(ArrayList<Destination> destinations) {
         this.destinations = destinations;
     }
 
@@ -105,21 +97,11 @@ public class Plan {
         this.notes = notes;
     }
 
-    /**
-     * Returns the list of collaborator IDs for the plan.
-     *
-     * @return the list of collaborator IDs
-     */
-    public List<String> getCollaborators() {
+    public ArrayList<String> getCollaborators() {
         return collaborators;
     }
 
-    /**
-     * Sets the list of collaborator IDs for the plan.
-     *
-     * @param collaborators the collaborators to set
-     */
-    public void setCollaborators(List<String> collaborators) {
+    public void setCollaborators(ArrayList<String> collaborators) {
         this.collaborators = collaborators;
     }
 

@@ -1,5 +1,7 @@
 package com.example.sprintproject.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,8 +10,8 @@ import java.util.Objects;
 public class Destination {
     private String id;
     private String location;
-    private List<String> accommodations;
-    private List<String> diningReservations;
+    private ArrayList<String> accommodations;
+    private ArrayList<String> diningReservations;
     private String transportation;
 
     private Date startDate;
@@ -22,37 +24,15 @@ public class Destination {
     public Destination() {
     }
 
-    /**
-     * Constructs a {@code Destination} with specified location,
-     * accommodations, dining reservation, and transportation.
-     *
-     * @param location          the location of the destination
-     * @param accommodations    a list of accommodation IDs
-     * @param diningReservations a list of dining reservation IDs
-     * @param transportation    the transportation method
-     */
-    public Destination(String location, List<String> accommodations,
-                       List<String> diningReservations, String transportation) {
+    // Parameterized constructor
+    public Destination(String location, ArrayList<String> accommodations, ArrayList<String> diningReservations, String transportation) {
         this.location = location;
         this.accommodations = accommodations;
         this.diningReservations = diningReservations;
         this.transportation = transportation;
     }
 
-    /**
-     * Constructs a {@code Destination} with specified location,
-     * accommodations, dining reservations, transportation, and trip dates.
-     *
-     * @param location          the location of the destination
-     * @param accommodations    a list of accommodation IDs
-     * @param diningReservations a list of dining reservation IDs
-     * @param transportation    the transportation method
-     * @param startDate         the start date of the trip
-     * @param endDate           the end date of the trip
-     */
-    public Destination(String location, List<String> accommodations,
-                       List<String> diningReservations, String transportation,
-                       Date startDate, Date endDate) {
+    public Destination(String location, ArrayList<String> accommodations, ArrayList<String> diningReservations, String transportation, Date startDate, Date endDate) {
         this.location = location;
         this.accommodations = accommodations;
         this.diningReservations = diningReservations;
@@ -100,39 +80,19 @@ public class Destination {
         this.location = location;
     }
 
-    /**
-     * Returns the list of accommodations.
-     *
-     * @return the accommodations
-     */
-    public List<String> getAccommodations() {
+    public ArrayList<String> getAccommodations() {
         return accommodations;
     }
 
-    /**
-     * Sets the list of accommodations.
-     *
-     * @param accommodations the accommodations to set
-     */
-    public void setAccommodations(List<String> accommodations) {
+    public void setAccommodations(ArrayList<String> accommodations) {
         this.accommodations = accommodations;
     }
 
-    /**
-     * Returns the list of dining reservations.
-     *
-     * @return the dining reservations
-     */
-    public List<String> getDiningReservations() {
+    public ArrayList<String> getDiningReservations() {
         return diningReservations;
     }
 
-    /**
-     * Sets the list of dining reservations.
-     *
-     * @param diningReservations the dining reservations to set
-     */
-    public void setDiningReservations(List<String> diningReservations) {
+    public void setDiningReservations(ArrayList<String> diningReservations) {
         this.diningReservations = diningReservations;
     }
 
@@ -188,6 +148,13 @@ public class Destination {
      */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setDestination(String location, String transportation, ArrayList<String> diningReservations, ArrayList<String> accommodations) {
+        this.location = location;
+        this.transportation = transportation;
+        this.diningReservations = diningReservations;
+        this.accommodations = accommodations;
     }
 
 
