@@ -18,8 +18,9 @@ import com.example.sprintproject.R;
 import com.example.sprintproject.databinding.AccommodationScreenBinding;
 import com.example.sprintproject.model.Accommodation;
 import com.example.sprintproject.viewmodels.AccommodationAdapter;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +29,8 @@ public class AccommodationActivity extends AppCompatActivity {
     private AccommodationScreenBinding binding;
     private ArrayList<Accommodation> accommodations;
     private AccommodationAdapter adapter;
-    private DatabaseReference databaseReference;
+    private FirebaseFirestore db;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,14 @@ public class AccommodationActivity extends AppCompatActivity {
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
+
         // Set up data binding
         binding = DataBindingUtil.setContentView(this, R.layout.accommodation_screen);
-        binding.setActivity(this);  // Bind this activity for the onClick handler
+        binding.setActivity(this); // Bind this activity for the onClick handler
 
-        // Initialize Firebase Database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("Accommodations");
+        // Initialize Firebase Firestore and get current user ID
+        db = FirebaseFirestore.getInstance();
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Set up RecyclerView
         accommodations = new ArrayList<>();
@@ -53,12 +57,15 @@ public class AccommodationActivity extends AppCompatActivity {
         binding.accommodationListView.setAdapter(adapter);
 
         binding.addNewAccommodationButton.setOnClickListener(view -> showAddAccommodationDialog());
+
+        // Fetch accommodations from Firestore for the current user
+        fetchAccommodations();
     }
 
     /**
      * Displays a dialog for adding a new accommodation. Includes inputs for
      * location, check-in date, check-out date, number of rooms, and room type.
-     * The new accommodation is saved to Firebase and added to the RecyclerView.
+     * The new accommodation is saved to Firestore and added to the RecyclerView.
      */
     public void showAddAccommodationDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.accommodation_form, null);
@@ -101,7 +108,6 @@ public class AccommodationActivity extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-
         addAccommodationButton.setOnClickListener(v -> {
             String location = locationInput.getText().toString();
             String checkInDate = checkInDateInput.getText().toString();
@@ -111,13 +117,13 @@ public class AccommodationActivity extends AppCompatActivity {
 
             if (location.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty()
                     || numRooms.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
-                // Create a new Accommodation entry and add it to Firebase
+                // Create a new Accommodation entry and add it to Firestore
                 Accommodation accommodation = new Accommodation(location, checkInDate, checkOutDate,
                         Integer.parseInt(numRooms), roomType);
-                databaseReference.push().setValue(accommodation);
+
+                saveAccommodation(accommodation);
                 accommodations.add(accommodation);
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
@@ -125,5 +131,42 @@ public class AccommodationActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    /**
+     * Saves the accommodation to Firestore under the current user's collection.
+     *
+     * @param accommodation The accommodation to save.
+     */
+    private void saveAccommodation(Accommodation accommodation) {
+        CollectionReference userAccommodationsRef = db.collection("users")
+                .document(currentUserId)
+                .collection("accommodations");
+
+        userAccommodationsRef.add(accommodation)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Accommodation saved successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to save accommodation", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * Fetches accommodations from Firestore for the current user.
+     */
+    private void fetchAccommodations() {
+        db.collection("users")
+                .document(currentUserId)
+                .collection("accommodations")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    accommodations.clear();
+                    accommodations.addAll(queryDocumentSnapshots.toObjects(Accommodation.class));
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to load accommodations", Toast.LENGTH_SHORT).show();
+                });
     }
 }
