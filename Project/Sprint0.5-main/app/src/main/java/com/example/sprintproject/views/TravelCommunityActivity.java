@@ -21,6 +21,8 @@ import com.example.sprintproject.viewmodels.TravelPost;
 import com.example.sprintproject.viewmodels.TravelPostsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth; // Added import
+import com.google.firebase.auth.FirebaseUser; // Added import
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,7 +31,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +89,7 @@ public class TravelCommunityActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> post = document.getData();
                                 post.putIfAbsent("isBoosted", false); // Default to non-boosted
+                                post.putIfAbsent("userEmail", "Unknown"); // Default if userEmail is missing
                                 travelPosts.add(post);
                             }
                             travelPosts.sort((post1, post2) -> {
@@ -158,6 +160,17 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 return;
             }
 
+            // Get the current user
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String userEmail = null;
+            if (currentUser != null) {
+                userEmail = currentUser.getEmail();
+            } else {
+                Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show();
+                dialog.dismiss(); // Close the dialog
+                return;
+            }
+
             Map<String, Object> newPost = new HashMap<>();
             newPost.put("startDate", startDate);
             newPost.put("endDate", endDate);
@@ -166,16 +179,9 @@ public class TravelCommunityActivity extends AppCompatActivity {
             newPost.put("accommodations", accommodations);
             newPost.put("diningReservations", diningReservations);
             newPost.put("notes", notes);
+            newPost.put("userEmail", userEmail); // Include userEmail
             boolean isBoosted = boostPostCheckbox.isChecked();
-
-            TravelPost travelPost = new RegularTravelPost(newPost);
-            if (isBoosted) {
-                travelPost = new BoostedTravelPost(travelPost);
-
-            }
-            newPost.put("isBoosted", travelPost.isBoosted());
-
-
+            newPost.put("isBoosted", isBoosted);
 
             db.collection("travelCommunity")
                     .add(newPost)
@@ -183,11 +189,6 @@ public class TravelCommunityActivity extends AppCompatActivity {
                         Toast.makeText(TravelCommunityActivity.this,
                                 "Travel post created!", Toast.LENGTH_SHORT).show();
                         fetchTravelPosts();
-                        TravelPostsAdapter adapter = (TravelPostsAdapter)
-                                travelPostsRecyclerView.getAdapter();
-                        if (adapter != null) {
-                            adapter.addPost(newPost);
-                        }
                         dialog.dismiss();
 
                     })
@@ -220,8 +221,6 @@ public class TravelCommunityActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void setTravelPosts(ArrayList<Map<String, Object>> posts) {
         this.travelPosts = posts;
     }
@@ -238,6 +237,4 @@ public class TravelCommunityActivity extends AppCompatActivity {
             travelPosts.remove(post);
         }
     }
-
-
 }

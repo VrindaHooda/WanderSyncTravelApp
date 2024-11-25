@@ -54,8 +54,8 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Map<String, Object> post = travelPosts.get(position);
         holder.durationTextView.setText("Duration: " + post.get("duration"));
-        holder.destinationsTextView.setText("Destinations: " + post.get("destination"));
         holder.notesTextView.setText("Notes: " + post.get("notes"));
+
         boolean isBoosted = (boolean) post.getOrDefault("isBoosted", false);
         if (isBoosted) {
             holder.itemView.setBackgroundColor(
@@ -66,11 +66,19 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
                     holder.itemView.getContext().getResources().
                             getColor(android.R.color.transparent));
         }
+
         String details = isBoosted
                 ? "[BOOSTED] Destination: " + post.get("destination")
                 : "Destination: " + post.get("destination");
         holder.destinationsTextView.setText(details);
 
+        // Set userEmail
+        String userEmail = (String) post.get("userEmail");
+        if (userEmail != null) {
+            holder.userEmailTextView.setText("User Email: " + userEmail);
+        } else {
+            holder.userEmailTextView.setText("User Email: N/A");
+        }
     }
 
     /**
@@ -104,6 +112,7 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
             e.printStackTrace();
         }
     }
+
     /**
      * Returns the total number of travel posts in the list.
      *
@@ -118,6 +127,7 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
         private TextView durationTextView;
         private TextView destinationsTextView;
         private TextView notesTextView;
+        private TextView userEmailTextView; // New TextView for userEmail
 
         /**
          * Constructs a {@code ViewHolder} and initializes
@@ -130,6 +140,7 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
             durationTextView = itemView.findViewById(R.id.durationTextView);
             destinationsTextView = itemView.findViewById(R.id.destinationsTextView);
             notesTextView = itemView.findViewById(R.id.notesTextView);
+            userEmailTextView = itemView.findViewById(R.id.userEmailTextView); // Initialize userEmailTextView
         }
 
         /**
@@ -157,6 +168,15 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
          */
         public TextView getNotesTextView() {
             return notesTextView;
+        }
+
+        /**
+         * Returns the {@link TextView} displaying the user email.
+         *
+         * @return the userEmail {@link TextView}
+         */
+        public TextView getUserEmailTextView() {
+            return userEmailTextView;
         }
     }
 }
