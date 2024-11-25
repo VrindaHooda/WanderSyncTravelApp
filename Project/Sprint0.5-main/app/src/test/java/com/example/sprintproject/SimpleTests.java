@@ -250,124 +250,87 @@ public class SimpleTests {
     }
 
     /**
-     * Tests retrieving the location field from a {@link DiningReservation} object.
+     * Tests retrieving the restaurant name from a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservationLocation() {
-        DiningReservation reservation = new DiningReservation("Fancy Restaurant", "7:00 PM", "www.restaurant.com", 4);
-        assertEquals("Fancy Restaurant", reservation.getLocation());
+    public void testDiningReservationRestaurantName() {
+        DiningReservation reservation = new DiningReservation(
+                "res1", "user1", "Fancy Restaurant", new Date(), 4, "Some notes", "www.restaurant.com", 4.5f);
+        assertEquals("Fancy Restaurant", reservation.getRestaurantName());
     }
 
     /**
-     * Tests retrieving the date field from a {@link DiningReservation} object.
-     */
-    /**
-     * Tests retrieving the date field from a {@link DiningReservation} object.
+     * Tests retrieving the reservation date from a {@link DiningReservation} object.
      */
     @Test
     public void testDiningReservationDate() {
+        Date reservationDate = new Date();
         DiningReservation reservation = new DiningReservation(
-                "Cozy Cafe", 11, 10, 2024, "6:00 PM", 2, "www.cafe.com", 4);
-        assertEquals("11/10/2024", reservation.getFormattedDate());
+                "res2", "user1", "Cozy Cafe", reservationDate, 2, "Notes", "www.cafe.com", 3.5f);
+        assertEquals(reservationDate, reservation.getReservationDate());
     }
 
-
     /**
-     * Tests retrieving the time field from a {@link DiningReservation} object.
-     */
-    /**
-     * Tests retrieving the time field from a {@link DiningReservation} object.
+     * Tests retrieving the number of guests field from a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservationTime() {
+    public void testDiningReservationNumberOfGuests() {
         DiningReservation reservation = new DiningReservation(
-                "Gourmet Bistro", 11, 20, 2024, "8:30 PM", 2, "www.bistro.com", 4);
-        assertEquals("8:30 PM", reservation.getTime());
+                "res3", "user1", "Gourmet Bistro", new Date(), 5, "Notes", "www.bistro.com", 4.0f);
+        assertEquals(5, reservation.getNumberOfGuests());
     }
 
-
     /**
-     * Tests retrieving the number of people field from a {@link DiningReservation} object.
-     */
-    /**
-     * Tests retrieving the number of people field from a {@link DiningReservation} object.
+     * Tests retrieving the notes field from a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservationNumberOfPeople() {
+    public void testDiningReservationNotes() {
         DiningReservation reservation = new DiningReservation(
-                "Sushi Place", 11, 18, 2024, "7:00 PM", 3, "www.sushiplace.com", 4);
-        assertEquals(3, reservation.getNumPeople());
+                "res4", "user1", "Burger Joint", new Date(), 3, "Special occasion", "www.burgerjoint.com", 5.0f);
+        assertEquals("Special occasion", reservation.getNotes());
     }
 
-    /**
-     * Tests retrieving the website field from a {@link DiningReservation} object.
-     */
     /**
      * Tests retrieving the website field from a {@link DiningReservation} object.
      */
     @Test
     public void testDiningReservationWebsite() {
         DiningReservation reservation = new DiningReservation(
-                "Burger Joint", 12, 1, 2024, "5:00 PM", 5, "www.burgerjoint.com", 4);
-        assertEquals("www.burgerjoint.com", reservation.getWebsite());
+                "res5", "user1", "Sushi Place", new Date(), 4, "Dinner out", "www.sushiplace.com", 4.5f);
+        assertEquals("www.sushiplace.com", reservation.getWebsite());
     }
 
-
     /**
-     * Tests updating the location field of a {@link DiningReservation} object.
-     */
-    /**
-     * Tests updating the location of a {@link DiningReservation} object.
+     * Tests retrieving the rating field from a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservationUpdateLocation() {
+    public void testDiningReservationRating() {
         DiningReservation reservation = new DiningReservation(
-                "Old Restaurant", 12, 1, 2024, "6:00 PM", 2, "www.oldrestaurant.com", 4);
-        reservation.setLocation("New Restaurant");
-        assertEquals("New Restaurant", reservation.getLocation());
+                "res6", "user1", "Steakhouse", new Date(), 2, "Business dinner", "www.steakhouse.com", 3.5f);
+        assertEquals(3.5f, reservation.getRating(), 0.0f);
     }
 
-
     /**
-     * Tests updating the number of people field of a {@link DiningReservation} object.
-     */
-    /**
-     * Tests updating the number of people in a {@link DiningReservation} object.
+     * Tests updating the restaurant name of a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservationUpdateNumPeople() {
+    public void testDiningReservationUpdateRestaurantName() {
         DiningReservation reservation = new DiningReservation(
-                "Steakhouse", 11, 25, 2024, "7:30 PM", 2, "www.steakhouse.com", 4);
-        reservation.setNumPeople(4);
-        assertEquals(4, reservation.getNumPeople());
+                "res7", "user1", "Old Restaurant", new Date(), 2, "Notes", "www.oldrestaurant.com", 4.0f);
+        reservation.setRestaurantName("New Restaurant");
+        assertEquals("New Restaurant", reservation.getRestaurantName());
     }
-
 
     /**
-     * Tests retrieving the notes or location field from a {@link DiningReservation} object.
+     * Tests updating the number of guests in a {@link DiningReservation} object.
      */
     @Test
-    public void testDiningReservation() {
+    public void testDiningReservationUpdateNumberOfGuests() {
         DiningReservation reservation = new DiningReservation(
-                "Dinner at NYC", "7:00 PM", "www.restaurant.com", 4);
-
-        // Validate the location
-        assertEquals("Dinner at NYC", reservation.getLocation());
+                "res8", "user1", "Seafood Spot", new Date(), 2, "Notes", "www.seafoodspot.com", 4.0f);
+        reservation.setNumberOfGuests(6);
+        assertEquals(6, reservation.getNumberOfGuests());
     }
-
-
-    @Test
-    public void testDiningReservationInitialization() {
-        // Adjusted to use the existing constructor
-        DiningReservation diningReservation = new DiningReservation("Fancy Restaurant", "7:00 PM", "www.fancyrestaurant.com", 4);
-
-        // Validate the fields
-        assertEquals("Fancy Restaurant", diningReservation.getLocation());
-        assertEquals("7:00 PM", diningReservation.getTime());
-        assertEquals("www.fancyrestaurant.com", diningReservation.getWebsite());
-        assertEquals(4, diningReservation.getRating()); // Assuming `rating` replaces `numPeople`
-    }
-
 
     @Test
     public void testPlanCreation() {
@@ -438,5 +401,26 @@ public class SimpleTests {
         assertEquals(endDate, vacationEntry.getEndDate());
         assertEquals(10, vacationEntry.getDuration());
     }
+
+
+    // Test 2: Verify setting and retrieving Accommodation location
+    @Test
+    public void testAccommodationSetLocation() {
+        Accommodation accommodation = new Accommodation();
+        accommodation.setLocation("Beach Resort");
+        assertEquals("Beach Resort", accommodation.getLocation());
+    }
+
+    // Test 3: Verify setting and retrieving VacationEntry dates
+    @Test
+    public void testVacationEntryDates() {
+        Date startDate = new Date();
+        Date endDate = new Date();
+        VacationEntry vacationEntry = new VacationEntry(startDate, endDate, 5);
+        assertEquals(startDate, vacationEntry.getStartDate());
+        assertEquals(endDate, vacationEntry.getEndDate());
+        assertEquals(5, vacationEntry.getDuration());
+    }
+
 
 }
