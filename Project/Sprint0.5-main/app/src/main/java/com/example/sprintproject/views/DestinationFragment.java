@@ -85,7 +85,8 @@ public class DestinationFragment extends Fragment {
 
         destinationViewModel.getTotalPlannedDays(userId).observe(getViewLifecycleOwner(), totalPlannedDays -> {
             // Update TextView with the total planned days
-            totalPlannedDaysTextView.setText(getString(R.string.total_planned_days, totalPlannedDays));
+            totalPlannedDaysTextView.setText(
+                    getString(R.string.total_planned_days, totalPlannedDays));
             passPlannedDataToActivity(totalPlannedDays);
         });
     }
