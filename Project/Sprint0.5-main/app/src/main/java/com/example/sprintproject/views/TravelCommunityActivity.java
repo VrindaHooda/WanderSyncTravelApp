@@ -21,8 +21,8 @@ import com.example.sprintproject.viewmodels.TravelPost;
 import com.example.sprintproject.viewmodels.TravelPostsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth; // Added import
-import com.google.firebase.auth.FirebaseUser; // Added import
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,6 +64,7 @@ public class TravelCommunityActivity extends AppCompatActivity {
 
         travelPostsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        prepopulateTravelPost();
         fetchTravelPosts();
 
         createPostButton.setOnClickListener(new View.OnClickListener() {
@@ -236,5 +237,41 @@ public class TravelCommunityActivity extends AppCompatActivity {
         if (travelPosts != null && travelPosts.contains(post)) {
             travelPosts.remove(post);
         }
+    }
+
+    private void prepopulateTravelPost() {
+        db.collection("travelCommunity")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null && task.getResult().isEmpty()) {
+                            // No posts exist, add a pre-populated post
+                            Map<String, Object> prepopulatedPost = new HashMap<>();
+                            prepopulatedPost.put("startDate", "2024-12-01");
+                            prepopulatedPost.put("endDate", "2024-12-07");
+                            prepopulatedPost.put("duration", "6 days");
+                            prepopulatedPost.put("destination", "Barcelona, Spain");
+                            prepopulatedPost.put("accommodations", "Hotel Barcelona");
+                            prepopulatedPost.put("diningReservations", "La Boqueria, Tickets Bar");
+                            prepopulatedPost.put("notes", "Visit the Sagrada Familia and Park Guell");
+                            prepopulatedPost.put("userEmail", "admin@travelapp.com");
+                            prepopulatedPost.put("isBoosted", false);
+
+                            db.collection("travelCommunity")
+                                    .add(prepopulatedPost)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Toast.makeText(TravelCommunityActivity.this,
+                                                "Prepopulated travel post created!", Toast.LENGTH_SHORT).show();
+                                        fetchTravelPosts();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.w(TAG, "Error adding prepopulated document", e);
+                                        Toast.makeText(TravelCommunityActivity.this,
+                                                "Failed to create prepopulated post.", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    }
+                });
     }
 }
