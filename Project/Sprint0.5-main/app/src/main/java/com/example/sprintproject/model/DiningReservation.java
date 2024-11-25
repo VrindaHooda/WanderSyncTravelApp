@@ -9,18 +9,22 @@ public class DiningReservation {
     private Date reservationDate;
     private int numberOfGuests;
     private String notes;
+    private String website;
+    private float rating;
 
     // Required no-argument constructor for Firebase serialization
     public DiningReservation() {
     }
 
-    public DiningReservation(String id, String userId, String restaurantName, Date reservationDate, int numberOfGuests, String notes) {
+    public DiningReservation(String id, String userId, String restaurantName, Date reservationDate, int numberOfGuests, String notes, String website, float rating) {
         this.id = id;
         this.userId = userId;
         this.restaurantName = restaurantName;
         this.reservationDate = reservationDate;
         this.numberOfGuests = numberOfGuests;
         this.notes = notes;
+        this.website = website;
+        this.rating = rating;
     }
 
     // Getters and setters for all fields
@@ -71,5 +75,21 @@ public class DiningReservation {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }
