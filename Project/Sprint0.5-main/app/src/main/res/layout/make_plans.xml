@@ -24,6 +24,17 @@
         android:layout_marginTop="16dp" />
 
     <EditText
+        android:id="@+id/editTextTripName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Trip Name"
+        android:inputType="number"
+        android:textColor="@color/colorDarkContrast"
+        android:padding="8dp"
+        android:textSize="12dp"
+        android:fontFamily="@font/playwritefrmoderne" />
+
+    <EditText
         android:id="@+id/editTextDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

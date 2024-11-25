@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprintproject.model.FirebaseRepository;
 import com.example.sprintproject.model.Plan;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LogisticsViewModel extends ViewModel {
@@ -57,16 +60,27 @@ public class LogisticsViewModel extends ViewModel {
      */
     public void fetchPlans(String userId) {
         isLoading.setValue(true);
-        firebaseRepository.getPlans(userId, task -> {
-            isLoading.setValue(false);
-            if (task.isSuccessful() && task.getResult() != null) {
-                List<Plan> plans = task.getResult().toObjects(Plan.class);
-                plansLiveData.setValue(plans);
-            } else {
-                errorMessage.setValue("Failed to fetch plans.");
-            }
-        });
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("plans")
+                .whereArrayContains("collaborators", userId)
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        errorMessage.setValue(e.getMessage());
+                        isLoading.setValue(false);
+                        return;
+                    }
+
+                    List<Plan> plans = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Plan plan = document.toObject(Plan.class);
+                        plans.add(plan);
+                    }
+                    plansLiveData.setValue(plans);
+                    isLoading.setValue(false);
+                });
     }
+
 
     /**
      * Adds a new plan for the given user ID and refreshes the plans list upon success.

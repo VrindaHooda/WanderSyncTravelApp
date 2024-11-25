@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.firestore.FieldValue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -90,23 +91,32 @@ public class InviteAdapter extends BaseAdapter {
 
         // Set position as tag
         holder.acceptButton.setTag(position);
-        holder.declineButton.setTag(position);
+        holder.declineButton.setTag(position);;
 
         holder.acceptButton.setOnClickListener(v -> {
             int pos = (int) v.getTag();
             Map<String, String> currentInvite = invites.get(pos);
             String currentDocument = documentNames.get(pos);
+            String planId = currentInvite.get("planId");
 
+            // Update the invite status to "Accepted"
             firestore.collection("users")
                     .document(userId)
                     .collection("invites")
                     .document(currentDocument)
                     .update("status", "Accepted")
                     .addOnSuccessListener(aVoid -> {
-                        currentInvite.put("status", "Accepted");
-                        holder.statusText.setText("Accepted");
-                        notifyDataSetChanged();
-                        Toast.makeText(context, "Invite accepted", Toast.LENGTH_SHORT).show();
+                        // Add the user to the plan's collaborators list
+                        firestore.collection("plans")
+                                .document(planId)
+                                .update("collaborators", FieldValue.arrayUnion(userId))
+                                .addOnSuccessListener(aVoid2 -> {
+                                    currentInvite.put("status", "Accepted");
+                                    holder.statusText.setText("Accepted");
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, "Invite accepted", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> Log.e("InviteAdapter", "Error updating plan collaborators", e));
                     })
                     .addOnFailureListener(e -> Log.e("InviteAdapter", "Error accepting invite", e));
         });
