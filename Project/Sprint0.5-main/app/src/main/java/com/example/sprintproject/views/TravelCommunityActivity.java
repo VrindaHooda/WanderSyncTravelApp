@@ -25,11 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,6 +78,7 @@ public class TravelCommunityActivity extends AppCompatActivity {
      */
     private void fetchTravelPosts() {
         db.collection("travelCommunity")
+                .orderBy("startDate")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -86,6 +90,17 @@ public class TravelCommunityActivity extends AppCompatActivity {
                                 post.putIfAbsent("isBoosted", false); // Default to non-boosted
                                 travelPosts.add(post);
                             }
+                            travelPosts.sort((post1, post2) -> {
+                                try {
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date date1 = formatter.parse((String) post1.get("startDate")); // Parse the startDate of post1
+                                    Date date2 = formatter.parse((String) post2.get("startDate")); // Parse the startDate of post2
+                                    return date1.compareTo(date2); // Compare the two dates
+                                } catch (ParseException e) {
+                                    e.printStackTrace(); // Print the stack trace for debugging
+                                    return 0; // Return 0 if parsing fails
+                                }
+                            });
                             TravelPostsAdapter adapter = new TravelPostsAdapter(travelPosts);
                             adapter.notifyDataSetChanged();
                             travelPostsRecyclerView.setAdapter(adapter);
@@ -162,7 +177,12 @@ public class TravelCommunityActivity extends AppCompatActivity {
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(TravelCommunityActivity.this, "Travel post created!", Toast.LENGTH_SHORT).show();
                         fetchTravelPosts();
+                        TravelPostsAdapter adapter = (TravelPostsAdapter) travelPostsRecyclerView.getAdapter();
+                        if (adapter != null) {
+                            adapter.addPost(newPost);
+                        }
                         dialog.dismiss();
+
                     })
                     .addOnFailureListener(e -> {
                         Log.w(TAG, "Error adding document", e);

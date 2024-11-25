@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
 
     <TextView
         android:id="@+id/invites_header"
@@ -12,13 +13,31 @@
         android:text="Invitations"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/playwritefrmoderne"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
     <ListView
         android:id="@+id/invite_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/colorDarkContrast"
+        android:dividerHeight="1dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonExit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorHighlight"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:padding="10dp"
+        android:text="Exit"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="12dp" />
 </LinearLayout>
