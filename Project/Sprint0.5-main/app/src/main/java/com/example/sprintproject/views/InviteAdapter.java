@@ -84,21 +84,26 @@ public class InviteAdapter extends BaseAdapter {
         String document = documentNames.get(position);
         String tripName = invite.get("tripName");
         String status = invite.get("status");
-        String planId = invite.get("planId");
 
         holder.tripNameText.setText(tripName);
         holder.statusText.setText(status);
 
+        // Set position as tag
+        holder.acceptButton.setTag(position);
+        holder.declineButton.setTag(position);
+
         holder.acceptButton.setOnClickListener(v -> {
-            Log.d("Document", document);
+            int pos = (int) v.getTag();
+            Map<String, String> currentInvite = invites.get(pos);
+            String currentDocument = documentNames.get(pos);
+
             firestore.collection("users")
                     .document(userId)
                     .collection("invites")
-                    .document(document)
+                    .document(currentDocument)
                     .update("status", "Accepted")
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Accepted", "Accepted");
-                        invite.put("status", "Accepted");
+                        currentInvite.put("status", "Accepted");
                         holder.statusText.setText("Accepted");
                         notifyDataSetChanged();
                         Toast.makeText(context, "Invite accepted", Toast.LENGTH_SHORT).show();
@@ -107,13 +112,17 @@ public class InviteAdapter extends BaseAdapter {
         });
 
         holder.declineButton.setOnClickListener(v -> {
+            int pos = (int) v.getTag();
+            String currentDocument = documentNames.get(pos);
+
             firestore.collection("users")
                     .document(userId)
                     .collection("invites")
-                    .document(document)
+                    .document(currentDocument)
                     .delete()
                     .addOnSuccessListener(aVoid -> {
-                        invites.remove(position);
+                        invites.remove(pos);
+                        documentNames.remove(pos);
                         notifyDataSetChanged();
                         Toast.makeText(context, "Invite declined", Toast.LENGTH_SHORT).show();
                     })
@@ -122,4 +131,5 @@ public class InviteAdapter extends BaseAdapter {
 
         return convertView;
     }
+
 }
