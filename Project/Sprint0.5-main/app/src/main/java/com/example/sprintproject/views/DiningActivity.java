@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,7 +55,6 @@ public class DiningActivity extends AppCompatActivity {
         upcomingRecyclerView = findViewById(R.id.upcomingRecyclerView);
         pastRecyclerView = findViewById(R.id.pastRecyclerView);
         addReservationButton = findViewById(R.id.addReservationButton);
-
 
         // Setup RecyclerViews
         setupRecyclerViews();
@@ -111,6 +111,14 @@ public class DiningActivity extends AppCompatActivity {
         diningViewModel.getUpcomingReservations().observe(this, new Observer<List<DiningReservation>>() {
             @Override
             public void onChanged(List<DiningReservation> reservations) {
+                for (DiningReservation reservation : reservations) {
+                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
+                        reservation.setWebsite("No website available");
+                    }
+                    if (reservation.getRating() == 0) {
+                        reservation.setRating(3.0f); // Default rating if none provided
+                    }
+                }
                 upcomingAdapter.setReservations(reservations);
             }
         });
@@ -118,6 +126,14 @@ public class DiningActivity extends AppCompatActivity {
         diningViewModel.getPastReservations().observe(this, new Observer<List<DiningReservation>>() {
             @Override
             public void onChanged(List<DiningReservation> reservations) {
+                for (DiningReservation reservation : reservations) {
+                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
+                        reservation.setWebsite("No website available");
+                    }
+                    if (reservation.getRating() == 0) {
+                        reservation.setRating(3.0f); // Default rating if none provided
+                    }
+                }
                 pastAdapter.setReservations(reservations);
             }
         });
