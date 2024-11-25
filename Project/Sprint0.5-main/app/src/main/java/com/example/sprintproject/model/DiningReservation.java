@@ -61,6 +61,7 @@ public class DiningReservation {
         this.website = website;
     }
 
+
     /**
      * Constructs a {@code DiningReservation} with basic details.
      *
