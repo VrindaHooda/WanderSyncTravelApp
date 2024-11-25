@@ -14,7 +14,7 @@ The architecture of WanderSync is modular and scalable, emphasizing separation o
 ![plot](./pages_images/image1.png)
 ![plot](./pages_images/image2.png)
 
-**Functionalit:y**
+**Functionality:**
 [Video Demonstrating](https://drive.google.com/file/d/19Ay-JIvpye8to82s5JW1-CqaytnpawDb/view?usp=sharing "@embed")
 
 **Conclusions & Learnings:**
