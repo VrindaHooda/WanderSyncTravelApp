@@ -397,12 +397,12 @@ public class FirebaseRepository {
 
         // Generate a new document ID if not already set
         if (reservation.getId() == null || reservation.getId().isEmpty()) {
-            String reservationId = firestore.collection(COLLECTION_NAME).document().getId();
+            String reservationId = firestore.collection("users").document(userId).collection(COLLECTION_NAME).document().getId();
             reservation.setId(reservationId);
         }
 
         // Save the reservation to Firestore
-        firestore.collection(COLLECTION_NAME)
+        firestore.collection("users").document(userId).collection(COLLECTION_NAME)
                 .document(reservation.getId())
                 .set(reservation, SetOptions.merge())
                 .addOnCompleteListener(listener);
@@ -414,7 +414,7 @@ public class FirebaseRepository {
     }
 
     public void getCategorizedDiningReservations(String userId, OnCategorizedReservationsListener listener) {
-        CollectionReference reservationsRef = firestore.collection(COLLECTION_NAME);
+        CollectionReference reservationsRef = firestore.collection("users").document(userId).collection(COLLECTION_NAME);
 
         // Query for reservations belonging to the user
         reservationsRef
@@ -452,6 +452,4 @@ public class FirebaseRepository {
                     }
                 });
     }
-
-
 }

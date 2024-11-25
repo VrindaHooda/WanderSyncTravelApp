@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DiningReservation;
 import com.example.sprintproject.viewmodels.DiningViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +33,7 @@ public class AddReservationActivity extends AppCompatActivity {
     private TextView timeTextView;
     private Button saveReservationButton;
     private ProgressBar progressBar;
-
+    private FirebaseAuth firebaseAuth;
     private DiningViewModel diningViewModel;
     private Calendar reservationCalendar;
 
@@ -41,6 +42,7 @@ public class AddReservationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reservation);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         // Initialize UI components
         restaurantNameEditText = findViewById(R.id.restaurantNameEditText);
         numberOfGuestsEditText = findViewById(R.id.numberOfGuestsEditText);
@@ -140,7 +142,7 @@ public class AddReservationActivity extends AppCompatActivity {
 
     private String getUserId() {
         // Replace with your method to retrieve the current user's ID, such as from Firebase Authentication
-        return "user123";
+        return firebaseAuth.getCurrentUser().getUid();
     }
 }
 
