@@ -5,10 +5,8 @@ The travel app project, "WanderSync: A Collaborative Travel Management System," 
 Key features of WanderSync include secure user authentication to ensure data privacy, efficient itinerary management tools for organizing destinations and travel dates, and collaborative planning capabilities that allow users to invite others to participate in trip modifications. Additionally, the app provides data visualization tools to help users compare planned versus allocated vacation days and a travel community feature where users can share and explore itineraries for inspiration. The project is being developed in four sprints, with each phase focusing on expanding and refining its functionality. From establishing foundational features to integrating advanced tools like a travel community database, WanderSync is a comprehensive solution designed for modern travelers who want to streamline and enhance their travel planning process.
 
 **Design & Architecture:**
-![plot](./pages_images/diagram1.png)
 ![plot](./pages_images/diagram2.png)
 ![plot](./pages_images/diagram3.png)
-![plot](./pages_images/diagram4.png)
 
 **User Interface (UI):**
 ![plot](./pages_images/image1.png)
