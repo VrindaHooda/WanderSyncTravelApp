@@ -19,6 +19,8 @@
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginBottom="16dp" />
 
+
+
     <EditText
         android:id="@+id/endDateInput"
         android:layout_width="match_parent"
@@ -30,6 +32,9 @@
         android:fontFamily="@font/playwritefrmoderne"
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginBottom="16dp" />
+
+
+
 
     <EditText
         android:id="@+id/durationInput"
@@ -43,11 +48,13 @@
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginBottom="16dp" />
 
+
+
     <Button
         android:id="@+id/calculateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calculate"
+        android:text="Calculate Vacation Time"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorHighlight"
         android:textColor="@color/colorDarkContrast"
@@ -57,7 +64,7 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="Save Vacation Time"
         android:layout_gravity="end"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorHighlight"

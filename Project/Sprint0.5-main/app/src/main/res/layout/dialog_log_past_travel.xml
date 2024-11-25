@@ -47,7 +47,7 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="   Save Log Past Travel     "
         android:layout_gravity="end"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorHighlight"
