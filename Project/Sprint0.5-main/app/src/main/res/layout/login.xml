@@ -59,7 +59,7 @@
                     android:background="@color/colorNeutral"
                     android:hint="@string/username_hint"
                     android:inputType="text"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimary"
                     android:fontFamily="@font/playwritefrmoderne"
                     android:textStyle="italic" />
 
@@ -81,7 +81,7 @@
                     android:background="@color/colorNeutral"
                     android:hint="@string/password_hint"
                     android:inputType="textPassword"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimary"
                     android:fontFamily="@font/playwritefrmoderne"
                     android:textStyle="italic" />
             </LinearLayout>
