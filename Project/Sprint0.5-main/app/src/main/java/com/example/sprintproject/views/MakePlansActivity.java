@@ -25,7 +25,8 @@ import com.example.sprintproject.viewmodels.LogisticsViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+//import java.util.concurrent.atomic.AtomicReference;
+//Commented out to satisfy Checkstyle
 
 import com.example.sprintproject.model.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,13 +63,11 @@ public class MakePlansActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_plans);
-
         firebaseRepository = new FirebaseRepository();
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         id = Id.getInstance();
-
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
@@ -82,31 +81,24 @@ public class MakePlansActivity extends AppCompatActivity {
         buttonAddPlan = findViewById(R.id.buttonAddPlan);
         buttonAddDestination = findViewById(R.id.buttonAddDestination);
         buttonExit = findViewById(R.id.buttonExit);
-
         // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         plansAdapter = new PlansAdapter();
         recyclerView.setAdapter(plansAdapter);
-
-        // Initialize ViewModel
         logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
         userId = firebaseAuth.getCurrentUser().getUid();
-
-        // Observe LiveData from ViewModel
         logisticsViewModel.getPlansLiveData().observe(this, new Observer<List<Plan>>() {
             @Override
             public void onChanged(List<Plan> plans) {
                 plansAdapter.setPlans(plans);
             }
         });
-
         logisticsViewModel.getIsLoading().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoading) {
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             }
         });
-
         logisticsViewModel.getErrorMessage().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String errorMessage) {
@@ -115,11 +107,7 @@ public class MakePlansActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // Fetch initial plans
         logisticsViewModel.fetchPlans(userId);
-
-        // Set up Add Destination button click listener
         buttonAddDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,13 +115,13 @@ public class MakePlansActivity extends AppCompatActivity {
                 String transportation = editTextTransportation.getText().toString();
                 String diningReservations = editTextDiningReservations.getText().toString();
                 String accommodations = editTextAccommodations.getText().toString();
-
                 if (!location.isEmpty() && !transportation.isEmpty()
                         && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
                     Destination destination = new Destination(location, parseList(accommodations),
                             parseList(diningReservations), transportation);
                     destinations.add(destination);
-                    Toast.makeText(MakePlansActivity.this, "Destination added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakePlansActivity.this,
+                            "Destination added", Toast.LENGTH_SHORT).show();
                     clearDestinationFields();
                 } else {
                     Toast.makeText(MakePlansActivity.this,
@@ -141,7 +129,6 @@ public class MakePlansActivity extends AppCompatActivity {
                 }
             }
         });
-
         // Set up Add Plan button click listener
         buttonAddPlan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +143,8 @@ public class MakePlansActivity extends AppCompatActivity {
                     try {
                         duration = Integer.parseInt(durationText);
                     } catch (NumberFormatException e) {
-                        Toast.makeText(MakePlansActivity.this, "Invalid duration", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MakePlansActivity.this,
+                                "Invalid duration", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         return;
                     }
@@ -172,7 +160,8 @@ public class MakePlansActivity extends AppCompatActivity {
                         @Override
                         public void onPlanAdded(String planId) {
                             // Fetch all collaborator IDs
-                            AtomicInteger counter = new AtomicInteger(collaboratorsEmailList.size());
+                            AtomicInteger counter = new AtomicInteger(
+                                    collaboratorsEmailList.size());
 
                             for (String collaboratorEmail : collaboratorsEmailList) {
                                 getUidByEmail(collaboratorEmail, uid -> {
@@ -183,10 +172,12 @@ public class MakePlansActivity extends AppCompatActivity {
                                         // All UIDs fetched, send invites
                                         for (String collaboratorId : collaboratorsIdList) {
                                             Log.w("Id", "CollaboratorId " + collaboratorId);
-                                            firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);
+                                            firebaseRepository.sendInvite(
+                                                    collaboratorId, planId, userId, notes);
                                         }
                                         Toast.makeText(MakePlansActivity.this,
-                                                "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                                                "Plan added and invites sent",
+                                                Toast.LENGTH_SHORT).show();
                                         progressBar.setVisibility(View.GONE);
                                         clearInputFields();
                                     }
@@ -220,44 +211,7 @@ public class MakePlansActivity extends AppCompatActivity {
         });
     }
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    public interface FirestoreCallback {
-        void onCallback(String uid);
-    }
-
-    public void getUidByEmail(String email, FirestoreCallback callback) {
-        db.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        if (!querySnapshot.isEmpty()) {
-                            for (QueryDocumentSnapshot document : querySnapshot) {
-                                String uid = document.getString("uid");
-                                Log.d("Data", "User UID: " + uid);
-
-                                // Use the singleton instance
-                                Id id = Id.getInstance();
-                                id.setId(uid);
-                                System.out.println("User Id: " + id.getId());
-
-                                // Pass the UID back to the caller via the callback
-                                callback.onCallback(uid);
-                                return; // Assuming only one match needed
-                            }
-                        } else {
-                            System.out.println("No user found with this email");
-                            callback.onCallback(null);
-                        }
-                    } else {
-                        System.out.println("Error fetching user: " + task.getException());
-                        callback.onCallback(null);
-                    }
-                });
-    }
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private List<String> parseCollaboratorsList(String input) {
         List<String> collaboratorsList = new ArrayList<>();
@@ -297,7 +251,8 @@ public class MakePlansActivity extends AppCompatActivity {
      * Parses a comma-separated input string into a list of strings.
      *
      * @param input the input string containing items separated by commas
-     * @return a list of trimmed strings parsed from the input, or an empty list if the input is empty
+     * @return a list of trimmed strings parsed from the input,
+     * or an empty list if the input is empty
      */
     private List<String> parseList(String input) {
         List<String> list = new ArrayList<>();
@@ -308,6 +263,46 @@ public class MakePlansActivity extends AppCompatActivity {
             }
         }
         return list;
+    }
+
+    public void getUidByEmail(String email, FirestoreCallback callback) {
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                String uid = document.getString("uid");
+                                Log.d("Data", "User UID: " + uid);
+
+                                // Use the singleton instance
+                                Id id = Id.getInstance();
+                                id.setId(uid);
+                                System.out.println("User Id: " + id.getId());
+
+                                // Pass the UID back to the caller via the callback
+                                callback.onCallback(uid);
+                                return; // Assuming only one match needed
+                            }
+                        } else {
+                            System.out.println("No user found with this email");
+                            callback.onCallback(null);
+                        }
+                    } else {
+                        System.out.println("Error fetching user: " + task.getException());
+                        callback.onCallback(null);
+                    }
+                });
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public interface FirestoreCallback {
+        void onCallback(String uid);
     }
 
     // PlansAdapter class for RecyclerView
@@ -363,16 +358,20 @@ public class MakePlansActivity extends AppCompatActivity {
                 // Get references to the TextView fields in the layout
                 EditText planDurationTextView = itemView.findViewById(R.id.textViewDuration);
                 EditText planNotesTextView = itemView.findViewById(R.id.textViewNotes);
-                EditText planCollaboratorsTextView = itemView.findViewById(R.id.textViewCollaborators);
-                EditText planDestinationsTextView = itemView.findViewById(R.id.textViewDestinations);
+                EditText planCollaboratorsTextView = itemView.
+                        findViewById(R.id.textViewCollaborators);
+                EditText planDestinationsTextView = itemView.
+                        findViewById(R.id.textViewDestinations);
 
                 // Set the values for the duration and notes
-                planDurationTextView.setText(String.format("Duration: %d days", plan.getDuration()));
+                planDurationTextView.setText(String.format(
+                        "Duration: %d days", plan.getDuration()));
                 planNotesTextView.setText(String.format("Notes: " + plan.getNotes()));
 
                 // Bind the collaborators list
                 if (plan.getCollaborators() != null && !plan.getCollaborators().isEmpty()) {
-                    planCollaboratorsTextView.setText("Collaborators: " + String.join(", ", plan.getCollaborators()));
+                    planCollaboratorsTextView.setText(
+                            "Collaborators: " + String.join(", ", plan.getCollaborators()));
                 } else {
                     planCollaboratorsTextView.setText("Collaborators: None");
                 }
@@ -384,8 +383,10 @@ public class MakePlansActivity extends AppCompatActivity {
                     for (int i = 0; i < destinations.size(); i++) {
                         Destination destination = destinations.get(i);
                         destinationsBuilder.append("Destination ").append(i + 1).append(":\n")
-                                .append("- Location: ").append(destination.getLocation()).append("\n")
-                                .append("- Transportation: ").append(destination.getTransportation()).append("\n")
+                                .append("- Location: ").
+                                append(destination.getLocation()).append("\n")
+                                .append("- Transportation: ").
+                                append(destination.getTransportation()).append("\n")
                                 .append("- Accommodations: ").append(String.join(", ",
                                         destination.getAccommodations())).append("\n")
                                 .append("- Dining Reservations: ").append(String.join(", ",

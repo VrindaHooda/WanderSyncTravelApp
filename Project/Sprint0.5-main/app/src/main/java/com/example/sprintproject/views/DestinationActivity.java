@@ -8,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 
-public class DestinationActivity extends AppCompatActivity implements DestinationFragment.OnDataPassListener {
+public class DestinationActivity extends
+        AppCompatActivity implements DestinationFragment.OnDataPassListener {
 
     private int plannedDays;
     private int pastDays;

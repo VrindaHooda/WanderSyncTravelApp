@@ -105,7 +105,8 @@ public class LogisticsViewModel extends ViewModel {
     }
 
     /**
-     * Updates an existing plan for the given user ID and plan ID, refreshing the plans list upon success.
+     * Updates an existing plan for the given user ID and plan ID,
+     * refreshing the plans list upon success.
      *
      * @param userId      the user ID whose plan needs to be updated
      * @param planId      the ID of the plan to update

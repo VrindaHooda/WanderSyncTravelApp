@@ -4,6 +4,7 @@ public class User {
     private String username;
     private String userId;
     private String password;
+    private VacationEntry vacationEntry;
 
     /**
      * Default constructor required for deserialization or general usage.
@@ -88,6 +89,15 @@ public class User {
      */
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    // Add getter and setter for VacationEntry
+    public VacationEntry getVacationEntry() {
+        return vacationEntry;
+    }
+
+    public void setVacationEntry(VacationEntry vacationEntry) {
+        this.vacationEntry = vacationEntry;
     }
 
 }
