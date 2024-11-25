@@ -5,15 +5,21 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
+
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -382,5 +388,71 @@ public class FirebaseRepository {
          */
         void onFailure(String error);
     }
+
+
+    private static final String COLLECTION_NAME = "dining_reservations";
+
+    public void saveDiningReservation(String userId, DiningReservation reservation, OnCompleteListener<Void> listener) {
+        // Set the userId in the reservation object
+        reservation.setUserId(userId);
+
+        // Generate a new document ID if not already set
+        if (reservation.getId() == null || reservation.getId().isEmpty()) {
+            String reservationId = firestore.collection(COLLECTION_NAME).document().getId();
+            reservation.setId(reservationId);
+        }
+
+        // Save the reservation to Firestore
+        firestore.collection(COLLECTION_NAME)
+                .document(reservation.getId())
+                .set(reservation, SetOptions.merge())
+                .addOnCompleteListener(listener);
+    }
+
+    public interface OnCategorizedReservationsListener {
+        void onSuccess(Map<String, List<DiningReservation>> categorizedReservations);
+        void onFailure(Exception e);
+    }
+
+    public void getCategorizedDiningReservations(String userId, OnCategorizedReservationsListener listener) {
+        CollectionReference reservationsRef = firestore.collection(COLLECTION_NAME);
+
+        // Query for reservations belonging to the user
+        reservationsRef
+                .whereEqualTo("userId", userId)
+                .orderBy("reservationDate", Query.Direction.ASCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DiningReservation> upcoming = new ArrayList<>();
+                        List<DiningReservation> past = new ArrayList<>();
+                        Date currentDate = new Date();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            DiningReservation reservation = document.toObject(DiningReservation.class);
+
+                            if (reservation.getReservationDate() != null) {
+                                if (reservation.getReservationDate().after(currentDate)) {
+                                    upcoming.add(reservation);
+                                } else {
+                                    past.add(reservation);
+                                }
+                            }
+                        }
+
+                        Map<String, List<DiningReservation>> categorizedReservations = new HashMap<>();
+                        categorizedReservations.put("upcoming", upcoming);
+                        categorizedReservations.put("past", past);
+
+                        // Call the onSuccess method directly
+                        listener.onSuccess(categorizedReservations);
+
+                    } else {
+                        // Call the onFailure method with the exception
+                        listener.onFailure(task.getException());
+                    }
+                });
+    }
+
 
 }

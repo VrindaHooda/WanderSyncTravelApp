@@ -7,6 +7,8 @@ public class Plan {
     private List<Destination> destinations;
     private String notes;
     private List<String> collaborators;
+    private String planName;
+    private String location;
 
     // Default constructor required for Firestore
     /**
@@ -29,6 +31,24 @@ public class Plan {
         this.destinations = destinations;
         this.notes = notes;
         this.collaborators = collaborators;
+    }
+
+
+    public Plan(String planName, String location, int duration, List<Destination> destinations, String notes, List<String> collaborators) {
+        this.planName = planName;
+        this.location = location;
+        this.duration = duration;
+        this.destinations = destinations;
+        this.notes = notes;
+        this.collaborators = collaborators;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     /**
@@ -102,5 +122,7 @@ public class Plan {
     public void setCollaborators(List<String> collaborators) {
         this.collaborators = collaborators;
     }
+
+
 }
 
