@@ -94,7 +94,8 @@ public class SimpleTests {
     @Test
     public void testPlanInitialization() {
         // Adjusted to use the existing constructor
-        Plan plan = new Plan("owner123", "Beach Trip", 7, new ArrayList<>(), "Relaxing vacation", new ArrayList<>());
+        Plan plan = new Plan("owner123", "Beach Trip", 7,
+                new ArrayList<>(), "Relaxing vacation", new ArrayList<>());
         assertEquals("owner123", plan.getPlanName());
         assertEquals("Beach Trip", plan.getLocation());
         assertEquals(7, plan.getDuration());
@@ -121,7 +122,8 @@ public class SimpleTests {
         Date startDate = sdf.parse("2023-12-01");
         Date endDate = sdf.parse("2023-12-10");
 
-        VacationEntry entry = new VacationEntry(startDate, endDate, 9); // Pass 9 as duration explicitly
+        VacationEntry entry = new VacationEntry(startDate, endDate, 9);
+        // Pass 9 as duration explicitly
         assertEquals(9, entry.getDuration());
     }
 
@@ -255,7 +257,8 @@ public class SimpleTests {
     @Test
     public void testDiningReservationRestaurantName() {
         DiningReservation reservation = new DiningReservation(
-                "res1", "user1", "Fancy Restaurant", new Date(), 4, "Some notes", "www.restaurant.com", 4.5f);
+                "res1", "user1", "Fancy Restaurant", new Date(),
+                4, "Some notes", "www.restaurant.com", 4.5f);
         assertEquals("Fancy Restaurant", reservation.getRestaurantName());
     }
 
@@ -266,7 +269,8 @@ public class SimpleTests {
     public void testDiningReservationDate() {
         Date reservationDate = new Date();
         DiningReservation reservation = new DiningReservation(
-                "res2", "user1", "Cozy Cafe", reservationDate, 2, "Notes", "www.cafe.com", 3.5f);
+                "res2", "user1", "Cozy Cafe", reservationDate,
+                2, "Notes", "www.cafe.com", 3.5f);
         assertEquals(reservationDate, reservation.getReservationDate());
     }
 
@@ -276,7 +280,8 @@ public class SimpleTests {
     @Test
     public void testDiningReservationNumberOfGuests() {
         DiningReservation reservation = new DiningReservation(
-                "res3", "user1", "Gourmet Bistro", new Date(), 5, "Notes", "www.bistro.com", 4.0f);
+                "res3", "user1", "Gourmet Bistro", new Date(),
+                5, "Notes", "www.bistro.com", 4.0f);
         assertEquals(5, reservation.getNumberOfGuests());
     }
 
@@ -286,7 +291,9 @@ public class SimpleTests {
     @Test
     public void testDiningReservationNotes() {
         DiningReservation reservation = new DiningReservation(
-                "res4", "user1", "Burger Joint", new Date(), 3, "Special occasion", "www.burgerjoint.com", 5.0f);
+                "res4", "user1", "Burger Joint", new Date(),
+                3, "Special occasion", "www.burgerjoint.com",
+                5.0f);
         assertEquals("Special occasion", reservation.getNotes());
     }
 
@@ -296,7 +303,8 @@ public class SimpleTests {
     @Test
     public void testDiningReservationWebsite() {
         DiningReservation reservation = new DiningReservation(
-                "res5", "user1", "Sushi Place", new Date(), 4, "Dinner out", "www.sushiplace.com", 4.5f);
+                "res5", "user1", "Sushi Place", new Date(),
+                4, "Dinner out", "www.sushiplace.com", 4.5f);
         assertEquals("www.sushiplace.com", reservation.getWebsite());
     }
 
@@ -306,7 +314,9 @@ public class SimpleTests {
     @Test
     public void testDiningReservationRating() {
         DiningReservation reservation = new DiningReservation(
-                "res6", "user1", "Steakhouse", new Date(), 2, "Business dinner", "www.steakhouse.com", 3.5f);
+                "res6", "user1", "Steakhouse", new Date(),
+                2, "Business dinner", "www.steakhouse.com",
+                3.5f);
         assertEquals(3.5f, reservation.getRating(), 0.0f);
     }
 
@@ -316,7 +326,8 @@ public class SimpleTests {
     @Test
     public void testDiningReservationUpdateRestaurantName() {
         DiningReservation reservation = new DiningReservation(
-                "res7", "user1", "Old Restaurant", new Date(), 2, "Notes", "www.oldrestaurant.com", 4.0f);
+                "res7", "user1", "Old Restaurant", new Date(),
+                2, "Notes", "www.oldrestaurant.com", 4.0f);
         reservation.setRestaurantName("New Restaurant");
         assertEquals("New Restaurant", reservation.getRestaurantName());
     }
@@ -327,7 +338,8 @@ public class SimpleTests {
     @Test
     public void testDiningReservationUpdateNumberOfGuests() {
         DiningReservation reservation = new DiningReservation(
-                "res8", "user1", "Seafood Spot", new Date(), 2, "Notes", "www.seafoodspot.com", 4.0f);
+                "res8", "user1", "Seafood Spot", new Date(),
+                2, "Notes", "www.seafoodspot.com", 4.0f);
         reservation.setNumberOfGuests(6);
         assertEquals(6, reservation.getNumberOfGuests());
     }
@@ -380,7 +392,8 @@ public class SimpleTests {
         List<String> diningReservations = new ArrayList<>();
         diningReservations.add("Dinner Reservation");
 
-        Destination destination = new Destination("Hawaii", accommodations, diningReservations, "Flight", startDate, endDate);
+        Destination destination = new Destination("Hawaii", accommodations,
+                diningReservations, "Flight", startDate, endDate);
 
         assertEquals("Hawaii", destination.getLocation());
         assertEquals(accommodations, destination.getAccommodations());
