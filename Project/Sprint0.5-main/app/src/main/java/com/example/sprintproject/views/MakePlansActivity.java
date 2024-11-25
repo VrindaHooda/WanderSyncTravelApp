@@ -9,10 +9,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +20,7 @@ import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.model.Plan;
 import com.example.sprintproject.viewmodels.LogisticsViewModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +40,8 @@ public class MakePlansActivity extends AppCompatActivity {
     private EditText editTextLocation, editTextTransportation, editTextDiningReservations, editTextAccommodations, editTextCollaborators;
     private Button buttonAddPlan, buttonAddDestination, buttonExit;
     private String userId;
-    private List<Destination> destinations = new ArrayList<>();
-    private List<String> collaborators = new ArrayList<>();
+    private ArrayList<Destination> destinations = new ArrayList<>();
+    private ArrayList<String> collaborators = new ArrayList<>();
     private FirebaseRepository firebaseRepository;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
@@ -81,26 +80,13 @@ public class MakePlansActivity extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
 
         // Observe LiveData from ViewModel
-        logisticsViewModel.getPlansLiveData().observe(this, new Observer<List<Plan>>() {
-            @Override
-            public void onChanged(List<Plan> plans) {
-                plansAdapter.setPlans(plans);
-            }
-        });
+        logisticsViewModel.getPlansLiveData().observe(this, plans -> plansAdapter.setPlans(plans));
 
-        logisticsViewModel.getIsLoading().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoading) {
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-            }
-        });
+        logisticsViewModel.getIsLoading().observe(this, isLoading -> progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));
 
-        logisticsViewModel.getErrorMessage().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String errorMessage) {
-                if (errorMessage != null) {
-                    Toast.makeText(MakePlansActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                }
+        logisticsViewModel.getErrorMessage().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                Toast.makeText(MakePlansActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -108,69 +94,69 @@ public class MakePlansActivity extends AppCompatActivity {
         logisticsViewModel.fetchPlans(userId);
 
         // Set up Add Destination button click listener
-        buttonAddDestination.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String location = editTextLocation.getText().toString();
-                String transportation = editTextTransportation.getText().toString();
-                String diningReservations = editTextDiningReservations.getText().toString();
-                String accommodations = editTextAccommodations.getText().toString();
+        buttonAddDestination.setOnClickListener(v -> {
+            String location = editTextLocation.getText().toString();
+            String transportation = editTextTransportation.getText().toString();
+            String diningReservations = editTextDiningReservations.getText().toString();
+            String accommodations = editTextAccommodations.getText().toString();
 
-                if (!location.isEmpty() && !transportation.isEmpty() && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
-                    Destination destination = new Destination(location, parseList(accommodations), parseList(diningReservations), transportation);
-                    destinations.add(destination);
-                    Toast.makeText(MakePlansActivity.this, "Destination added", Toast.LENGTH_SHORT).show();
-                    clearDestinationFields();
-                } else {
-                    Toast.makeText(MakePlansActivity.this, "All destination fields are required", Toast.LENGTH_SHORT).show();
-                }
+            if (!location.isEmpty() && !transportation.isEmpty() && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
+                Destination destination = new Destination(location, parseList(accommodations), parseList(diningReservations), transportation);
+                destinations.add(destination);
+                Toast.makeText(MakePlansActivity.this, "Destination added", Toast.LENGTH_SHORT).show();
+                clearDestinationFields();
+            } else {
+                Toast.makeText(MakePlansActivity.this, "All destination fields are required", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Set up Add Plan button click listener
-        buttonAddPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                String durationText = editTextDuration.getText().toString();
-                String notes = editTextNotes.getText().toString();
-                String collaboratorsText = editTextCollaborators.getText().toString();
+        buttonAddPlan.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            String durationText = editTextDuration.getText().toString();
+            String notes = editTextNotes.getText().toString();
+            String collaboratorsText = editTextCollaborators.getText().toString();
+            Log.d("DEST CHECK", destinations.toString());
+            if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
+                int duration = Integer.parseInt(durationText);
+                ArrayList<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                Log.d("Data", "Destinations: " + destinations);
+                // Get logged-in user ID
 
-                if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
-                    int duration = Integer.parseInt(durationText);
-                    List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get logged-in user ID
+                // Create a new Plan object
+                Plan newPlan = new Plan(duration, destinations, notes, collaborators, "");
 
-                    // Create a new Plan object
-                    Plan newPlan = new Plan(duration, destinations, notes, collaborators, "");
-
-                    // Add the Plan to Firestore and send invites
-                    firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
-                        @Override
-                        public void onPlanAdded(Plan plan) {
-                            // Send invites to collaborators after plan is successfully added
-                            String planId = plan.getId();
-                            Log.d("AddPlan", "Generated planId: " + planId);
-                            for (String collaboratorId : collaborators) {
-                                firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);  // Get the planId from the Plan object
-                            }
-                            plansAdapter.addPlanToList(plan);
-                            Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                // Add the Plan to Firestore and send invites
+                firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
+                    @Override
+                    public void onPlanAdded(Plan plan) {
+                        // Send invites to collaborators after plan is successfully added
+                        String planId = plan.getId();
+                        Log.d("AddPlan", "Generated planId: " + planId);
+                        for (String collaboratorId : collaborators) {
+                            firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);  // Get the planId from the Plan object
                         }
+                        logisticsViewModel.refreshPlans(userId); // Trigger refresh of plans
 
-                        @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(MakePlansActivity.this, "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        plansAdapter.addPlanToList(plan);
+                        Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
 
-                    // Clear input fields after the plan is added
-                    clearInputFields();
-                } else {
-                    Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
-                }
-                progressBar.setVisibility(View.GONE);
+
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        Toast.makeText(MakePlansActivity.this, "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Clear input fields after the plan is added
+                clearInputFields();
+            } else {
+                Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
             }
+            progressBar.setVisibility(View.GONE);
         });
 
         // Set up Exit button click listener
@@ -196,8 +182,8 @@ public class MakePlansActivity extends AppCompatActivity {
         editTextAccommodations.setText("");
     }
 
-    private List<String> parseList(String input) {
-        List<String> list = new ArrayList<>();
+    private ArrayList<String> parseList(String input) {
+        ArrayList<String> list = new ArrayList<>();
         if (!input.isEmpty()) {
             String[] items = input.split(",");
             for (String item : items) {
@@ -207,65 +193,95 @@ public class MakePlansActivity extends AppCompatActivity {
         return list;
     }
 
-    private List<Destination> parseDestinations(String destinationsText) {
-        List<Destination> destinationList = new ArrayList<>();
+
+    private ArrayList<Destination> parseDestinations(String destinationsText) {
+        ArrayList<Destination> destinationList = new ArrayList<>();
+        Log.d("ParseDestinations", "Raw Destinations Text: " + destinationsText);
 
         if (destinationsText == null || destinationsText.isEmpty()) {
-            return destinationList;  // Return empty if no destinations are specified
+            return destinationList; // Return empty if no destinations are specified
         }
 
-        String[] destinationBlocks = destinationsText.split("\n\n");  // Assuming each destination block is separated by two newlines
+        // Normalize line breaks
+        destinationsText = destinationsText.replace("\r\n", "\n");
 
+        // Split blocks by double newlines or other patterns indicating block separation
+        String[] destinationBlocks = destinationsText.split("\n\n");
         for (String block : destinationBlocks) {
-            // Extract location, transportation, accommodations, and dining from each block
-            String[] lines = block.split("\n");
+            try {
+                String[] lines = block.split("\n");
 
-            if (lines.length >= 4) {
-                String location = extractField(lines[0], "Location:");
-                String transportation = extractField(lines[1], "Transportation:");
-                List<String> accommodations = extractListField(lines[2], "Accommodations:");
-                List<String> diningReservations = extractListField(lines[3], "Dining Reservations:");
+                // Extract values for each field using updated extract methods
+                String location = extractField(findLineWithPrefix(lines, "Location:"), "Location:");
+                String transportation = extractField(findLineWithPrefix(lines, "Transportation:"), "Transportation:");
+                ArrayList<String> accommodations = extractListField(findLineWithPrefix(lines, "Accommodations:"), "Accommodations:");
+                ArrayList<String> diningReservations = extractListField(findLineWithPrefix(lines, "Dining Reservations:"), "Dining Reservations:");
 
-                // Create a new Destination object and add it to the list
-                Destination destination = new Destination(location, accommodations, diningReservations, transportation);
-                destinationList.add(destination);
+                // Create Destination object only if location is present
+                if (!location.isEmpty()) {
+                    Destination destination = new Destination(location, accommodations, diningReservations, transportation);
+                    destinationList.add(destination);
+                } else {
+                    Log.w("ParseDestinations", "Skipped block due to missing location: " + block);
+                }
+            } catch (Exception e) {
+                Log.e("ParseDestinations", "Error parsing block: " + block, e);
             }
         }
 
         return destinationList;
     }
 
-    private String extractField(String line, String prefix) {
-        // Extracts the field after the prefix (e.g., "Location: Paris")
-        if (line.startsWith(prefix)) {
-            return line.substring(prefix.length()).trim();
-        }
-        return "";
-    }
 
-    private List<String> extractListField(String line, String prefix) {
-        // Extracts a comma-separated list after the prefix (e.g., "Accommodations: Hotel, Airbnb")
-        List<String> list = new ArrayList<>();
-        if (line.startsWith(prefix)) {
-            String items = line.substring(prefix.length()).trim();
-            if (!items.isEmpty()) {
-                String[] splitItems = items.split(",");
-                for (String item : splitItems) {
-                    list.add(item.trim());
-                }
+
+    private String extractField(String line, String prefix) {
+        if (line == null || prefix == null || !line.contains(prefix)) {
+            Log.w("ExtractField", "Prefix not found: " + prefix + " in line: " + line);
+            return ""; // Return empty if prefix is missing or line is invalid
+        }
+
+        // Remove the prefix and trim the result to get the field value
+        return line.substring(line.indexOf(prefix) + prefix.length()).trim();
+    }
+    private ArrayList<String> extractListField(String line, String prefix) {
+        ArrayList<String> items = new ArrayList<>();
+
+        if (line == null || prefix == null || !line.contains(prefix)) {
+            Log.w("ExtractListField", "Prefix not found: " + prefix + " in line: " + line);
+            return items; // Return empty list if line is invalid or prefix is missing
+        }
+
+        // Remove the prefix and trim the remaining text
+        String listPart = line.substring(line.indexOf(prefix) + prefix.length()).trim();
+
+        // Split the remaining text into items using a comma as the delimiter
+        if (!listPart.isEmpty()) {
+            String[] splitItems = listPart.split(",");
+            for (String item : splitItems) {
+                items.add(item.trim()); // Trim each item and add it to the list
             }
         }
-        return list;
+
+        return items;
     }
 
-    // public string Get clicked plan (userID, buttonID)
+    private String findLineWithPrefix(String[] lines, String prefix) {
+        for (String line : lines) {
+            if (line.contains(prefix)) {
+                return line.trim();
+            }
+        }
+        return ""; // Return an empty string if no matching line is found
+    }
+
+
 
 
     // PlansAdapter class for RecyclerView
     class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
-        private List<Plan> plans;
+        private ArrayList<Plan> plans;
 
-        public void setPlans(List<Plan> plans) {
+        public void setPlans(ArrayList<Plan> plans) {
             this.plans = plans;
             notifyDataSetChanged();
         }
@@ -284,8 +300,9 @@ public class MakePlansActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(PlanViewHolder holder, int position) {
             Plan plan = plans.get(position);
-            Log.d("MakePlansActivity", "Binding plan: " + plan);
+            Log.d("MakePlansActivity", "Binding plan: " + plans.toString());
             holder.bind(plan);
+            Log.d("PlanViewHolder", "Binding Plan ID: " + plan.getId());
         }
 
         @Override
@@ -306,12 +323,9 @@ public class MakePlansActivity extends AppCompatActivity {
                 EditText planCollaboratorsTextView = itemView.findViewById(R.id.textViewCollaborators);
                 EditText planDestinationsTextView = itemView.findViewById(R.id.textViewDestinations);
                 Button buttonUpdatePlan = itemView.findViewById(R.id.buttonUpdatePlan);
-
+                Log.d("Setting plan ID", "Setting plan id to " + plan.getId());
                 buttonUpdatePlan.setTag(plan.getId());
-                Log.d("Set Tag", "Line 303 Plan ID: " + plan.getId());
-                Log.d("Set Tag", "Line 303 Plan Duration: " + plan.getDuration());
-                Log.d("Set Tag", "Line 303 Plan Collaborators: " + plan.getCollaborators());
-                Log.d("Set Tag", "Line 303 Plan Destinations: " + plan.getDestinations());
+                Log.d("Set Tag", "Line 303 Plan ID: " + plan);
 
                 // Set the values for the duration and notes
                 planDurationTextView.setText(String.format("Duration: %d days", plan.getDuration()));
@@ -319,27 +333,36 @@ public class MakePlansActivity extends AppCompatActivity {
 
                 // Bind the collaborators list
                 if (plan.getCollaborators() != null && !plan.getCollaborators().isEmpty()) {
-                    planCollaboratorsTextView.setText("Collaborators: " + String.join(", ", plan.getCollaborators()));
+                    planCollaboratorsTextView.setText(String.join(", ", plan.getCollaborators()));
                 } else {
                     planCollaboratorsTextView.setText("Collaborators: None");
                 }
 
                 // Bind the destinations list
                 StringBuilder destinationsBuilder = new StringBuilder();
-                List<Destination> destinations = plan.getDestinations();
+                ArrayList<Destination> destinations = plan.getDestinations();
+                Log.d("Data", "Destinations: " + destinations);
                 if (destinations != null && !destinations.isEmpty()) {
                     for (int i = 0; i < destinations.size(); i++) {
                         Destination destination = destinations.get(i);
                         destinationsBuilder.append("Destination ").append(i + 1).append(":\n")
-                                .append("- Location: ").append(destination.getLocation()).append("\n")
-                                .append("- Transportation: ").append(destination.getTransportation()).append("\n")
-                                .append("- Accommodations: ").append(String.join(", ", destination.getAccommodations())).append("\n")
-                                .append("- Dining Reservations: ").append(String.join(", ", destination.getDiningReservations())).append("\n\n");
+                                .append("- Location: ").append(destination.getLocation() != null ? destination.getLocation() : "Unknown").append("\n")
+                                .append("- Transportation: ").append(destination.getTransportation() != null ? destination.getTransportation() : "None").append("\n")
+                                .append("- Accommodations: ")
+                                .append(destination.getAccommodations() != null ? String.join(", ", destination.getAccommodations()) : "None").append("\n")
+                                .append("- Dining Reservations: ")
+                                .append(destination.getDiningReservations() != null ? String.join(", ", destination.getDiningReservations()) : "None").append("\n\n");
+                    }
+                    if (destinationsBuilder.length() > 0) {
+                        destinationsBuilder.setLength(destinationsBuilder.length() - 2); // Remove last "\n\n"
                     }
                 } else {
                     destinationsBuilder.append("No destinations added.");
                 }
-                planDestinationsTextView.setText(destinationsBuilder.toString());
+
+// Update UI on the main thread
+                runOnUiThread(() -> planDestinationsTextView.setText(destinationsBuilder.toString()));
+
 
                 buttonUpdatePlan.setOnClickListener(v -> {
                     Log.d("MakePlansActivity", "Update button clicked");
@@ -352,6 +375,8 @@ public class MakePlansActivity extends AppCompatActivity {
                     String notes = planNotesTextView.getText().toString(); // Get updated notes
                     String collaboratorsText = planCollaboratorsTextView.getText().toString(); // Get updated collaborators
                     String destinationsText = planDestinationsTextView.getText().toString(); // Get updated destinations
+                    Log.d("Destinations Before Save", destinationsText);
+
 
                     Log.d("MakePlansActivity", "Captured input fields: duration=" + durationText + ", notes=" + notes + ", collaborators=" + collaboratorsText + ", destinations=" + destinationsText);
 
@@ -362,7 +387,13 @@ public class MakePlansActivity extends AppCompatActivity {
                         // Extract the numeric value from the duration text (e.g., "13" from "Duration: 13 days")
                         int duration = 0;
                         try {
-                            String durationNumber = durationText.replaceAll("[^0-9]", ""); // Remove non-digit characters
+                            String durationNumber = durationText.replaceAll("[^0-9]", "");
+                            if (durationNumber.isEmpty()) {
+                                Log.e("MakePlansActivity", "Invalid duration text: " + durationText);
+                                Toast.makeText(MakePlansActivity.this, "Invalid duration value", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+                                return;
+                            }
                             duration = Integer.parseInt(durationNumber);
                             Log.d("MakePlansActivity", "Parsed duration: " + duration);
                         } catch (NumberFormatException e) {
@@ -373,8 +404,8 @@ public class MakePlansActivity extends AppCompatActivity {
                         }
 
                         // Parse collaborators and destinations
-                        List<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
-                        List<Destination> updatedDestinations = parseDestinations(destinationsText); // Parse destinations from the updated text
+                        ArrayList<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
+                        ArrayList<Destination> updatedDestinations = parseDestinations(destinationsText); // Parse destinations from the updated text
 
                         Log.d("MakePlansActivity", "Parsed values: duration=" + duration + ", collaborators=" + collaborators + ", destinations=" + updatedDestinations);
 
@@ -398,7 +429,9 @@ public class MakePlansActivity extends AppCompatActivity {
                         updatedPlan.setId(planId);
                         updatedPlan.setDuration(duration);
                         updatedPlan.setCollaborators(collaborators);
-                        updatedPlan.setDestinations(destinations);
+                        updatedPlan.setDestinations(updatedDestinations);
+                        Log.d("Plan Update", "Updated Plan Destinations: " + updatedDestinations);
+
 
 
                         Log.d("MakePlansActivity", "Created updated Plan object: " + updatedPlan);
@@ -406,6 +439,7 @@ public class MakePlansActivity extends AppCompatActivity {
                         Log.d("Update Plan", "Plan ID: " + planId); // Log to ensure planId is correctly set
 
                         if (planId != null && !planId.isEmpty()) {
+                            Log.d("UPDATING PLAN", "UPDATING PLAN");
                             logisticsViewModel.updatePlan(userId, planId, updatedPlan);
                         } else {
                             Log.e("Update Error", "Plan ID is null or empty");

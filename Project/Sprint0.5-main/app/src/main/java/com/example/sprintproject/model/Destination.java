@@ -1,5 +1,7 @@
 package com.example.sprintproject.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,8 +10,8 @@ import java.util.Objects;
 public class Destination {
     private String id;
     private String location;
-    private List<String> accommodations;
-    private List<String> diningReservations;
+    private ArrayList<String> accommodations;
+    private ArrayList<String> diningReservations;
     private String transportation;
 
     private Date startDate;
@@ -21,14 +23,14 @@ public class Destination {
     }
 
     // Parameterized constructor
-    public Destination(String location, List<String> accommodations, List<String> diningReservations, String transportation) {
+    public Destination(String location, ArrayList<String> accommodations, ArrayList<String> diningReservations, String transportation) {
         this.location = location;
         this.accommodations = accommodations;
         this.diningReservations = diningReservations;
         this.transportation = transportation;
     }
 
-    public Destination(String location, List<String> accommodations, List<String> diningReservations, String transportation, Date startDate, Date endDate) {
+    public Destination(String location, ArrayList<String> accommodations, ArrayList<String> diningReservations, String transportation, Date startDate, Date endDate) {
         this.location = location;
         this.accommodations = accommodations;
         this.diningReservations = diningReservations;
@@ -57,19 +59,19 @@ public class Destination {
         this.location = location;
     }
 
-    public List<String> getAccommodations() {
+    public ArrayList<String> getAccommodations() {
         return accommodations;
     }
 
-    public void setAccommodations(List<String> accommodations) {
+    public void setAccommodations(ArrayList<String> accommodations) {
         this.accommodations = accommodations;
     }
 
-    public List<String> getDiningReservations() {
+    public ArrayList<String> getDiningReservations() {
         return diningReservations;
     }
 
-    public void setDiningReservations(List<String> diningReservations) {
+    public void setDiningReservations(ArrayList<String> diningReservations) {
         this.diningReservations = diningReservations;
     }
 
@@ -95,6 +97,13 @@ public class Destination {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setDestination(String location, String transportation, ArrayList<String> diningReservations, ArrayList<String> accommodations) {
+        this.location = location;
+        this.transportation = transportation;
+        this.diningReservations = diningReservations;
+        this.accommodations = accommodations;
     }
 
 

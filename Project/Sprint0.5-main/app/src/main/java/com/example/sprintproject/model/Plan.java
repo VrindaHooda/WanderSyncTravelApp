@@ -1,21 +1,24 @@
 package com.example.sprintproject.model;
 
-import java.util.List;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 public class Plan {
     private String id;
     private int duration;
-    private List<Destination> destinations;
+    private ArrayList<Destination> destinations;
     private String notes;
-    private List<String> collaborators;
+    private ArrayList<String> collaborators;
 
     // Default constructor required for Firestore
     public Plan() {
     }
 
-    public Plan(int duration, List<Destination> destinations, String notes, List<String> collaborators, String id) {
+    public Plan(int duration, ArrayList<Destination> destinations, String notes, ArrayList<String> collaborators, String id) {
         this.duration = duration;
         this.destinations = destinations;
+        Log.d("Hello", this.destinations.toString());
         this.notes = notes;
         this.collaborators = collaborators;
         this.id = id;
@@ -37,11 +40,11 @@ public class Plan {
         this.duration = duration;
     }
 
-    public List<Destination> getDestinations() {
+    public ArrayList<Destination> getDestinations() {
         return destinations;
     }
 
-    public void setDestinations(List<Destination> destinations) {
+    public void setDestinations(ArrayList<Destination> destinations) {
         this.destinations = destinations;
     }
 
@@ -53,11 +56,11 @@ public class Plan {
         this.notes = notes;
     }
 
-    public List<String> getCollaborators() {
+    public ArrayList<String> getCollaborators() {
         return collaborators;
     }
 
-    public void setCollaborators(List<String> collaborators) {
+    public void setCollaborators(ArrayList<String> collaborators) {
         this.collaborators = collaborators;
     }
 }

@@ -9,11 +9,12 @@ import com.example.sprintproject.model.Plan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LogisticsViewModel extends ViewModel {
     private final FirebaseRepository firebaseRepository;
-    private final MutableLiveData<List<Plan>> plansLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Plan>> plansLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
@@ -22,7 +23,7 @@ public class LogisticsViewModel extends ViewModel {
         isLoading.setValue(false);
     }
 
-    public LiveData<List<Plan>> getPlansLiveData() {
+    public LiveData<ArrayList<Plan>> getPlansLiveData() {
         return plansLiveData;
     }
 
@@ -39,7 +40,7 @@ public class LogisticsViewModel extends ViewModel {
         firebaseRepository.getPlans(userId, task -> {
             isLoading.setValue(false);
             if (task.isSuccessful() && task.getResult() != null) {
-                List<Plan> plans = task.getResult().toObjects(Plan.class);
+                ArrayList<Plan> plans = new ArrayList<>(task.getResult().toObjects(Plan.class));
                 plansLiveData.setValue(plans);
             } else {
                 errorMessage.setValue("Failed to fetch plans.");
@@ -91,6 +92,10 @@ public class LogisticsViewModel extends ViewModel {
                 errorMessage.setValue("Failed to update plan: " + error);
             }
         });
+    }
+
+    public void refreshPlans(String userId) {
+        fetchPlans(userId); // Simply call fetchPlans to reload the plans
     }
 
 }
