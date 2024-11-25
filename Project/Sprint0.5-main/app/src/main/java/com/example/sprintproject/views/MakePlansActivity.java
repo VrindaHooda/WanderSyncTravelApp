@@ -81,7 +81,6 @@ public class MakePlansActivity extends AppCompatActivity {
         buttonAddPlan = findViewById(R.id.buttonAddPlan);
         buttonAddDestination = findViewById(R.id.buttonAddDestination);
         buttonExit = findViewById(R.id.buttonExit);
-        // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         plansAdapter = new PlansAdapter();
         recyclerView.setAdapter(plansAdapter);
@@ -156,42 +155,43 @@ public class MakePlansActivity extends AppCompatActivity {
 
                     Plan newPlan = new Plan(duration, destinations, notes, collaborators);
 
-                    firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
-                        @Override
-                        public void onPlanAdded(String planId) {
-                            // Fetch all collaborator IDs
-                            AtomicInteger counter = new AtomicInteger(
-                                    collaboratorsEmailList.size());
+                    firebaseRepository.addPlan(userId, newPlan,
+                            new FirebaseRepository.PlanCallback() {
+                            @Override
+                            public void onPlanAdded(String planId) {
+                                // Fetch all collaborator IDs
+                                AtomicInteger counter = new AtomicInteger(
+                                        collaboratorsEmailList.size());
 
-                            for (String collaboratorEmail : collaboratorsEmailList) {
-                                getUidByEmail(collaboratorEmail, uid -> {
-                                    if (uid != null) {
-                                        collaboratorsIdList.add(uid);
-                                    }
-                                    if (counter.decrementAndGet() == 0) {
-                                        // All UIDs fetched, send invites
-                                        for (String collaboratorId : collaboratorsIdList) {
-                                            Log.w("Id", "CollaboratorId " + collaboratorId);
-                                            firebaseRepository.sendInvite(
-                                                    collaboratorId, planId, userId, notes);
+                                for (String collaboratorEmail : collaboratorsEmailList) {
+                                    getUidByEmail(collaboratorEmail, uid -> {
+                                        if (uid != null) {
+                                            collaboratorsIdList.add(uid);
                                         }
-                                        Toast.makeText(MakePlansActivity.this,
-                                                "Plan added and invites sent",
-                                                Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.GONE);
-                                        clearInputFields();
-                                    }
-                                });
+                                        if (counter.decrementAndGet() == 0) {
+                                            // All UIDs fetched, send invites
+                                            for (String collaboratorId : collaboratorsIdList) {
+                                                Log.w("Id", "CollaboratorId " + collaboratorId);
+                                                firebaseRepository.sendInvite(
+                                                        collaboratorId, planId, userId, notes);
+                                            }
+                                            Toast.makeText(MakePlansActivity.this,
+                                                    "Plan added and invites sent",
+                                                    Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
+                                            clearInputFields();
+                                        }
+                                    });
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(MakePlansActivity.this,
-                                    "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+                            @Override
+                            public void onFailure(String error) {
+                                Toast.makeText(MakePlansActivity.this,
+                                        "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
                 } else {
                     Toast.makeText(MakePlansActivity.this,
                             "All fields are required and at least one destination must be added",

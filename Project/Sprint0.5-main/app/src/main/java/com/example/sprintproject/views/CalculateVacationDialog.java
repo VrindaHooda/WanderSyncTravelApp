@@ -75,21 +75,22 @@ public class CalculateVacationDialog extends DialogFragment {
         });
 
         // Observe ViewModel for calculated duration
-        destinationViewModel.getCalculatedDuration().observe(getViewLifecycleOwner(), calculatedDuration -> {
-            if (calculatedDuration != null) {
-                if (startDateInput.getText().toString().isEmpty()
-                        && !endDateInput.getText().toString().isEmpty()) {
-                    startDateInput.setText(formatDate(calculateStartDate(
-                            endDateInput.getText().toString(), calculatedDuration)));
-                } else if (endDateInput.getText().toString().isEmpty()
-                        && !startDateInput.getText().toString().isEmpty()) {
-                    endDateInput.setText(formatDate(calculateEndDate(
-                            startDateInput.getText().toString(), calculatedDuration)));
-                } else if (durationInput.getText().toString().isEmpty()) {
-                    durationInput.setText(String.valueOf(calculatedDuration));
-                }
-            }
-        });
+        destinationViewModel.getCalculatedDuration().
+                observe(getViewLifecycleOwner(), calculatedDuration -> {
+                    if (calculatedDuration != null) {
+                        if (startDateInput.getText().toString().isEmpty()
+                                && !endDateInput.getText().toString().isEmpty()) {
+                            startDateInput.setText(formatDate(calculateStartDate(
+                                    endDateInput.getText().toString(), calculatedDuration)));
+                        } else if (endDateInput.getText().toString().isEmpty()
+                                && !startDateInput.getText().toString().isEmpty()) {
+                            endDateInput.setText(formatDate(calculateEndDate(
+                                    startDateInput.getText().toString(), calculatedDuration)));
+                        } else if (durationInput.getText().toString().isEmpty()) {
+                            durationInput.setText(String.valueOf(calculatedDuration));
+                        }
+                    }
+                });
 
         // Set up Save Button Listener
         saveButton.setOnClickListener(v -> {
