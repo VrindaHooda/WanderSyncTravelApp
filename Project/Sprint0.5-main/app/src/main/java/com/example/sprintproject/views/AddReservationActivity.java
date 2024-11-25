@@ -36,6 +36,8 @@ public class AddReservationActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DiningViewModel diningViewModel;
     private Calendar reservationCalendar;
+    private Button exitButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class AddReservationActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
         saveReservationButton = findViewById(R.id.saveReservationButton);
+        exitButton = findViewById(R.id.exitButton);
         progressBar = findViewById(R.id.progressBar);
 
         // Initialize ViewModel
@@ -65,6 +68,9 @@ public class AddReservationActivity extends AppCompatActivity {
 
         // Set up Save Reservation Button
         saveReservationButton.setOnClickListener(v -> saveReservation());
+
+        // Set up Exit Button
+        exitButton.setOnClickListener(v -> finish()); // Simply finishes the activity
 
         // Observe ViewModel for loading state
         diningViewModel.getIsLoading().observe(this, isLoading -> {
