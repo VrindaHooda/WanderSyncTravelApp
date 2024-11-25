@@ -68,8 +68,12 @@ public class NavigationFragment extends Fragment {
 
         ImageButton logisticsButton = view.findViewById(R.id.logistics);
         logisticsButton.setOnClickListener(v -> {
-            if (getActivity() instanceof DestinationActivity) {
+            if (getActivity() instanceof DestinationActivity ) {
                 ((DestinationActivity) getActivity()).navigateToLogisticsActivity();
+            } else {
+                Intent intent = new Intent(getActivity(), LogisticsActivity.class);
+                assert getActivity() != null;
+                getActivity().startActivity(intent);
             }
         });
 
