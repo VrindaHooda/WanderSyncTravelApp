@@ -140,7 +140,8 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
             durationTextView = itemView.findViewById(R.id.durationTextView);
             destinationsTextView = itemView.findViewById(R.id.destinationsTextView);
             notesTextView = itemView.findViewById(R.id.notesTextView);
-            userEmailTextView = itemView.findViewById(R.id.userEmailTextView); // Initialize userEmailTextView
+            userEmailTextView = itemView.findViewById(R.id.userEmailTextView);
+            // Initialize userEmailTextView
         }
 
         /**

@@ -145,7 +145,8 @@ public class AccommodationActivity extends AppCompatActivity {
 
         userAccommodationsRef.add(accommodation)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Accommodation saved successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Accommodation saved successfully",
+                            Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to save accommodation", Toast.LENGTH_SHORT).show();
@@ -166,7 +167,8 @@ public class AccommodationActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load accommodations", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to load accommodations",
+                            Toast.LENGTH_SHORT).show();
                 });
     }
 }

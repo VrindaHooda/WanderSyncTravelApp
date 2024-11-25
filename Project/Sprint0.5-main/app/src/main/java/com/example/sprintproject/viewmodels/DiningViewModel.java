@@ -43,20 +43,23 @@ public class DiningViewModel extends ViewModel {
 
     public void fetchCategorizedDiningReservations(String userId) {
         isLoading.setValue(true);
-        repository.getCategorizedDiningReservations(userId, new FirebaseRepository.OnCategorizedReservationsListener() {
-            @Override
-            public void onSuccess(Map<String, List<DiningReservation>> categorizedReservations) {
-                isLoading.postValue(false);
-                upcomingReservations.postValue(categorizedReservations.get("upcoming"));
-                pastReservations.postValue(categorizedReservations.get("past"));
-            }
+        repository.getCategorizedDiningReservations(userId,
+                new FirebaseRepository.OnCategorizedReservationsListener() {
+                @Override
+                public void onSuccess(
+                        Map<String, List<DiningReservation>> categorizedReservations) {
+                    isLoading.postValue(false);
+                    upcomingReservations.postValue(categorizedReservations.get("upcoming"));
+                    pastReservations.postValue(categorizedReservations.get("past"));
+                }
 
-            @Override
-            public void onFailure(Exception e) {
-                isLoading.postValue(false);
-                errorMessage.postValue(e != null ? e.getMessage() : "Failed to load categorized reservations.");
-            }
-        });
+                @Override
+                public void onFailure(Exception e) {
+                    isLoading.postValue(false);
+                    errorMessage.postValue(e != null ? e.getMessage()
+                            : "Failed to load categorized reservations.");
+                }
+            });
     }
 
 

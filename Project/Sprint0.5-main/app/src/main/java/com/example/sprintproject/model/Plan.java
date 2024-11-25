@@ -14,7 +14,8 @@ public class Plan {
         // Default constructor required for calls to DataSnapshot.getValue(Plan.class)
     }
 
-    public Plan(int duration, List<Destination> destinations, String notes, List<String> collaborators, String owner) {
+    public Plan(int duration, List<Destination> destinations,
+                String notes, List<String> collaborators, String owner) {
         this.duration = duration;
         this.destinations = destinations;
         this.notes = notes;
