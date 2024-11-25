@@ -15,7 +15,7 @@ The architecture of WanderSync is modular and scalable, emphasizing separation o
 ![plot](./pages_images/image2.png)
 
 **Functionalit:y**
-Link to video
+[Video Demonstrating](https://drive.google.com/file/d/19Ay-JIvpye8to82s5JW1-CqaytnpawDb/view?usp=sharing "@embed")
 
 **Conclusions & Learnings:**
 The travel app project has been a rewarding journey of growth and learning for us. One of the most significant challenges we faced was designing an authentication system that seamlessly integrates user invitations and role-based access. Understanding the intricate dynamics of secure user management and implementing a feature where invited users can accept invitations to join a planning page was both challenging and educational.
