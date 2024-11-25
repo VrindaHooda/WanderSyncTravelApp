@@ -320,48 +320,30 @@ public class FirebaseRepository {
                 });
     }
 
-    /**
-     * Sends an invite for a trip plan to another user.
-     *
-     * @param userId   the ID of the user receiving the invite
-     * @param planId   the unique ID of the plan being shared
-     * @param senderId the ID of the user sending the invite
-     * @param tripName the name of the trip
-     */
-    public void sendInvite(String userId, String planId, String senderId, String tripName) {
-        Map<String, Object> invite = new HashMap<>();
-        invite.put("planId", planId);
-        invite.put("senderId", senderId);
-        invite.put("tripName", tripName);
-        invite.put("status", "Pending");
-
-        firestore.collection("users")
-                .document(userId)
-                .collection("invites")
-                .add(invite)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("FirebaseRepository", "Invite sent successfully");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirebaseRepository", "Failed to send invite", e);
-                });
+    public interface PlanCallback {
+        void onPlanAdded(String planId);
+        void onFailure(String error);
     }
 
-    /**
-     * Adds a plan for a specified user and invokes a
-     * callback with the generated plan ID or an error message.
-     *
-     * @param userId   the user ID
-     * @param plan     the {@code Plan} object to add
-     * @param callback the {@code PlanCallback} to handle success or failure
-     */
     public void addPlan(String userId, Plan plan, PlanCallback callback) {
-        firestore.collection("users")
-                .document(userId)
-                .collection("plans")
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Set the owner of the plan
+        plan.setOwner(userId);
+
+        // Ensure collaborators list is initialized and includes the owner
+        if (plan.getCollaborators() == null) {
+            plan.setCollaborators(new ArrayList<>());
+        }
+        if (!plan.getCollaborators().contains(userId)) {
+            plan.getCollaborators().add(userId);
+        }
+
+        // Store the plan in the 'plans' collection
+        db.collection("plans")
                 .add(plan)
                 .addOnSuccessListener(documentReference -> {
-                    String planId = documentReference.getId(); // Get generated document ID
+                    String planId = documentReference.getId();
                     callback.onPlanAdded(planId);
                 })
                 .addOnFailureListener(e -> {
@@ -369,24 +351,25 @@ public class FirebaseRepository {
                 });
     }
 
-    // Callback interface for adding plans
-    /**
-     * A callback interface for handling the result of adding a plan.
-     */
-    public interface PlanCallback {
-        /**
-         * Called when a plan is successfully added.
-         *
-         * @param planId the generated ID of the newly added plan
-         */
-        void onPlanAdded(String planId);
+    public void sendInvite(String collaboratorId, String planId, String senderId, String notes, String tripName) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> inviteData = new HashMap<>();
+        inviteData.put("planId", planId);
+        inviteData.put("senderId", senderId);
+        inviteData.put("notes", notes);
+        inviteData.put("tripName", tripName);
+        inviteData.put("status", "Pending");
 
-        /**
-         * Called when there is an error adding a plan.
-         *
-         * @param error the error message
-         */
-        void onFailure(String error);
+        db.collection("users")
+                .document(collaboratorId)
+                .collection("invites")
+                .add(inviteData)
+                .addOnSuccessListener(documentReference -> {
+                    // Invite sent successfully
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                });
     }
 
     private static final String COLLECTION_NAME = "dining_reservations";
