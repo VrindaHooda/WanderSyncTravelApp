@@ -94,7 +94,8 @@ public class LogisticsActivity extends AppCompatActivity {
         PieDataSet dataSet = new PieDataSet(entries, "Travel Plans");
 
         // Customize the data set
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Set colors from the Material Design color palette
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        // Set colors from the Material Design color palette
         dataSet.setValueTextSize(14f); // Set value text size
         dataSet.setValueTextColor(Color.WHITE); // Set value text color to white
         dataSet.setSliceSpace(3f); // Add space between slices for better readability
@@ -115,8 +116,11 @@ public class LogisticsActivity extends AppCompatActivity {
         pieChart.getLegend().setEnabled(true); // Enable legend
         pieChart.getLegend().setTextSize(14f); // Set legend text size
         pieChart.getLegend().setTextColor(Color.BLACK); // Set legend text color
-        pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL); // Set legend orientation
-        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER); // Center legend horizontally
+        pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        // Set legend orientation
+
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        // Center legend horizontally
 
         // Display at the very bottom after the color codes
         pieChart.invalidate(); // Refresh the chart

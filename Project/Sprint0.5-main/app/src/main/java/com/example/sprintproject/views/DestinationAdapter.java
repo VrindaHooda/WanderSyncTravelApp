@@ -88,7 +88,8 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             endDateTextView.setText(dateFormat.format(travelLog.getEndDate()));
 
             // Calculate and set the duration
-            long diffInMillies = Math.abs(travelLog.getEndDate().getTime() - travelLog.getStartDate().getTime());
+            long diffInMillies = Math.abs(travelLog.getEndDate().
+                    getTime() - travelLog.getStartDate().getTime());
             int duration = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
             durationTextView.setText("Duration: " + duration + " days");
         }

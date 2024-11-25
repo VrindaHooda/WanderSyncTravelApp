@@ -93,8 +93,10 @@ public class TravelCommunityActivity extends AppCompatActivity {
                             travelPosts.sort((post1, post2) -> {
                                 try {
                                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                                    Date date1 = formatter.parse((String) post1.get("startDate")); // Parse the startDate of post1
-                                    Date date2 = formatter.parse((String) post2.get("startDate")); // Parse the startDate of post2
+                                    Date date1 = formatter.parse((String)
+                                            post1.get("startDate")); // Parse the startDate of post1
+                                    Date date2 = formatter.parse((String)
+                                            post2.get("startDate")); // Parse the startDate of post2
                                     return date1.compareTo(date2); // Compare the two dates
                                 } catch (ParseException e) {
                                     e.printStackTrace(); // Print the stack trace for debugging
@@ -112,7 +114,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens a dialog for creating a new travel post, validates the inputs, and saves it to Firestore.
+     * Opens a dialog for creating a new travel post,
+     * validates the inputs, and saves it to Firestore.
      */
     private void createNewTravelPost() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_travel_posr, null);
@@ -140,7 +143,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
             String notes = notesInput.getText().toString().trim();
 
             if (startDate.isEmpty() || endDate.isEmpty() || destination.isEmpty()) {
-                Toast.makeText(this, "Start Date, End Date, and Destination are required.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Start Date, End Date, and Destination are required.",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -149,7 +153,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 duration = calculateTripDuration(startDate, endDate);
             }
             if (duration < 0) {
-                Toast.makeText(this, "End Date must be after Start Date.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "End Date must be after Start Date.",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -175,9 +180,11 @@ public class TravelCommunityActivity extends AppCompatActivity {
             db.collection("travelCommunity")
                     .add(newPost)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(TravelCommunityActivity.this, "Travel post created!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TravelCommunityActivity.this,
+                                "Travel post created!", Toast.LENGTH_SHORT).show();
                         fetchTravelPosts();
-                        TravelPostsAdapter adapter = (TravelPostsAdapter) travelPostsRecyclerView.getAdapter();
+                        TravelPostsAdapter adapter = (TravelPostsAdapter)
+                                travelPostsRecyclerView.getAdapter();
                         if (adapter != null) {
                             adapter.addPost(newPost);
                         }
