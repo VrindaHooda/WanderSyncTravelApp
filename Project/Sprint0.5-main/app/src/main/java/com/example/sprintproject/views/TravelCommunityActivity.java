@@ -206,16 +206,38 @@ public class TravelCommunityActivity extends AppCompatActivity {
      * @param endDate   the end date in "yyyy-MM-dd" format
      * @return the number of days between the start and end dates, or -1 if parsing fails
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private long calculateTripDuration(String startDate, String endDate) {
+    public long calculateTripDuration(String startDate, String endDate) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate start = LocalDate.parse(startDate, formatter);
             LocalDate end = LocalDate.parse(endDate, formatter);
+            if (end.isBefore(start)) {
+                return -1; // Negative duration
+            }
             return ChronoUnit.DAYS.between(start, end);
-        } catch (DateTimeParseException e) {
-            Toast.makeText(this, "Invalid date format. Use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
-            return -1;
+        } catch (Exception e) {
+            return -1; // Handle invalid dates
         }
     }
+
+
+
+    public void setTravelPosts(ArrayList<Map<String, Object>> posts) {
+        this.travelPosts = posts;
+    }
+
+    public ArrayList<Map<String, Object>> getTravelPosts() {
+        if (travelPosts == null) {
+            travelPosts = new ArrayList<>();
+        }
+        return travelPosts;
+    }
+
+    public void removeTravelPost(Map<String, Object> post) {
+        if (travelPosts != null && travelPosts.contains(post)) {
+            travelPosts.remove(post);
+        }
+    }
+
+
 }
