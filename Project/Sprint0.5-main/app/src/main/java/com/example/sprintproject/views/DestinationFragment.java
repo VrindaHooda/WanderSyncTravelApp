@@ -69,26 +69,30 @@ public class DestinationFragment extends Fragment {
      */
     private void observeViewModel() {
         String userId = firebaseAuth.getCurrentUser().getUid();
-        destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
-            // Update RecyclerView with the last five travel logs
-            if (travelLogs != null) {
-                destinationAdapter.setTravelLogs(travelLogs);
-                destinationAdapter.notifyDataSetChanged();
-            }
-        });
+        destinationViewModel.getLastFiveTravelLogs(userId).
+                observe(getViewLifecycleOwner(), travelLogs -> {
+                    // Update RecyclerView with the last five travel logs
+                    if (travelLogs != null) {
+                        destinationAdapter.setTravelLogs(travelLogs);
+                        destinationAdapter.notifyDataSetChanged();
+                    }
+                });
 
-        destinationViewModel.getTotalTravelDays(userId).observe(getViewLifecycleOwner(), totalDays -> {
-            // Update TextView with the total travel days
-            totalTravelDaysTextView.setText(getString(R.string.total_travel_days, totalDays));
-            passPastDataToActivity(totalDays);
-        });
+        destinationViewModel.getTotalTravelDays(userId).
+                        observe(getViewLifecycleOwner(), totalDays -> {
+                            // Update TextView with the total travel days
+                            totalTravelDaysTextView.
+                                    setText(getString(R.string.total_travel_days, totalDays));
+                            passPastDataToActivity(totalDays);
+                        });
 
-        destinationViewModel.getTotalPlannedDays(userId).observe(getViewLifecycleOwner(), totalPlannedDays -> {
-            // Update TextView with the total planned days
-            totalPlannedDaysTextView.setText(
-                    getString(R.string.total_planned_days, totalPlannedDays));
-            passPlannedDataToActivity(totalPlannedDays);
-        });
+        destinationViewModel.getTotalPlannedDays(userId).
+                        observe(getViewLifecycleOwner(), totalPlannedDays -> {
+                            // Update TextView with the total planned days
+                            totalPlannedDaysTextView.setText(
+                                    getString(R.string.total_planned_days, totalPlannedDays));
+                            passPlannedDataToActivity(totalPlannedDays);
+                        });
     }
 
     /**
@@ -130,13 +134,14 @@ public class DestinationFragment extends Fragment {
      * @param userId the user ID for which to refresh travel logs
      */
     private void refreshTravelLogs(String userId) {
-        destinationViewModel.getLastFiveTravelLogs(userId).observe(getViewLifecycleOwner(), travelLogs -> {
-            // Update RecyclerView with the refreshed travel logs
-            if (travelLogs != null) {
-                destinationAdapter.setTravelLogs(travelLogs);
-                destinationAdapter.notifyDataSetChanged();
-            }
-        });
+        destinationViewModel.getLastFiveTravelLogs(userId).
+                observe(getViewLifecycleOwner(), travelLogs -> {
+                    // Update RecyclerView with the refreshed travel logs
+                    if (travelLogs != null) {
+                        destinationAdapter.setTravelLogs(travelLogs);
+                        destinationAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     private OnDataPassListener dataPassListener;
