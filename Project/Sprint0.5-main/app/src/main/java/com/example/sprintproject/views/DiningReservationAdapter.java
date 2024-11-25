@@ -37,6 +37,7 @@ public class DiningReservationAdapter extends RecyclerView.Adapter<DiningReserva
     public void onBindViewHolder(@NonNull DiningReservationAdapter.ViewHolder holder, int position) {
         // Bind data to the item views
         DiningReservation reservation = reservations.get(position);
+
         holder.bind(reservation);
     }
 

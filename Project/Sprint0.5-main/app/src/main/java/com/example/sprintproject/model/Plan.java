@@ -25,7 +25,8 @@ public class Plan {
      * @param notes         notes or additional details about the plan
      * @param collaborators a list of collaborator IDs for the plan
      */
-    public Plan(int duration, List<Destination> destinations, String notes, List<String> collaborators) {
+    public Plan(int duration, List<Destination> destinations,
+                String notes, List<String> collaborators) {
         this.duration = duration;
         this.destinations = destinations;
         this.notes = notes;

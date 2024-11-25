@@ -18,7 +18,8 @@ public class ValidateViewModel extends ViewModel {
     }
 
     /**
-     * Validates the registration details by ensuring the username and password meet the required criteria:
+     * Validates the registration details by ensuring
+     * the username and password meet the required criteria:
      * <ul>
      *     <li>Both fields are non-empty</li>
      *     <li>Neither contains spaces</li>

@@ -51,7 +51,8 @@ public class Destination {
      * @param endDate           the end date of the trip
      */
     public Destination(String location, List<String> accommodations,
-                       List<String> diningReservations, String transportation, Date startDate, Date endDate) {
+                       List<String> diningReservations, String transportation,
+                       Date startDate, Date endDate) {
         this.location = location;
         this.accommodations = accommodations;
         this.diningReservations = diningReservations;
@@ -192,7 +193,8 @@ public class Destination {
 
     // toString method for easier debugging and logging
     /**
-     * Returns a string representation of the {@code Destination} for debugging and logging purposes.
+     * Returns a string representation of the {@code Destination}
+     * for debugging and logging purposes.
      *
      * @return a string representation of the destination
      */

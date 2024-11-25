@@ -37,7 +37,8 @@ public class CalculateVacationDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(
-            @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            @NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_calculate_vacation, container, false);
 
         // Initialize Views
@@ -48,7 +49,8 @@ public class CalculateVacationDialog extends DialogFragment {
         saveButton = rootView.findViewById(R.id.saveButton);
 
         // Initialize ViewModel
-        destinationViewModel = new ViewModelProvider(requireActivity()).get(DestinationViewModel.class);
+        destinationViewModel = new ViewModelProvider(requireActivity()).
+                get(DestinationViewModel.class);
 
         startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
         endDateInput.setOnClickListener(v -> showDatePickerDialog(endDateInput));
@@ -67,14 +69,16 @@ public class CalculateVacationDialog extends DialogFragment {
                 destinationViewModel.calculateVacationTime(null, endDate, duration);
             } else {
                 Toast.makeText(getContext(),
-                        "Please provide at least two inputs to calculate the third", Toast.LENGTH_SHORT).show();
+                        "Please provide at least two inputs to calculate the third",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
         // Observe ViewModel for calculated duration
         destinationViewModel.getCalculatedDuration().observe(getViewLifecycleOwner(), calculatedDuration -> {
             if (calculatedDuration != null) {
-                if (startDateInput.getText().toString().isEmpty() && !endDateInput.getText().toString().isEmpty()) {
+                if (startDateInput.getText().toString().isEmpty()
+                        && !endDateInput.getText().toString().isEmpty()) {
                     startDateInput.setText(formatDate(calculateStartDate(
                             endDateInput.getText().toString(), calculatedDuration)));
                 } else if (endDateInput.getText().toString().isEmpty()
@@ -93,12 +97,14 @@ public class CalculateVacationDialog extends DialogFragment {
             Date endDate = parseDate(endDateInput.getText().toString());
             Integer duration = parseInteger(durationInput.getText().toString());
 
-            if (onSaveListener != null && startDate != null && endDate != null && duration != null) {
+            if (onSaveListener != null && startDate != null
+                    && endDate != null && duration != null) {
                 VacationEntry vacationEntry = new VacationEntry(startDate, endDate, duration);
                 onSaveListener.onSave(vacationEntry);
                 dismiss();
             } else {
-                Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        "Please fill in all fields", Toast.LENGTH_SHORT).show();
             }
         });
 

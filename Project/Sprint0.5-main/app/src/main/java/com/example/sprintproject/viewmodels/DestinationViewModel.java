@@ -36,7 +36,8 @@ public class DestinationViewModel extends ViewModel {
     }
 
     /**
-     * Retrieves the last five travel logs for a given user ID. If no travel logs exist, the repository
+     * Retrieves the last five travel logs for a given user ID.
+     * If no travel logs exist, the repository
      * prepopulates the user's travel logs.
      *
      * @param userId the user ID
@@ -83,13 +84,13 @@ public class DestinationViewModel extends ViewModel {
     /**
      * Calculates the vacation time based on provided start date, end date, or duration.
      *
-     * @param startDate the start date of the vacation
-     * @param endDate   the end date of the vacation
+     * @param startD the start date of the vacation
+     * @param endD   the end date of the vacation
      * @param duration  the duration of the vacation in days
      */
-    public void calculateVacationTime(Date startDate, Date endDate, Integer duration) {
-        if (startDate != null && endDate != null) {
-            firebaseRepository.calculateDuration(startDate, endDate, new OnCompleteListener<Integer>() {
+    public void calculateVacationTime(Date startD, Date endD, Integer duration) {
+        if (startD != null && endD != null) {
+            firebaseRepository.calculateDuration(startD, endD, new OnCompleteListener<Integer>() {
                 @Override
                 public void onComplete(@NonNull Task<Integer> task) {
                     if (task.isSuccessful()) {
@@ -97,18 +98,18 @@ public class DestinationViewModel extends ViewModel {
                     }
                 }
             });
-        } else if (startDate != null && duration != null) {
+        } else if (startD != null && duration != null) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startDate);
+            calendar.setTime(startD);
             calendar.add(Calendar.DAY_OF_YEAR, duration);
-            endDate = calendar.getTime();
-            calculateVacationTime(startDate, endDate, null);
-        } else if (endDate != null && duration != null) {
+            endD = calendar.getTime();
+            calculateVacationTime(startD, endD, null);
+        } else if (endD != null && duration != null) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(endDate);
+            calendar.setTime(endD);
             calendar.add(Calendar.DAY_OF_YEAR, -duration);
-            startDate = calendar.getTime();
-            calculateVacationTime(startDate, endDate, null);
+            startD = calendar.getTime();
+            calculateVacationTime(startD, endD, null);
         }
     }
 
@@ -160,7 +161,8 @@ public class DestinationViewModel extends ViewModel {
     }
 
     /**
-     * Refreshes the total planned vacation days for a given user ID by fetching data from the repository.
+     * Refreshes the total planned vacation days for a
+     * given user ID by fetching data from the repository.
      *
      * @param userId the user ID
      */

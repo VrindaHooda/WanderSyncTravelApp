@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.views.InviteAdapter;
+//import com.example.sprintproject.views.InviteAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,7 +55,7 @@ public class ViewInvitesActivity extends AppCompatActivity {
     }
 
     /**
-     * Fetches invites for the current user from the Firestore database and updates the invites list.
+     * Fetches invites for current user from the Firestore database and updates the invites list.
      *
      * This method listens for real-time updates to the "invites" collection in Firestore
      * for the specified user and populates the local list of invites. Each invite is stored

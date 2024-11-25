@@ -90,7 +90,8 @@ public class AuthViewModel extends ViewModel {
                                         System.out.println("User data saved successfully");
                                     })
                                     .addOnFailureListener(e -> {
-                                        System.out.println("Error saving user data: " + e.getMessage());
+                                        System.out.println(
+                                                "Error saving user data: " + e.getMessage());
                                     });
                         }
                         callback.onSuccess(user);
