@@ -1,92 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/colorNeutral">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/playwritefrmoderne"
-        android:text="Dining Establishments"
-        android:textColor="@color/colorDarkContrast"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/errorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textColor="@color/colorDarkContrast"
-        android:fontFamily="@font/playwritefrmoderne"
-        android:visibility="gone" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Upcoming Reservations"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/playwritefrmoderne"
-        android:textColor="@color/colorDarkContrast" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/upcomingRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/colorNeutral">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Past Reservations"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/playwritefrmoderne"
-        android:textColor="@color/colorDarkContrast" />
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:text="Dining Establishments"
+            android:textColor="@color/colorDarkContrast"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pastRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:id="@+id/addReservationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:text="Add Reservation"
-        android:backgroundTint="@color/colorHighlight"
-        android:fontFamily="@font/playwritefrmoderne"
-        android:textSize="18sp"
-        android:textColor="@color/colorDarkContrast" />
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textColor="@color/colorDarkContrast"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:visibility="gone" />
 
-    <!-- Bottom Navigation Fragment Container -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Upcoming Reservations"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textColor="@color/colorDarkContrast" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/upcomingRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Past Reservations"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:textColor="@color/colorDarkContrast" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pastRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/addReservationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/colorHighlight"
+            android:fontFamily="@font/playwritefrmoderne"
+            android:text="Add Reservation"
+            android:textColor="@color/colorDarkContrast"
+            android:textSize="18sp" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

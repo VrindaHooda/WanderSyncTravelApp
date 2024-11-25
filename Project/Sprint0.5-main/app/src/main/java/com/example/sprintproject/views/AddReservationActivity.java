@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DiningReservation;
 import com.example.sprintproject.viewmodels.DiningViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,26 +29,33 @@ import java.util.Date;
 public class AddReservationActivity extends AppCompatActivity {
 
     private EditText restaurantNameEditText;
+    private EditText websiteEditText;
     private EditText numberOfGuestsEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private RatingBar ratingBar;
     private Button saveReservationButton;
     private ProgressBar progressBar;
-
+    private FirebaseAuth firebaseAuth;
     private DiningViewModel diningViewModel;
     private Calendar reservationCalendar;
+    private Button exitButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reservation);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         // Initialize UI components
         restaurantNameEditText = findViewById(R.id.restaurantNameEditText);
+        websiteEditText = findViewById(R.id.websiteEditText);
         numberOfGuestsEditText = findViewById(R.id.numberOfGuestsEditText);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
+        ratingBar = findViewById(R.id.ratingBar);
         saveReservationButton = findViewById(R.id.saveReservationButton);
+        exitButton = findViewById(R.id.exitButton);
         progressBar = findViewById(R.id.progressBar);
 
         // Initialize ViewModel
@@ -63,6 +72,9 @@ public class AddReservationActivity extends AppCompatActivity {
 
         // Set up Save Reservation Button
         saveReservationButton.setOnClickListener(v -> saveReservation());
+
+        // Set up Exit Button
+        exitButton.setOnClickListener(v -> finish()); // Simply finishes the activity
 
         // Observe ViewModel for loading state
         diningViewModel.getIsLoading().observe(this, isLoading -> {
@@ -102,10 +114,18 @@ public class AddReservationActivity extends AppCompatActivity {
 
     private void saveReservation() {
         String restaurantName = restaurantNameEditText.getText().toString().trim();
+        String website = websiteEditText.getText().toString().trim();
         String numberOfGuestsStr = numberOfGuestsEditText.getText().toString().trim();
+        float rating = ratingBar.getRating();
+
 
         if (restaurantName.isEmpty()) {
             restaurantNameEditText.setError("Restaurant name is required");
+            return;
+        }
+
+        if (website.isEmpty()) {
+            websiteEditText.setError("Website is required");
             return;
         }
 
@@ -126,7 +146,7 @@ public class AddReservationActivity extends AppCompatActivity {
         Date reservationDate = reservationCalendar.getTime();
         String reservationId = null; // Generate dynamically
 
-        DiningReservation reservation = new DiningReservation(reservationId, getUserId(), restaurantName, reservationDate, numberOfGuests, "");
+        DiningReservation reservation = new DiningReservation(reservationId, getUserId(), restaurantName, reservationDate, numberOfGuests, "", website, rating);
 
         // Save the reservation using ViewModel
         diningViewModel.addDiningReservation(getUserId(), reservation);
@@ -140,7 +160,6 @@ public class AddReservationActivity extends AppCompatActivity {
 
     private String getUserId() {
         // Replace with your method to retrieve the current user's ID, such as from Firebase Authentication
-        return "user123";
+        return firebaseAuth.getCurrentUser().getUid();
     }
 }
-

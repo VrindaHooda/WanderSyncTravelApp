@@ -11,7 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast" />
+
+    <TextView
+        android:id="@+id/websiteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:fontFamily="@font/playwritefrmoderne"
         android:textColor="@color/colorDarkContrast" />
 
@@ -19,9 +27,16 @@
         android:id="@+id/reservationDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:textSize="16sp"
         android:fontFamily="@font/playwritefrmoderne"
         android:textColor="@color/colorDarkContrast" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

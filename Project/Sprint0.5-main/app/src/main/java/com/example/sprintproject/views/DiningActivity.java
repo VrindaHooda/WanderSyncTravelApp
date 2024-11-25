@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.example.sprintproject.R;
 import com.example.sprintproject.model.DiningReservation;
 import com.example.sprintproject.viewmodels.DiningViewModel;
 import com.example.sprintproject.views.DiningReservationAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class DiningActivity extends AppCompatActivity {
     private DiningReservationAdapter upcomingAdapter;
     private DiningReservationAdapter pastAdapter;
     private Button addReservationButton;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class DiningActivity extends AppCompatActivity {
         }
         // Set your layout resource
         setContentView(R.layout.activity_dining);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
@@ -51,7 +55,6 @@ public class DiningActivity extends AppCompatActivity {
         upcomingRecyclerView = findViewById(R.id.upcomingRecyclerView);
         pastRecyclerView = findViewById(R.id.pastRecyclerView);
         addReservationButton = findViewById(R.id.addReservationButton);
-
 
         // Setup RecyclerViews
         setupRecyclerViews();
@@ -63,7 +66,7 @@ public class DiningActivity extends AppCompatActivity {
         observeViewModel();
 
         // Fetch the reservations for the user
-        String userId = getUserId(); // Implement this method to get the current user's ID
+        String userId = firebaseAuth.getCurrentUser().getUid(); // Implement this method to get the current user's ID
         diningViewModel.fetchCategorizedDiningReservations(userId);
 
         addReservationButton.setOnClickListener(v -> {
@@ -108,6 +111,14 @@ public class DiningActivity extends AppCompatActivity {
         diningViewModel.getUpcomingReservations().observe(this, new Observer<List<DiningReservation>>() {
             @Override
             public void onChanged(List<DiningReservation> reservations) {
+                for (DiningReservation reservation : reservations) {
+                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
+                        reservation.setWebsite("No website available");
+                    }
+                    if (reservation.getRating() == 0) {
+                        reservation.setRating(3.0f); // Default rating if none provided
+                    }
+                }
                 upcomingAdapter.setReservations(reservations);
             }
         });
@@ -115,15 +126,17 @@ public class DiningActivity extends AppCompatActivity {
         diningViewModel.getPastReservations().observe(this, new Observer<List<DiningReservation>>() {
             @Override
             public void onChanged(List<DiningReservation> reservations) {
+                for (DiningReservation reservation : reservations) {
+                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
+                        reservation.setWebsite("No website available");
+                    }
+                    if (reservation.getRating() == 0) {
+                        reservation.setRating(3.0f); // Default rating if none provided
+                    }
+                }
                 pastAdapter.setReservations(reservations);
             }
         });
-    }
-
-    private String getUserId() {
-        // Implement logic to retrieve the current user's ID
-        // For example, from Firebase Authentication
-        return "user123";
     }
 
     // Add methods to handle user interactions, like deleting a reservation
