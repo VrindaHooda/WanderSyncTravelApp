@@ -16,16 +16,28 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
     private Context context;
     private ArrayList<Accommodation> accommodations;
 
+    /**
+     * Constructs an {@code AccommodationAdapter} with the
+     * specified context and list of accommodations.
+     *
+     * @param context       the context in which the adapter is used
+     * @param accommodations the list of accommodations to display
+     */
     public AccommodationAdapter(Context context, ArrayList<Accommodation> accommodations) {
         this.context = context;
         this.accommodations = accommodations;
     }
 
+
+    public void setAccommodations(ArrayList<Accommodation> accommodations) {
+        this.accommodations = accommodations;
+        notifyDataSetChanged();
+    }
+  
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.accommodation_item, parent,
-                false);
+        View view = LayoutInflater.from(context).inflate(R.layout.accommodation_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -81,4 +93,3 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         }
     }
 }
-

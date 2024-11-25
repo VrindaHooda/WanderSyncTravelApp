@@ -17,18 +17,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Destination;
+import com.example.sprintproject.model.Id;
 import com.example.sprintproject.model.Plan;
 import com.example.sprintproject.viewmodels.LogisticsViewModel;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+//import java.util.concurrent.atomic.AtomicReference;
+//Commented out to satisfy Checkstyle
 
 import com.example.sprintproject.model.FirebaseRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class MakePlansActivity extends AppCompatActivity {
@@ -45,17 +51,18 @@ public class MakePlansActivity extends AppCompatActivity {
     private FirebaseRepository firebaseRepository;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
+    private Id id;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_plans);
-
         firebaseRepository = new FirebaseRepository();
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
+        id = Id.getInstance();
         // Initialize UI components
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
@@ -69,13 +76,9 @@ public class MakePlansActivity extends AppCompatActivity {
         buttonAddPlan = findViewById(R.id.buttonAddPlan);
         buttonAddDestination = findViewById(R.id.buttonAddDestination);
         buttonExit = findViewById(R.id.buttonExit);
-
-        // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         plansAdapter = new PlansAdapter();
         recyclerView.setAdapter(plansAdapter);
-
-        // Initialize ViewModel
         logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
         userId = firebaseAuth.getCurrentUser().getUid();
 
@@ -89,75 +92,108 @@ public class MakePlansActivity extends AppCompatActivity {
                 Toast.makeText(MakePlansActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Fetch initial plans
         logisticsViewModel.fetchPlans(userId);
-
-        // Set up Add Destination button click listener
-        buttonAddDestination.setOnClickListener(v -> {
-            String location = editTextLocation.getText().toString();
-            String transportation = editTextTransportation.getText().toString();
-            String diningReservations = editTextDiningReservations.getText().toString();
-            String accommodations = editTextAccommodations.getText().toString();
-
-            if (!location.isEmpty() && !transportation.isEmpty() && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
-                Destination destination = new Destination(location, parseList(accommodations), parseList(diningReservations), transportation);
-                destinations.add(destination);
-                Toast.makeText(MakePlansActivity.this, "Destination added", Toast.LENGTH_SHORT).show();
-                clearDestinationFields();
-            } else {
-                Toast.makeText(MakePlansActivity.this, "All destination fields are required", Toast.LENGTH_SHORT).show();
+        buttonAddDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String location = editTextLocation.getText().toString();
+                String transportation = editTextTransportation.getText().toString();
+                String diningReservations = editTextDiningReservations.getText().toString();
+                String accommodations = editTextAccommodations.getText().toString();
+                if (!location.isEmpty() && !transportation.isEmpty()
+                        && !diningReservations.isEmpty() && !accommodations.isEmpty()) {
+                    Destination destination = new Destination(location, parseList(accommodations),
+                            parseList(diningReservations), transportation);
+                    destinations.add(destination);
+                    Toast.makeText(MakePlansActivity.this,
+                            "Destination added", Toast.LENGTH_SHORT).show();
+                    clearDestinationFields();
+                } else {
+                    Toast.makeText(MakePlansActivity.this,
+                            "All destination fields are required", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
         // Set up Add Plan button click listener
-        buttonAddPlan.setOnClickListener(v -> {
-            progressBar.setVisibility(View.VISIBLE);
-            String durationText = editTextDuration.getText().toString();
-            String notes = editTextNotes.getText().toString();
-            String collaboratorsText = editTextCollaborators.getText().toString();
-            Log.d("DEST CHECK", destinations.toString());
-            if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
-                int duration = Integer.parseInt(durationText);
-                ArrayList<String> collaborators = parseList(collaboratorsText); // Helper function for parsing collaborators
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                Log.d("Data", "Destinations: " + destinations);
-                // Get logged-in user ID
+        buttonAddPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                String durationText = editTextDuration.getText().toString();
+                String notes = editTextNotes.getText().toString();
+                String collaboratorsText = editTextCollaborators.getText().toString();
+
+                if (!durationText.isEmpty() && !notes.isEmpty() && !destinations.isEmpty()) {
+                    int duration;
+                    try {
+                        duration = Integer.parseInt(durationText);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(MakePlansActivity.this,
+                                "Invalid duration", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        return;
+                    }
 
                 // Create a new Plan object
                 Plan newPlan = new Plan(duration, destinations, notes, collaborators, "");
 
-                // Add the Plan to Firestore and send invites
-                firebaseRepository.addPlan(userId, newPlan, new FirebaseRepository.PlanCallback() {
-                    @Override
-                    public void onPlanAdded(Plan plan) {
-                        // Send invites to collaborators after plan is successfully added
-                        String planId = plan.getId();
-                        Log.d("AddPlan", "Generated planId: " + planId);
-                        for (String collaboratorId : collaborators) {
-                            firebaseRepository.sendInvite(collaboratorId, planId, userId, notes);  // Get the planId from the Plan object
-                        }
-                        logisticsViewModel.refreshPlans(userId); // Trigger refresh of plans
+                    Log.d("Data", "Collaborators: " + collaboratorsText);
+                    ArrayList<String> collaboratorsEmailList = parseCollaboratorsList(collaboratorsText);
+                    List<String> collaboratorsIdList = new ArrayList<>();
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    Plan newPlan = new Plan(duration, destinations, notes, collaborators);
+
+                    firebaseRepository.addPlan(userId, newPlan,
+                            new FirebaseRepository.PlanCallback() {
+                            @Override
+                            public void onPlanAdded(String planId) {
+                                // Fetch all collaborator IDs
+                                AtomicInteger counter = new AtomicInteger(
+                                        collaboratorsEmailList.size());
+
+                                for (String collaboratorEmail : collaboratorsEmailList) {
+                                    getUidByEmail(collaboratorEmail, uid -> {
+                                        if (uid != null) {
+                                            collaboratorsIdList.add(uid);
+                                        }
+                                        if (counter.decrementAndGet() == 0) {
+                                            // All UIDs fetched, send invites
+                                            for (String collaboratorId : collaboratorsIdList) {
+                                                Log.w("Id", "CollaboratorId " + collaboratorId);
+                                                firebaseRepository.sendInvite(
+                                                        collaboratorId, planId, userId, notes);
+                                            }
+                                          logisticsViewModel.refreshPlans(userId); // Trigger refresh of plans
 
                         plansAdapter.addPlanToList(plan);
-                        Toast.makeText(MakePlansActivity.this, "Plan added and invites sent", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MakePlansActivity.this,
+                                                    "Plan added and invites sent",
+                                                    Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
+                                            clearInputFields();
+                                        }
+                                    });
+                                }
+                            }
 
-
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        Toast.makeText(MakePlansActivity.this, "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                // Clear input fields after the plan is added
-                clearInputFields();
-            } else {
-                Toast.makeText(MakePlansActivity.this, "All fields are required and at least one destination must be added", Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onFailure(String error) {
+                                Toast.makeText(MakePlansActivity.this,
+                                        "Failed to add plan: " + error, Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                } else {
+                    Toast.makeText(MakePlansActivity.this,
+                            "All fields are required and at least one destination must be added",
+                            Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                }
             }
             progressBar.setVisibility(View.GONE);
         });
+
 
         // Set up Exit button click listener
         buttonExit.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +204,23 @@ public class MakePlansActivity extends AppCompatActivity {
         });
     }
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private List<String> parseCollaboratorsList(String input) {
+        List<String> collaboratorsList = new ArrayList<>();
+
+        if (input != null && !input.trim().isEmpty()) {
+            String[] collaboratorsArray = input.split(",[ \t]*");
+            for (String collaborator : collaboratorsArray) {
+                if (!collaborator.isEmpty()) {
+                    collaboratorsList.add(collaborator.trim());
+                }
+            }
+        }
+        Log.d("Data", "Collaborators List: " + collaboratorsList);
+        return collaboratorsList;
+    }
+
     private void clearInputFields() {
         editTextDuration.setText("");
         editTextNotes.setText("");
@@ -175,6 +228,11 @@ public class MakePlansActivity extends AppCompatActivity {
         destinations.clear();
     }
 
+    /**
+     * Clears the input fields for the destination form.
+     * This method resets the text fields for location, transportation,
+     * dining reservations, and accommodations.
+     */
     private void clearDestinationFields() {
         editTextLocation.setText("");
         editTextTransportation.setText("");
@@ -192,7 +250,6 @@ public class MakePlansActivity extends AppCompatActivity {
         }
         return list;
     }
-
 
     private ArrayList<Destination> parseDestinations(String destinationsText) {
         ArrayList<Destination> destinationList = new ArrayList<>();
@@ -274,8 +331,45 @@ public class MakePlansActivity extends AppCompatActivity {
         return ""; // Return an empty string if no matching line is found
     }
 
+    public void getUidByEmail(String email, FirestoreCallback callback) {
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                String uid = document.getString("uid");
+                                Log.d("Data", "User UID: " + uid);
 
+                                // Use the singleton instance
+                                Id id = Id.getInstance();
+                                id.setId(uid);
+                                System.out.println("User Id: " + id.getId());
 
+                                // Pass the UID back to the caller via the callback
+                                callback.onCallback(uid);
+                                return; // Assuming only one match needed
+                            }
+                        } else {
+                            System.out.println("No user found with this email");
+                            callback.onCallback(null);
+                        }
+                    } else {
+                        System.out.println("Error fetching user: " + task.getException());
+                        callback.onCallback(null);
+                    }
+                });
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public interface FirestoreCallback {
+        void onCallback(String uid);
+    }
 
     // PlansAdapter class for RecyclerView
     class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.PlanViewHolder> {
@@ -312,10 +406,22 @@ public class MakePlansActivity extends AppCompatActivity {
 
         class PlanViewHolder extends RecyclerView.ViewHolder {
 
+            /**
+             * Constructs a new {@code PlanViewHolder}.
+             *
+             * @param itemView the view representing a single item in the RecyclerView
+             */
             public PlanViewHolder(View itemView) {
                 super(itemView);
             }
 
+            /**
+             * Binds a {@link Plan} object to the item view.
+             * This method populates the views with the plan's duration, notes, collaborators,
+             * and destination details.
+             *
+             * @param plan the {@link Plan} object to bind
+             */
             public void bind(Plan plan) {
                 // Get references to the TextView fields in the layout
                 EditText planDurationTextView = itemView.findViewById(R.id.textViewDuration);
@@ -328,7 +434,8 @@ public class MakePlansActivity extends AppCompatActivity {
                 Log.d("Set Tag", "Line 303 Plan ID: " + plan);
 
                 // Set the values for the duration and notes
-                planDurationTextView.setText(String.format("Duration: %d days", plan.getDuration()));
+                planDurationTextView.setText(String.format(
+                        "Duration: %d days", plan.getDuration()));
                 planNotesTextView.setText(String.format("Notes: " + plan.getNotes()));
 
                 // Bind the collaborators list

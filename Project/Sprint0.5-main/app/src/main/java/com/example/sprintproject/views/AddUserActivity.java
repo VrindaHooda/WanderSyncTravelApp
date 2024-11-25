@@ -28,6 +28,10 @@ public class AddUserActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Validates the entered email address. Checks for non-empty input and proper email format.
+     * Displays appropriate error messages or a success toast message.
+     */
     private void validateEmail() {
         String email = emailEditText.getText().toString().trim();
 
@@ -43,6 +47,12 @@ public class AddUserActivity extends AppCompatActivity {
         Toast.makeText(this, "Valid email entered!", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Checks if the provided email address is already registered in Firebase Authentication.
+     *
+     * @param email    the email address to check
+     * @param callback the callback to handle the result, indicating whether the user exists
+     */
     public void isUserAdded(String email, MainActivity.OnUserAddedCallback callback) {
         firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(task -> {
             boolean userExists = task.isSuccessful() && task.getResult()

@@ -1,4 +1,4 @@
-package com.example.sprintproject.adapters;
+package com.example.sprintproject.views;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,9 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sprintproject.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -22,26 +23,25 @@ public class InviteAdapter extends BaseAdapter {
 
     private Context context;
     private List<Map<String, String>> invites;
+    private List<String> documentNames;
     private FirebaseFirestore firestore;
     private String userId;
 
-    public InviteAdapter(Context context, List<Map<String, String>> invites, FirebaseFirestore firestore, String userId) {
+    /**
+     * Constructs a new {@code InviteAdapter}.
+     *
+     * @param context  the application context
+     * @param invites  the list of invites
+     * @param firestore the Firestore instance for database operations
+     * @param userId   the ID of the user
+     */
+    public InviteAdapter(Context context, List<Map<String, String>> invites, FirebaseFirestore firestore, String userId, List<String> documentNames) {
         this.context = context;
         this.invites = invites;
         this.firestore = firestore;
         this.userId = userId;
+        this.documentNames = documentNames;
     }
-
-    public void acceptInvite(String inviteId) {
-        DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
-        inviteRef.child("status").setValue("Accepted");
-    }
-
-    public void declineInvite(String inviteId) {
-        DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
-        inviteRef.removeValue();
-    }
-
 
     @Override
     public int getCount() {
@@ -58,43 +58,59 @@ public class InviteAdapter extends BaseAdapter {
         return position;
     }
 
+    static class ViewHolder {
+        TextView tripNameText;
+        TextView statusText;
+        Button acceptButton;
+        Button declineButton;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.invite_item, parent, false);
+            holder = new ViewHolder();
+            holder.tripNameText = convertView.findViewById(R.id.trip_name_text);
+            holder.statusText = convertView.findViewById(R.id.status_text);
+            holder.acceptButton = convertView.findViewById(R.id.accept_button);
+            holder.declineButton = convertView.findViewById(R.id.decline_button);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        TextView tripNameText = convertView.findViewById(R.id.trip_name_text);
-        TextView statusText = convertView.findViewById(R.id.status_text);
-        Button acceptButton = convertView.findViewById(R.id.accept_button);
-        Button declineButton = convertView.findViewById(R.id.decline_button);
-
         Map<String, String> invite = invites.get(position);
+        String document = documentNames.get(position);
         String tripName = invite.get("tripName");
         String status = invite.get("status");
         String planId = invite.get("planId");
 
-        tripNameText.setText(tripName);
-        statusText.setText(status);
+        holder.tripNameText.setText(tripName);
+        holder.statusText.setText(status);
 
-        acceptButton.setOnClickListener(v -> {
+        holder.acceptButton.setOnClickListener(v -> {
+            Log.d("Document", document);
             firestore.collection("users")
                     .document(userId)
                     .collection("invites")
-                    .document(planId)
+                    .document(document)
                     .update("status", "Accepted")
                     .addOnSuccessListener(aVoid -> {
-                        statusText.setText("Accepted");
+                        Log.d("Accepted", "Accepted");
+                        invite.put("status", "Accepted");
+                        holder.statusText.setText("Accepted");
+                        notifyDataSetChanged();
                         Toast.makeText(context, "Invite accepted", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> Log.e("InviteAdapter", "Error accepting invite", e));
         });
 
-        declineButton.setOnClickListener(v -> {
+        holder.declineButton.setOnClickListener(v -> {
             firestore.collection("users")
                     .document(userId)
                     .collection("invites")
-                    .document(planId)
+                    .document(document)
                     .delete()
                     .addOnSuccessListener(aVoid -> {
                         invites.remove(position);

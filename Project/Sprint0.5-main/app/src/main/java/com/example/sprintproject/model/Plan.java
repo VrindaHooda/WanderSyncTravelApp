@@ -12,6 +12,9 @@ public class Plan {
     private ArrayList<String> collaborators;
 
     // Default constructor required for Firestore
+    /**
+     * Default constructor required for Firestore.
+     */
     public Plan() {
     }
 
@@ -32,10 +35,38 @@ public class Plan {
         this.id = id;
     }
 
+
+    public Plan(String planName, String location, int duration, List<Destination> destinations, String notes, List<String> collaborators) {
+        this.planName = planName;
+        this.location = location;
+        this.duration = duration;
+        this.destinations = destinations;
+        this.notes = notes;
+        this.collaborators = collaborators;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Returns the duration of the plan in days.
+     *
+     * @return the duration of the plan
+     */
     public int getDuration() {
         return duration;
     }
 
+    /**
+     * Sets the duration of the plan in days.
+     *
+     * @param duration the duration to set
+     */
     public void setDuration(int duration) {
         this.duration = duration;
     }
@@ -48,10 +79,20 @@ public class Plan {
         this.destinations = destinations;
     }
 
+    /**
+     * Returns the notes or additional details about the plan.
+     *
+     * @return the notes of the plan
+     */
     public String getNotes() {
         return notes;
     }
 
+    /**
+     * Sets the notes or additional details about the plan.
+     *
+     * @param notes the notes to set
+     */
     public void setNotes(String notes) {
         this.notes = notes;
     }
@@ -63,5 +104,7 @@ public class Plan {
     public void setCollaborators(ArrayList<String> collaborators) {
         this.collaborators = collaborators;
     }
+
+
 }
 

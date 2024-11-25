@@ -25,6 +25,13 @@ public class NavigationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Default constructor for the {@code NavigationFragment} class.
+     *
+     * This constructor is required for the Android framework to instantiate
+     * the fragment. It is intentionally left empty as no custom initialization
+     * is needed during instantiation.
+     */
     public NavigationFragment() {
     }
 
@@ -60,14 +67,12 @@ public class NavigationFragment extends Fragment {
         View view = inflater.inflate(R.layout.navigation_bar, container, false);
 
         ImageButton logisticsButton = view.findViewById(R.id.logistics);
-        logisticsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LogisticsActivity.class);
-                assert getActivity() != null;
-                getActivity().startActivity(intent);
+        logisticsButton.setOnClickListener(v -> {
+            if (getActivity() instanceof DestinationActivity) {
+                ((DestinationActivity) getActivity()).navigateToLogisticsActivity();
             }
         });
+
         ImageButton logoutButton = view.findViewById(R.id.logout);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

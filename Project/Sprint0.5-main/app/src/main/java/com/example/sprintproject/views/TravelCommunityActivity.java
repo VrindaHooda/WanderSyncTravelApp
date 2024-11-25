@@ -25,11 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,8 +73,12 @@ public class TravelCommunityActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches travel posts from Firebase Firestore and displays them in the RecyclerView.
+     */
     private void fetchTravelPosts() {
         db.collection("travelCommunity")
+                .orderBy("startDate")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -83,6 +90,19 @@ public class TravelCommunityActivity extends AppCompatActivity {
                                 post.putIfAbsent("isBoosted", false); // Default to non-boosted
                                 travelPosts.add(post);
                             }
+                            travelPosts.sort((post1, post2) -> {
+                                try {
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date date1 = formatter.parse((String)
+                                            post1.get("startDate")); // Parse the startDate of post1
+                                    Date date2 = formatter.parse((String)
+                                            post2.get("startDate")); // Parse the startDate of post2
+                                    return date1.compareTo(date2); // Compare the two dates
+                                } catch (ParseException e) {
+                                    e.printStackTrace(); // Print the stack trace for debugging
+                                    return 0; // Return 0 if parsing fails
+                                }
+                            });
                             TravelPostsAdapter adapter = new TravelPostsAdapter(travelPosts);
                             adapter.notifyDataSetChanged();
                             travelPostsRecyclerView.setAdapter(adapter);
@@ -93,6 +113,10 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Opens a dialog for creating a new travel post,
+     * validates the inputs, and saves it to Firestore.
+     */
     private void createNewTravelPost() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_travel_posr, null);
         CheckBox boostPostCheckbox = dialogView.findViewById(R.id.boostPostCheckbox);
@@ -119,7 +143,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
             String notes = notesInput.getText().toString().trim();
 
             if (startDate.isEmpty() || endDate.isEmpty() || destination.isEmpty()) {
-                Toast.makeText(this, "Start Date, End Date, and Destination are required.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Start Date, End Date, and Destination are required.",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -128,7 +153,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 duration = calculateTripDuration(startDate, endDate);
             }
             if (duration < 0) {
-                Toast.makeText(this, "End Date must be after Start Date.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "End Date must be after Start Date.",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -154,17 +180,32 @@ public class TravelCommunityActivity extends AppCompatActivity {
             db.collection("travelCommunity")
                     .add(newPost)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(TravelCommunityActivity.this, "Travel post created!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TravelCommunityActivity.this,
+                                "Travel post created!", Toast.LENGTH_SHORT).show();
                         fetchTravelPosts();
+                        TravelPostsAdapter adapter = (TravelPostsAdapter)
+                                travelPostsRecyclerView.getAdapter();
+                        if (adapter != null) {
+                            adapter.addPost(newPost);
+                        }
                         dialog.dismiss();
+
                     })
                     .addOnFailureListener(e -> {
                         Log.w(TAG, "Error adding document", e);
-                        Toast.makeText(TravelCommunityActivity.this, "Failed to create post.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TravelCommunityActivity.this,
+                                "Failed to create post.", Toast.LENGTH_SHORT).show();
                     });
         });
     }
 
+    /**
+     * Calculates the duration of a trip in days based on the start and end dates.
+     *
+     * @param startDate the start date in "yyyy-MM-dd" format
+     * @param endDate   the end date in "yyyy-MM-dd" format
+     * @return the number of days between the start and end dates, or -1 if parsing fails
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private long calculateTripDuration(String startDate, String endDate) {
         try {

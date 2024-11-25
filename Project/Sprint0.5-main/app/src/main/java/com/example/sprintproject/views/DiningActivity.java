@@ -1,146 +1,127 @@
 package com.example.sprintproject.views;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.databinding.DiningEstablishmentScreenBinding;
 import com.example.sprintproject.model.DiningReservation;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.Calendar;
+import com.example.sprintproject.viewmodels.DiningViewModel;
+import com.example.sprintproject.views.DiningReservationAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 public class DiningActivity extends AppCompatActivity {
 
-    private DiningEstablishmentScreenBinding binding;
-    private DatabaseReference databaseRef;
-    private List<DiningReservation> reservations = new ArrayList<>();
-    private DiningReservationAdapter adapter;
+    private DiningViewModel diningViewModel;
+    private ProgressBar progressBar;
+    private TextView errorTextView;
+    private RecyclerView upcomingRecyclerView;
+    private RecyclerView pastRecyclerView;
+    private DiningReservationAdapter upcomingAdapter;
+    private DiningReservationAdapter pastAdapter;
+    private Button addReservationButton;
+    private FirebaseAuth firebaseAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.bottomNavigation, NavigationFragment.class, null)
                     .commit();
         }
-        binding = DataBindingUtil.setContentView(this, R.layout.dining_establishment_screen);
+        // Set your layout resource
+        setContentView(R.layout.activity_dining);
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        // Set the activity for binding
-        binding.setActivity(this);
+        // Initialize UI components
+        progressBar = findViewById(R.id.progressBar);
+        errorTextView = findViewById(R.id.errorTextView);
+        upcomingRecyclerView = findViewById(R.id.upcomingRecyclerView);
+        pastRecyclerView = findViewById(R.id.pastRecyclerView);
+        addReservationButton = findViewById(R.id.addReservationButton);
 
-        // Initialize data binding
-        binding = DiningEstablishmentScreenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-        // Set activity for data binding
-        binding.setActivity(this);
+        // Setup RecyclerViews
+        setupRecyclerViews();
 
-        // Initialize Firebase Database reference
-        databaseRef = FirebaseDatabase.getInstance().getReference("DiningReservations");
+        // Get the ViewModel
+        diningViewModel = new ViewModelProvider(this).get(DiningViewModel.class);
 
-        // Set up the RecyclerView
-        binding.reservationList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DiningReservationAdapter(reservations);
-        binding.reservationList.setAdapter(adapter);
+        // Observe LiveData from the ViewModel
+        observeViewModel();
 
-        // Fetch reservations from the database
-        fetchReservationsFromDatabase();
+        // Fetch the reservations for the user
+        String userId = firebaseAuth.getCurrentUser().getUid(); // Implement this method to get the current user's ID
+        diningViewModel.fetchCategorizedDiningReservations(userId);
+
+        addReservationButton.setOnClickListener(v -> {
+            // Intent to Add Reservation Activity or dialog to add reservation
+            Intent intent = new Intent(DiningActivity.this, AddReservationActivity.class);
+            startActivity(intent);
+        });
     }
 
-    public void addReservation() {
-        String location = binding.locationInput.getText().toString().trim();
-        String time = binding.timeInput.getText().toString().trim();
-        String website = binding.websiteInput.getText().toString().trim();
-        int rating = (int) binding.ratingInput.getRating();
+    private void setupRecyclerViews() {
+        // Upcoming Reservations RecyclerView
+        upcomingAdapter = new DiningReservationAdapter();
+        upcomingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        upcomingRecyclerView.setAdapter(upcomingAdapter);
 
-        int month = Integer.parseInt(binding.monthInput.getText().toString().trim());
-        int day = Integer.parseInt(binding.dayInput.getText().toString().trim());
-        int year = Integer.parseInt(binding.yearInput.getText().toString().trim());
-
-        if (TextUtils.isEmpty(location) || TextUtils.isEmpty(time) || TextUtils.isEmpty(website)) {
-            Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!isValidTime(time)) {
-            Toast.makeText(this, "Invalid time format. Use HH:mm.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String reservationId = databaseRef.push().getKey();
-        if (reservationId != null) {
-            DiningReservation reservation = new DiningReservation(location, month, day, year, time, 0, website, rating);
-            databaseRef.child(reservationId).setValue(reservation);
-
-            binding.locationInput.setText("");
-            binding.timeInput.setText("");
-            binding.websiteInput.setText("");
-            binding.ratingInput.setRating(0);
-        }
+        // Past Reservations RecyclerView
+        pastAdapter = new DiningReservationAdapter();
+        pastRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        pastRecyclerView.setAdapter(pastAdapter);
     }
 
-
-
-    private boolean isValidTime(String time) {
-        String timeRegex = "^([01]\\d|2[0-3]):([0-5]\\d)$";
-        return time.matches(timeRegex);
-    }
-
-    private boolean isDateInPast(int year, int month, int day) {
-        Calendar today = Calendar.getInstance();
-        Calendar reservationDate = Calendar.getInstance();
-        reservationDate.set(year, month - 1, day);
-        return reservationDate.before(today);
-    }
-
-    private void fetchReservationsFromDatabase() {
-        databaseRef.addValueEventListener(new ValueEventListener() {
+    private void observeViewModel() {
+        diningViewModel.getIsLoading().observe(this, new Observer<Boolean>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                reservations.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DiningReservation reservation = snapshot.getValue(DiningReservation.class);
-                    if (reservation != null) {
-                        reservations.add(reservation);
-                    }
-                }
-
-                // Sort reservations by year, month, day, and time
-                reservations.sort((r1, r2) -> {
-                    Calendar cal1 = Calendar.getInstance();
-                    cal1.set(r1.getYear(), r1.getMonth() - 1, r1.getDay());
-                    Calendar cal2 = Calendar.getInstance();
-                    cal2.set(r2.getYear(), r2.getMonth() - 1, r2.getDay());
-
-                    if (cal1.equals(cal2)) {
-                        return r1.getTime().compareTo(r2.getTime());
-                    }
-                    return cal1.compareTo(cal2);
-                });
-
-                adapter.notifyDataSetChanged();
+            public void onChanged(Boolean isLoading) {
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             }
+        });
 
+        diningViewModel.getErrorMessage().observe(this, new Observer<String>() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("DiningActivity", "Database error: " + databaseError.getMessage());
-                Toast.makeText(DiningActivity.this, "Failed to load reservations.", Toast.LENGTH_SHORT).show();
+            public void onChanged(String errorMsg) {
+                if (errorMsg != null) {
+                    errorTextView.setText(errorMsg);
+                    errorTextView.setVisibility(View.VISIBLE);
+                } else {
+                    errorTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        diningViewModel.getUpcomingReservations().observe(this, new Observer<List<DiningReservation>>() {
+            @Override
+            public void onChanged(List<DiningReservation> reservations) {
+                upcomingAdapter.setReservations(reservations);
+            }
+        });
+
+        diningViewModel.getPastReservations().observe(this, new Observer<List<DiningReservation>>() {
+            @Override
+            public void onChanged(List<DiningReservation> reservations) {
+                pastAdapter.setReservations(reservations);
             }
         });
     }
 
+    // Add methods to handle user interactions, like deleting a reservation
 }

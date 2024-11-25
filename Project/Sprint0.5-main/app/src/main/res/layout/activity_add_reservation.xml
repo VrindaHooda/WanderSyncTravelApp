@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/colorNeutral">
+
+    <EditText
+        android:id="@+id/restaurantNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Restaurant Name"
+        android:backgroundTint="@color/colorPrimary"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:textStyle="italic"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/numberOfGuestsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Number of Guests"
+        android:inputType="number"
+        android:backgroundTint="@color/colorPrimary"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast"
+        android:textColorHint="@color/colorDarkContrast"
+        android:textStyle="italic"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select Date"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast" />
+
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select Time"
+        android:textSize="16sp"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textColor="@color/colorDarkContrast" />
+
+    <Button
+        android:id="@+id/saveReservationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:text="Save Reservation"
+        android:backgroundTint="@color/colorHighlight"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="20sp"
+        android:textColor="@color/colorDarkContrast" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
+    <!-- Exit Button -->
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="Exit"
+        android:backgroundTint="@color/colorHighlight"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:textSize="20sp"
+        android:textColor="@color/colorDarkContrast" />
+
+</LinearLayout>

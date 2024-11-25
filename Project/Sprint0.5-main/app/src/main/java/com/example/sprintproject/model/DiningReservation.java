@@ -1,112 +1,75 @@
 package com.example.sprintproject.model;
 
+import java.util.Date;
+
 public class DiningReservation {
-    private String location;
-    private String time;
-    private String website;
-    private int rating;
-    private int numPeople;
-    private int month;
-    private int day;
-    private int year;
+    private String id;
+    private String userId;
+    private String restaurantName;
+    private Date reservationDate;
+    private int numberOfGuests;
+    private String notes;
 
-    public DiningReservation() { }
-
-    public DiningReservation(String location, int month, int day, int year, String time, int numPeople, String website, int rating) {
-        this.location = location;
-        this.month = month;
-        this.day = day;
-        this.year = year;
-        this.time = time;
-        this.numPeople = numPeople;
-        this.website = website;
-        this.rating = rating;
+    // Required no-argument constructor for Firebase serialization
+    public DiningReservation() {
     }
 
-    public DiningReservation(String location, int month, int day, int year, String time, int numPeople, String website) {
-        this.location = location;
-        this.month = month;
-        this.day = day;
-        this.year = year;
-        this.time = time;
-        this.numPeople = numPeople;
-        this.website = website;
+    public DiningReservation(String id, String userId, String restaurantName, Date reservationDate, int numberOfGuests, String notes) {
+        this.id = id;
+        this.userId = userId;
+        this.restaurantName = restaurantName;
+        this.reservationDate = reservationDate;
+        this.numberOfGuests = numberOfGuests;
+        this.notes = notes;
     }
 
-    public DiningReservation(String location, String time, String website, int rating) {
-        this.location = location;
-        this.time = time;
-        this.website = website;
-        this.rating = rating;
+    // Getters and setters for all fields
+
+    public String getId() {
+        return id;
     }
 
-    // Getters and Setters
-    public String getLocation() {
-        return location;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getTime() {
-        return time;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public String getRestaurantName() {
+        return restaurantName;
     }
 
-    public String getWebsite() {
-        return website;
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
+    public Date getReservationDate() {
+        return reservationDate;
     }
 
-    public int getRating() {
-        return rating;
+    public void setReservationDate(Date reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public int getNumberOfGuests() {
+        return numberOfGuests;
     }
 
-    public int getNumPeople() {
-        return numPeople;
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
     }
 
-    public void setNumPeople(int numPeople) {
-        this.numPeople = numPeople;
+    public String getNotes() {
+        return notes;
     }
 
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    // Method to get formatted date as a string (optional)
-    public String getFormattedDate() {
-        return String.format("%02d/%02d/%04d", month, day, year);
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
