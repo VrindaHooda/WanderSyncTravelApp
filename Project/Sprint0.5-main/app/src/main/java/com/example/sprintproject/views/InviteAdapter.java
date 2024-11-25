@@ -1,4 +1,4 @@
-package com.example.sprintproject.adapters;
+package com.example.sprintproject.views;
 
 import android.content.Context;
 import android.util.Log;
