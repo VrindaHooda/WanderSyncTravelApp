@@ -59,10 +59,12 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
         boolean isBoosted = (boolean) post.getOrDefault("isBoosted", false);
         if (isBoosted) {
             holder.itemView.setBackgroundColor(
-                    holder.itemView.getContext().getResources().getColor(R.color.sky_blue)); // Add color in colors.xml
+                    holder.itemView.getContext().getResources().
+                            getColor(R.color.sky_blue)); // Add color in colors.xml
         } else {
             holder.itemView.setBackgroundColor(
-                    holder.itemView.getContext().getResources().getColor(android.R.color.transparent));
+                    holder.itemView.getContext().getResources().
+                            getColor(android.R.color.transparent));
         }
         String details = isBoosted
                 ? "[BOOSTED] Destination: " + post.get("destination")
@@ -118,7 +120,8 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
         private TextView notesTextView;
 
         /**
-         * Constructs a {@code ViewHolder} and initializes references to the views in the travel post layout.
+         * Constructs a {@code ViewHolder} and initializes
+         * references to the views in the travel post layout.
          *
          * @param itemView the view of the travel post item
          */

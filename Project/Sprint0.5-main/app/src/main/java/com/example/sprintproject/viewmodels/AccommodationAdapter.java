@@ -17,7 +17,8 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
     private ArrayList<Accommodation> accommodations;
 
     /**
-     * Constructs an {@code AccommodationAdapter} with the specified context and list of accommodations.
+     * Constructs an {@code AccommodationAdapter} with the
+     * specified context and list of accommodations.
      *
      * @param context       the context in which the adapter is used
      * @param accommodations the list of accommodations to display
@@ -28,7 +29,8 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
     }
 
     /**
-     * Called when a new {@link ViewHolder} is created. Inflates the layout for an accommodation item.
+     * Called when a new {@link ViewHolder} is created.
+     * Inflates the layout for an accommodation item.
      *
      * @param parent   the parent view group
      * @param viewType the view type

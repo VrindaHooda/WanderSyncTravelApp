@@ -138,12 +138,14 @@ public class DestinationFragment extends Fragment {
         });
     }
 
-    interface OnDataPassListener {
-        void onPastDataPass(int data);
-        void onPlannedDataPass(int data);
+    private OnDataPassListener dataPassListener;
+
+    //This variable was made private and given a getter method to satisfy Checkstyle
+    public OnDataPassListener getDataPassListener() {
+        return dataPassListener;
     }
 
-    OnDataPassListener dataPassListener;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -160,5 +162,10 @@ public class DestinationFragment extends Fragment {
     }
     private void passPlannedDataToActivity(int plannedDays) {
         dataPassListener.onPlannedDataPass(plannedDays);
+    }
+
+    interface OnDataPassListener {
+        void onPastDataPass(int data);
+        void onPlannedDataPass(int data);
     }
 }

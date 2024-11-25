@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
      * Checks if the currently logged-in account matches the provided email address.
      *
      * @param email the email address to check against the logged-in user's email
-     * @return {@code true} if the logged-in user's email matches the provided email, {@code false} otherwise
+     * @return {@code true} if the logged-in user's email
+     * matches the provided email, {@code false} otherwise
      */
     public boolean isAccountCreated(String email) {
         FirebaseUser user = mAuth.getCurrentUser();
@@ -53,10 +54,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks if a user with the given email exists in the database and invokes a callback with the result.
+     * Checks if a user with the given email exists in the
+     * database and invokes a callback with the result.
      *
      * @param email    the email address to search for in the database
-     * @param callback the callback to invoke with the result; {@code true} if the user exists, {@code false} otherwise
+     * @param callback the callback to invoke with the result;
+     * {@code true} if the user exists, {@code false} otherwise
      */
     public void isUserAdded(String email, OnUserAddedCallback callback) {
         Query query = databaseReference.orderByChild("email").equalTo(email);

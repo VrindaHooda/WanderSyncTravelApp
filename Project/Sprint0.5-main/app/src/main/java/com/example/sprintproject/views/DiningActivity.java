@@ -86,7 +86,8 @@ public class DiningActivity extends AppCompatActivity {
 
         String reservationId = databaseRef.push().getKey();
         if (reservationId != null) {
-            DiningReservation reservation = new DiningReservation(location, month, day, year, time, 0, website, rating);
+            DiningReservation reservation = new DiningReservation(
+                    location, month, day, year, time, 0, website, rating);
             databaseRef.child(reservationId).setValue(reservation);
 
             binding.locationInput.setText("");
@@ -158,7 +159,8 @@ public class DiningActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("DiningActivity", "Database error: " + databaseError.getMessage());
-                Toast.makeText(DiningActivity.this, "Failed to load reservations.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiningActivity.this,
+                        "Failed to load reservations.", Toast.LENGTH_SHORT).show();
             }
         });
     }

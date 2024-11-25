@@ -48,7 +48,8 @@ public class LogPastTravelDialog extends DialogFragment {
         durationTextView = rootView.findViewById(R.id.durationTextView);
 
         // Initialize ViewModel
-        destinationViewModel = new ViewModelProvider(requireActivity()).get(DestinationViewModel.class);
+        destinationViewModel = new ViewModelProvider(requireActivity()).
+                get(DestinationViewModel.class);
 
         startDateInput.setOnClickListener(v -> showDatePickerDialog(startDateInput));
         endDateInput.setOnClickListener(v -> showDatePickerDialog(endDateInput));
@@ -59,12 +60,14 @@ public class LogPastTravelDialog extends DialogFragment {
             Date startDate = parseDate(startDateInput.getText().toString());
             Date endDate = parseDate(endDateInput.getText().toString());
 
-            if (onSaveListener != null && !location.isEmpty() && startDate != null && endDate != null) {
+            if (onSaveListener != null && !location.isEmpty()
+                    && startDate != null && endDate != null) {
                 TravelLog travelLog = new TravelLog(location, startDate, endDate);
                 onSaveListener.onSave(travelLog);
                 dismiss();
             } else {
-                Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        "Please fill in all fields", Toast.LENGTH_SHORT).show();
             }
         });
 

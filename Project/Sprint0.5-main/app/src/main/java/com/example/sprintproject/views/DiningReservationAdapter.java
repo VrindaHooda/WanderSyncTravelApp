@@ -46,7 +46,8 @@ public class DiningReservationAdapter
 
         // Set reservation date and time
         Calendar reservationDate = Calendar.getInstance();
-        reservationDate.set(reservation.getYear(), reservation.getMonth() - 1, reservation.getDay());
+        reservationDate.set(reservation.getYear(),
+                reservation.getMonth() - 1, reservation.getDay());
 
         // Parse time and set it in the reservation calendar
         try {

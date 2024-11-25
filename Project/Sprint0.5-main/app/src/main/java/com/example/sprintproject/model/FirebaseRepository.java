@@ -101,8 +101,10 @@ public class FirebaseRepository {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && querySnapshot.isEmpty()) {
                                 // No travel logs exist, prepopulate with two default travel logs
-                                TravelLog log1 = new TravelLog("Paris", new Date(123, 5, 1), new Date(123, 5, 10));
-                                TravelLog log2 = new TravelLog("New York", new Date(124, 0, 15), new Date(124, 0, 20));
+                                TravelLog log1 = new TravelLog("Paris", new Date(123, 5, 1),
+                                        new Date(123, 5, 10));
+                                TravelLog log2 = new TravelLog("New York", new Date(124, 0, 15),
+                                        new Date(124, 0, 20));
 
                                 // Add both travel logs to Firestore
                                 firestore.collection("users")
@@ -159,7 +161,8 @@ public class FirebaseRepository {
                                 if (travelLog != null) {
                                     long diffInMillies = Math.abs(travelLog.getEndDate().getTime()
                                             - travelLog.getStartDate().getTime());
-                                    int days = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                                    int days = (int) TimeUnit.DAYS.convert(diffInMillies,
+                                            TimeUnit.MILLISECONDS);
                                     totalDays += days;
                                 }
                             }
@@ -182,7 +185,8 @@ public class FirebaseRepository {
      * @param listener  the {@code OnCompleteListener} to handle the result
      *                  with the calculated duration in days or an exception if the input is invalid
      */
-    public void calculateDuration(Date startDate, Date endDate, OnCompleteListener<Integer> listener) {
+    public void calculateDuration(Date startDate, Date endDate,
+                                  OnCompleteListener<Integer> listener) {
         if (startDate != null && endDate != null) {
             long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
             int duration = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
@@ -210,7 +214,8 @@ public class FirebaseRepository {
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             int totalPlannedDays = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                VacationEntry vacationEntry = document.toObject(VacationEntry.class);
+                                VacationEntry vacationEntry = document.toObject(
+                                        VacationEntry.class);
                                 if (vacationEntry != null) {
                                     totalPlannedDays += vacationEntry.getDuration();
                                 }
@@ -274,7 +279,8 @@ public class FirebaseRepository {
      * @param updatedPlan the updated {@code Plan} object
      * @param listener  the {@code OnCompleteListener} to handle the result of the update operation
      */
-    public void updatePlan(String userId, String planId, Plan updatedPlan, OnCompleteListener<Void> listener) {
+    public void updatePlan(String userId, String planId,
+                           Plan updatedPlan, OnCompleteListener<Void> listener) {
         firestore.collection("users")
                 .document(userId)
                 .collection("plans")
@@ -336,7 +342,8 @@ public class FirebaseRepository {
     }
 
     /**
-     * Adds a plan for a specified user and invokes a callback with the generated plan ID or an error message.
+     * Adds a plan for a specified user and invokes a
+     * callback with the generated plan ID or an error message.
      *
      * @param userId   the user ID
      * @param plan     the {@code Plan} object to add

@@ -47,7 +47,8 @@ public class InviteAdapter extends BaseAdapter {
      * @param inviteId the ID of the invite to accept
      */
     public void acceptInvite(String inviteId) {
-        DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
+        DatabaseReference inviteRef = FirebaseDatabase.
+                getInstance().getReference("Invites").child(inviteId);
         inviteRef.child("status").setValue("Accepted");
     }
 
@@ -57,7 +58,8 @@ public class InviteAdapter extends BaseAdapter {
      * @param inviteId the ID of the invite to decline
      */
     public void declineInvite(String inviteId) {
-        DatabaseReference inviteRef = FirebaseDatabase.getInstance().getReference("Invites").child(inviteId);
+        DatabaseReference inviteRef = FirebaseDatabase.
+                getInstance().getReference("Invites").child(inviteId);
         inviteRef.removeValue();
     }
 
