@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModel;
 import com.example.sprintproject.model.FirebaseRepository;
 import com.example.sprintproject.model.Plan;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LogisticsViewModel extends ViewModel {
     private final FirebaseRepository firebaseRepository;
-    private final MutableLiveData<ArrayList<Plan>> plansLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Plan>> plansLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
@@ -24,7 +23,12 @@ public class LogisticsViewModel extends ViewModel {
         isLoading.setValue(false);
     }
 
-    public LiveData<ArrayList<Plan>> getPlansLiveData() {
+    /**
+     * Returns a {@link LiveData} object to observe the list of plans.
+     *
+     * @return the LiveData object containing a list of {@link Plan}
+     */
+    public LiveData<List<Plan>> getPlansLiveData() {
         return plansLiveData;
     }
 
@@ -56,7 +60,7 @@ public class LogisticsViewModel extends ViewModel {
         firebaseRepository.getPlans(userId, task -> {
             isLoading.setValue(false);
             if (task.isSuccessful() && task.getResult() != null) {
-                ArrayList<Plan> plans = new ArrayList<>(task.getResult().toObjects(Plan.class));
+                List<Plan> plans = task.getResult().toObjects(Plan.class);
                 plansLiveData.setValue(plans);
             } else {
                 errorMessage.setValue("Failed to fetch plans.");
@@ -109,29 +113,15 @@ public class LogisticsViewModel extends ViewModel {
      * @param updatedPlan the updated {@link Plan} object
      */
     public void updatePlan(String userId, String planId, Plan updatedPlan) {
-        // Show loading indicator
         isLoading.setValue(true);
-
-        // Use the updated updatePlan method from the FirebaseRepository
-        firebaseRepository.updatePlan(userId, planId, updatedPlan, new FirebaseRepository.PlanCallback() {
-            @Override
-            public void onPlanAdded(Plan plan) {
-                // Successfully updated plan, refresh the plans list
-                isLoading.setValue(false);
-                fetchPlans(userId);  // Refresh the plans after updating
-            }
-
-            @Override
-            public void onFailure(String error) {
-                // Failure in updating plan, set the error message
-                isLoading.setValue(false);
-                errorMessage.setValue("Failed to update plan: " + error);
+        firebaseRepository.updatePlan(userId, planId, updatedPlan, task -> {
+            isLoading.setValue(false);
+            if (task.isSuccessful()) {
+                fetchPlans(userId); // Refresh the plans after updating
+            } else {
+                errorMessage.setValue("Failed to update plan.");
             }
         });
-    }
-
-    public void refreshPlans(String userId) {
-        fetchPlans(userId); // Simply call fetchPlans to reload the plans
     }
 
 }
