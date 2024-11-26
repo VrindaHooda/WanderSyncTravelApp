@@ -10,14 +10,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.TravelPost;
 import com.example.sprintproject.viewmodels.TravelPostsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -78,7 +76,7 @@ public class TravelCommunityActivity extends AppCompatActivity {
     /**
      * Fetches travel posts from Firebase Firestore and displays them in the RecyclerView.
      */
-    private void fetchTravelPosts() {
+    public void fetchTravelPosts() {
         db.collection("travelCommunity")
                 .orderBy("startDate")
                 .get()
