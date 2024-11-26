@@ -53,10 +53,7 @@ public class TravelPostsAdapter extends RecyclerView.Adapter<TravelPostsAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Map<String, Object> post = travelPosts.get(position);
-        String duration = (String) post.get("duration");
         holder.durationTextView.setText("Duration: " + post.get("duration"));
-        String destination = (String) post.get("destination");
-        String notes = (String) post.get("notes");
         holder.notesTextView.setText("Notes: " + post.get("notes"));
 
         boolean isBoosted = (boolean) post.getOrDefault("isBoosted", false);
