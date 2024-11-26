@@ -88,7 +88,9 @@ public class TravelCommunityActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> post = document.getData();
                                 post.putIfAbsent("isBoosted", false); // Default to non-boosted
-                                post.putIfAbsent("userEmail", "Unknown"); // Default if userEmail is missing
+                                post.putIfAbsent("userEmail", "Unknown");
+                                // Default if userEmail is missing
+
                                 travelPosts.add(post);
                             }
                             travelPosts.sort((post1, post2) -> {
@@ -243,7 +245,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null && task.getResult().isEmpty()) {
+                        if (task.isSuccessful() && task.getResult()
+                                != null && task.getResult().isEmpty()) {
                             // No posts exist, add a pre-populated post
                             Map<String, Object> prepopulatedPost = new HashMap<>();
                             prepopulatedPost.put("startDate", "2024-12-01");
@@ -252,7 +255,8 @@ public class TravelCommunityActivity extends AppCompatActivity {
                             prepopulatedPost.put("destination", "Barcelona, Spain");
                             prepopulatedPost.put("accommodations", "Hotel Barcelona");
                             prepopulatedPost.put("diningReservations", "La Boqueria, Tickets Bar");
-                            prepopulatedPost.put("notes", "Visit the Sagrada Familia and Park Guell");
+                            prepopulatedPost.put(
+                                    "notes", "Visit the Sagrada Familia and Park Guell");
                             prepopulatedPost.put("userEmail", "admin@travelapp.com");
                             prepopulatedPost.put("isBoosted", false);
 
@@ -260,13 +264,15 @@ public class TravelCommunityActivity extends AppCompatActivity {
                                     .add(prepopulatedPost)
                                     .addOnSuccessListener(documentReference -> {
                                         Toast.makeText(TravelCommunityActivity.this,
-                                                "Prepopulated travel post created!", Toast.LENGTH_SHORT).show();
+                                                "Prepopulated travel post created!",
+                                                Toast.LENGTH_SHORT).show();
                                         fetchTravelPosts();
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.w(TAG, "Error adding prepopulated document", e);
                                         Toast.makeText(TravelCommunityActivity.this,
-                                                "Failed to create prepopulated post.", Toast.LENGTH_SHORT).show();
+                                                "Failed to create prepopulated post.",
+                                                Toast.LENGTH_SHORT).show();
                                     });
                         }
                     }

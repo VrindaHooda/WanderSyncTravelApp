@@ -15,14 +15,16 @@ import com.example.sprintproject.model.DiningReservation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiningReservationAdapter extends RecyclerView.Adapter<DiningReservationAdapter.DiningReservationViewHolder> {
+public class DiningReservationAdapter extends
+        RecyclerView.Adapter<DiningReservationAdapter.DiningReservationViewHolder> {
 
     private List<DiningReservation> reservations = new ArrayList<>();
 
     @NonNull
     @Override
     public DiningReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_reservation, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.item_reservation, parent, false);
         return new DiningReservationViewHolder(view);
     }
 
@@ -45,9 +47,21 @@ public class DiningReservationAdapter extends RecyclerView.Adapter<DiningReserva
     }
 
     static class DiningReservationViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView websiteTextView;
-        RatingBar ratingBar;
+        private TextView nameTextView;
+        private TextView websiteTextView;
+        private RatingBar ratingBar;
+
+        public TextView getNameTextView() {
+            return nameTextView;
+        }
+
+        public TextView getWebsiteTextView() {
+            return websiteTextView;
+        }
+
+        public RatingBar getRatingBar() {
+            return ratingBar;
+        }
 
         public DiningReservationViewHolder(@NonNull View itemView) {
             super(itemView);

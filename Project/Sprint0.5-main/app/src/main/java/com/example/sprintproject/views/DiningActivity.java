@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
+//import android.widget.Toast;
+// Commented out this unused import to comply with Checkstyle
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DiningReservation;
 import com.example.sprintproject.viewmodels.DiningViewModel;
-import com.example.sprintproject.views.DiningReservationAdapter;
+//import com.example.sprintproject.views.DiningReservationAdapter;
+// Commented out this unused import to comply with Checkstyle
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -66,7 +68,9 @@ public class DiningActivity extends AppCompatActivity {
         observeViewModel();
 
         // Fetch the reservations for the user
-        String userId = firebaseAuth.getCurrentUser().getUid(); // Implement this method to get the current user's ID
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        // Implement this method to get the current user's ID
+
         diningViewModel.fetchCategorizedDiningReservations(userId);
 
         addReservationButton.setOnClickListener(v -> {
@@ -108,35 +112,39 @@ public class DiningActivity extends AppCompatActivity {
             }
         });
 
-        diningViewModel.getUpcomingReservations().observe(this, new Observer<List<DiningReservation>>() {
-            @Override
-            public void onChanged(List<DiningReservation> reservations) {
-                for (DiningReservation reservation : reservations) {
-                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
-                        reservation.setWebsite("No website available");
+        diningViewModel.getUpcomingReservations().observe(
+                this, new Observer<List<DiningReservation>>() {
+                    @Override
+                    public void onChanged(List<DiningReservation> reservations) {
+                        for (DiningReservation reservation : reservations) {
+                            if (reservation.getWebsite() == null
+                                    || reservation.getWebsite().isEmpty()) {
+                                reservation.setWebsite("No website available");
+                            }
+                            if (reservation.getRating() == 0) {
+                                reservation.setRating(3.0f); // Default rating if none provided
+                            }
+                        }
+                        upcomingAdapter.setReservations(reservations);
                     }
-                    if (reservation.getRating() == 0) {
-                        reservation.setRating(3.0f); // Default rating if none provided
-                    }
-                }
-                upcomingAdapter.setReservations(reservations);
-            }
-        });
+                });
 
-        diningViewModel.getPastReservations().observe(this, new Observer<List<DiningReservation>>() {
-            @Override
-            public void onChanged(List<DiningReservation> reservations) {
-                for (DiningReservation reservation : reservations) {
-                    if (reservation.getWebsite() == null || reservation.getWebsite().isEmpty()) {
-                        reservation.setWebsite("No website available");
+        diningViewModel.getPastReservations().observe(
+                this, new Observer<List<DiningReservation>>() {
+                    @Override
+                    public void onChanged(List<DiningReservation> reservations) {
+                        for (DiningReservation reservation : reservations) {
+                            if (reservation.getWebsite() == null
+                                    || reservation.getWebsite().isEmpty()) {
+                                reservation.setWebsite("No website available");
+                            }
+                            if (reservation.getRating() == 0) {
+                                reservation.setRating(3.0f); // Default rating if none provided
+                            }
+                        }
+                        pastAdapter.setReservations(reservations);
                     }
-                    if (reservation.getRating() == 0) {
-                        reservation.setRating(3.0f); // Default rating if none provided
-                    }
-                }
-                pastAdapter.setReservations(reservations);
-            }
-        });
+                });
     }
 
     // Add methods to handle user interactions, like deleting a reservation

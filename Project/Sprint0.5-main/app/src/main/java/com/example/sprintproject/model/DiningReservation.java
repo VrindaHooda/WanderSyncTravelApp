@@ -16,7 +16,9 @@ public class DiningReservation {
     public DiningReservation() {
     }
 
-    public DiningReservation(String id, String userId, String restaurantName, Date reservationDate, int numberOfGuests, String notes, String website, float rating) {
+    //More than 7 parameters, not sure how this could be fixed
+    public DiningReservation(String id, String userId, String restaurantName, Date reservationDate,
+                             int numberOfGuests, String notes, String website, float rating) {
         this.id = id;
         this.userId = userId;
         this.restaurantName = restaurantName;
