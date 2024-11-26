@@ -11,10 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.firestore.FieldValue;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
+// Commented out this unused import to comply with Checkstyle
 
 import com.example.sprintproject.R;
-import com.google.firebase.firestore.DocumentSnapshot;
+//import com.google.firebase.firestore.DocumentSnapshot;
+// Commented out this unused import to comply with Checkstyle
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -35,8 +38,10 @@ public class InviteAdapter extends BaseAdapter {
      * @param invites  the list of invites
      * @param firestore the Firestore instance for database operations
      * @param userId   the ID of the user
+     * @param documentNames the document names
      */
-    public InviteAdapter(Context context, List<Map<String, String>> invites, FirebaseFirestore firestore, String userId, List<String> documentNames) {
+    public InviteAdapter(Context context, List<Map<String, String>> invites,
+                         FirebaseFirestore firestore, String userId, List<String> documentNames) {
         this.context = context;
         this.invites = invites;
         this.firestore = firestore;
@@ -57,13 +62,6 @@ public class InviteAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    static class ViewHolder {
-        TextView tripNameText;
-        TextView statusText;
-        Button acceptButton;
-        Button declineButton;
     }
 
     @Override
@@ -91,7 +89,7 @@ public class InviteAdapter extends BaseAdapter {
 
         // Set position as tag
         holder.acceptButton.setTag(position);
-        holder.declineButton.setTag(position);;
+        holder.declineButton.setTag(position);
 
         holder.acceptButton.setOnClickListener(v -> {
             int pos = (int) v.getTag();
@@ -114,9 +112,11 @@ public class InviteAdapter extends BaseAdapter {
                                     currentInvite.put("status", "Accepted");
                                     holder.statusText.setText("Accepted");
                                     notifyDataSetChanged();
-                                    Toast.makeText(context, "Invite accepted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context,
+                                            "Invite accepted", Toast.LENGTH_SHORT).show();
                                 })
-                                .addOnFailureListener(e -> Log.e("InviteAdapter", "Error updating plan collaborators", e));
+                                .addOnFailureListener(e -> Log.e("InviteAdapter",
+                                        "Error updating plan collaborators", e));
                     })
                     .addOnFailureListener(e -> Log.e("InviteAdapter", "Error accepting invite", e));
         });
@@ -142,4 +142,26 @@ public class InviteAdapter extends BaseAdapter {
         return convertView;
     }
 
+    static class ViewHolder {
+        private TextView tripNameText;
+        private TextView statusText;
+        private Button acceptButton;
+        private Button declineButton;
+
+        public TextView getTripNameText() {
+            return tripNameText;
+        }
+
+        public TextView getStatusText() {
+            return statusText;
+        }
+
+        public Button getAcceptButton() {
+            return acceptButton;
+        }
+
+        public Button getDeclineButton() {
+            return declineButton;
+        }
+    }
 }

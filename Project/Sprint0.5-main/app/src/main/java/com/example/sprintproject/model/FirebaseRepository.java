@@ -1,6 +1,7 @@
 package com.example.sprintproject.model;
 
-import android.util.Log;
+//import android.util.Log;
+// Commented out this unused import to comply with Checkstyle
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +29,8 @@ public class FirebaseRepository {
      * The Firestore database instance.
      */
     private final FirebaseFirestore firestore;
+
+    private static final String COLLECTION_NAME = "dining_reservations";
 
     /**
      * Constructs a {@code FirebaseRepository} and initializes the Firestore instance.
@@ -320,11 +323,6 @@ public class FirebaseRepository {
                 });
     }
 
-    public interface PlanCallback {
-        void onPlanAdded(String planId);
-        void onFailure(String error);
-    }
-
     public void addPlan(String userId, Plan plan, PlanCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -351,7 +349,8 @@ public class FirebaseRepository {
                 });
     }
 
-    public void sendInvite(String collaboratorId, String planId, String senderId, String notes, String tripName) {
+    public void sendInvite(String collaboratorId, String planId,
+                           String senderId, String notes, String tripName) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> inviteData = new HashMap<>();
         inviteData.put("planId", planId);
@@ -372,15 +371,15 @@ public class FirebaseRepository {
                 });
     }
 
-    private static final String COLLECTION_NAME = "dining_reservations";
-
-    public void saveDiningReservation(String userId, DiningReservation reservation, OnCompleteListener<Void> listener) {
+    public void saveDiningReservation(String userId, DiningReservation reservation,
+                                      OnCompleteListener<Void> listener) {
         // Set the userId in the reservation object
         reservation.setUserId(userId);
 
         // Generate a new document ID if not already set
         if (reservation.getId() == null || reservation.getId().isEmpty()) {
-            String reservationId = firestore.collection("users").document(userId).collection(COLLECTION_NAME).document().getId();
+            String reservationId = firestore.collection("users").
+                    document(userId).collection(COLLECTION_NAME).document().getId();
             reservation.setId(reservationId);
         }
 
@@ -391,13 +390,10 @@ public class FirebaseRepository {
                 .addOnCompleteListener(listener);
     }
 
-    public interface OnCategorizedReservationsListener {
-        void onSuccess(Map<String, List<DiningReservation>> categorizedReservations);
-        void onFailure(Exception e);
-    }
-
-    public void getCategorizedDiningReservations(String userId, OnCategorizedReservationsListener listener) {
-        CollectionReference reservationsRef = firestore.collection("users").document(userId).collection(COLLECTION_NAME);
+    public void getCategorizedDiningReservations(
+            String userId, OnCategorizedReservationsListener listener) {
+        CollectionReference reservationsRef = firestore.collection(
+                "users").document(userId).collection(COLLECTION_NAME);
 
         // Query for reservations belonging to the user
         reservationsRef
@@ -411,7 +407,8 @@ public class FirebaseRepository {
                         Date currentDate = new Date();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            DiningReservation reservation = document.toObject(DiningReservation.class);
+                            DiningReservation reservation =
+                                    document.toObject(DiningReservation.class);
 
                             if (reservation.getReservationDate() != null) {
                                 if (reservation.getReservationDate().after(currentDate)) {
@@ -422,7 +419,8 @@ public class FirebaseRepository {
                             }
                         }
 
-                        Map<String, List<DiningReservation>> categorizedReservations = new HashMap<>();
+                        Map<String, List<DiningReservation>>
+                                categorizedReservations = new HashMap<>();
                         categorizedReservations.put("upcoming", upcoming);
                         categorizedReservations.put("past", past);
 
@@ -435,4 +433,15 @@ public class FirebaseRepository {
                     }
                 });
     }
+
+    public interface OnCategorizedReservationsListener {
+        void onSuccess(Map<String, List<DiningReservation>> categorizedReservations);
+        void onFailure(Exception e);
+    }
+
+    public interface PlanCallback {
+        void onPlanAdded(String planId);
+        void onFailure(String error);
+    }
+
 }

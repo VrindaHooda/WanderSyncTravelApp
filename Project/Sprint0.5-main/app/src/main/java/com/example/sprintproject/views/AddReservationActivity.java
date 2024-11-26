@@ -5,12 +5,14 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
+//import android.widget.DatePicker;
+// Commented out this unused import to comply with Checkstyle
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
+//import android.widget.TimePicker;
+// Commented out this unused import to comply with Checkstyle
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -84,21 +86,25 @@ public class AddReservationActivity extends AppCompatActivity {
     }
 
     private void showDatePicker() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this, (view, year, month, dayOfMonth) -> {
             reservationCalendar.set(Calendar.YEAR, year);
             reservationCalendar.set(Calendar.MONTH, month);
             reservationCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateDateLabel();
-        }, reservationCalendar.get(Calendar.YEAR), reservationCalendar.get(Calendar.MONTH), reservationCalendar.get(Calendar.DAY_OF_MONTH));
+        }, reservationCalendar.get(Calendar.YEAR), reservationCalendar.get(Calendar.MONTH),
+                reservationCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
     private void showTimePicker() {
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this, (view, hourOfDay, minute) -> {
             reservationCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             reservationCalendar.set(Calendar.MINUTE, minute);
             updateTimeLabel();
-        }, reservationCalendar.get(Calendar.HOUR_OF_DAY), reservationCalendar.get(Calendar.MINUTE), true);
+        }, reservationCalendar.get(Calendar.HOUR_OF_DAY),
+                reservationCalendar.get(Calendar.MINUTE), true);
         timePickerDialog.show();
     }
 
@@ -146,7 +152,8 @@ public class AddReservationActivity extends AppCompatActivity {
         Date reservationDate = reservationCalendar.getTime();
         String reservationId = null; // Generate dynamically
 
-        DiningReservation reservation = new DiningReservation(reservationId, getUserId(), restaurantName, reservationDate, numberOfGuests, "", website, rating);
+        DiningReservation reservation = new DiningReservation(reservationId, getUserId(),
+                restaurantName, reservationDate, numberOfGuests, "", website, rating);
 
         // Save the reservation using ViewModel
         diningViewModel.addDiningReservation(getUserId(), reservation);
@@ -159,7 +166,8 @@ public class AddReservationActivity extends AppCompatActivity {
     }
 
     private String getUserId() {
-        // Replace with your method to retrieve the current user's ID, such as from Firebase Authentication
+        // Replace with your method to retrieve the current user's ID,
+        // such as from Firebase Authentication
         return firebaseAuth.getCurrentUser().getUid();
     }
 }
