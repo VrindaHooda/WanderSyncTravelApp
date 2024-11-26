@@ -18,21 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Destination;
+import com.example.sprintproject.model.FirebaseRepository;
 import com.example.sprintproject.model.Id;
 import com.example.sprintproject.model.Plan;
 import com.example.sprintproject.viewmodels.LogisticsViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-//import java.util.concurrent.atomic.AtomicReference;
-//Commented out to satisfy Checkstyle
-
-import com.example.sprintproject.model.FirebaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class MakePlansActivity extends AppCompatActivity {
@@ -62,6 +61,7 @@ public class MakePlansActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_plans);
         firebaseRepository = new FirebaseRepository();
@@ -94,6 +94,14 @@ public class MakePlansActivity extends AppCompatActivity {
                 plansAdapter.setPlans(plans);
             }
         });
+        Button buttonSharePlan = findViewById(R.id.buttonSharePlan);
+        buttonSharePlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharePlanToTravelCommunity();
+            }
+        });
+
         logisticsViewModel.getIsLoading().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoading) {
@@ -226,6 +234,7 @@ public class MakePlansActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     private List<String> parseCollaboratorsList(String input) {
         List<String> collaboratorsList = new ArrayList<>();
 
@@ -247,6 +256,62 @@ public class MakePlansActivity extends AppCompatActivity {
         editTextCollaborators.setText("");
         destinations.clear();
     }
+    private void sharePlanToTravelCommunity() {
+        if (destinations.isEmpty()) {
+            Toast.makeText(this, "No destinations to share.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String durationText = editTextDuration.getText().toString();
+        String notes = editTextNotes.getText().toString();
+        String tripName = editTextTripName.getText().toString();
+
+        if (durationText.isEmpty() || notes.isEmpty() || tripName.isEmpty()) {
+            Toast.makeText(this, "All fields must be filled before sharing.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Prepare the data to share
+        Map<String, Object> travelCommunityPost = new HashMap<>();
+        travelCommunityPost.put("tripName", tripName);
+        travelCommunityPost.put("duration", durationText + " days");
+        travelCommunityPost.put("notes", notes);
+        travelCommunityPost.put("destinations", destinations);
+        travelCommunityPost.put("userEmail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        travelCommunityPost.put("isBoosted", false); // Default value
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("travelCommunity")
+                .add(travelCommunityPost)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(MakePlansActivity.this, "Plan shared successfully!", Toast.LENGTH_SHORT).show();
+
+                    // Refresh the travel posts to include the new one
+                    fetchTravelPosts(); // Call the fetch method to update the UI
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(MakePlansActivity.this, "Failed to share plan: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void fetchTravelPosts() {
+        TravelCommunityHelper.fetchTravelPosts(db, new TravelCommunityHelper.TravelPostsCallback() {
+            @Override
+            public void onSuccess(ArrayList<Map<String, Object>> travelPosts) {
+                // Handle the fetched posts
+                for (Map<String, Object> post : travelPosts) {
+                    Log.d("TravelPost", post.toString());
+                }
+                Toast.makeText(MakePlansActivity.this, "Fetched travel posts!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(MakePlansActivity.this, "Failed to fetch travel posts.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     /**
      * Clears the input fields for the destination form.

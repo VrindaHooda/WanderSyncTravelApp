@@ -151,6 +151,21 @@
             android:textColor="@color/colorDarkContrast"
             android:textSize="8dp" />
 
+
+
     </LinearLayout>
+    <Button
+        android:id="@+id/buttonSharePlan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorHighlight"
+        android:fontFamily="@font/playwritefrmoderne"
+        android:padding="10dp"
+        android:text="Share Plan"
+        android:textColor="@color/colorDarkContrast"
+        android:textSize="8dp" />
+
 
 </LinearLayout>
