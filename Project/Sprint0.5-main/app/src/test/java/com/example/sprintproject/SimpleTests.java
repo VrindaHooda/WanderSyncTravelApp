@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -89,18 +90,23 @@ public class SimpleTests {
     }
 
     /**
-     * Tests setting and updating the notes field of a {@link Plan}.
+     * Tests setting and updating the fields of a {@link Plan}.
      */
     @Test
     public void testPlanInitialization() {
         // Adjusted to use the existing constructor
-        Plan plan = new Plan("owner123", "Beach Trip", 7,
-                new ArrayList<>(), "Relaxing vacation", new ArrayList<>());
-        assertEquals("owner123", plan.getPlanName());
-        assertEquals("Beach Trip", plan.getLocation());
+        List<Destination> destinations = new ArrayList<>();
+        List<String> collaborators = new ArrayList<>();
+        Plan plan = new Plan(7, destinations, "Relaxing vacation", collaborators, "owner123");
+
+        // Validate the fields
         assertEquals(7, plan.getDuration());
+        assertEquals(destinations, plan.getDestinations());
         assertEquals("Relaxing vacation", plan.getNotes());
+        assertEquals(collaborators, plan.getCollaborators());
+        assertEquals("owner123", plan.getOwner());
     }
+
 
 
     /**
@@ -344,22 +350,31 @@ public class SimpleTests {
         assertEquals(6, reservation.getNumberOfGuests());
     }
 
+    /**
+     * Tests the creation of a {@link Plan} object with valid data.
+     */
     @Test
     public void testPlanCreation() {
+        List<Destination> destinations = new ArrayList<>(); // Initialize as an empty list
+        List<String> collaborators = new ArrayList<>(); // Initialize as an empty list
+
+        // Create a Plan object using the correct constructor
         Plan plan = new Plan(
-                "Holiday Trip",
-                "New York",
-                7,
-                null, // Pass an empty or null list for destinations
-                "Family vacation",
-                null // Pass an empty or null list for collaborators
+                7,                  // Duration
+                destinations,       // Destinations
+                "Family vacation",  // Notes
+                collaborators,      // Collaborators
+                "owner123"          // Owner
         );
 
-        assertEquals("Holiday Trip", plan.getPlanName());
-        assertEquals("New York", plan.getLocation());
+        // Assertions to verify the Plan fields
         assertEquals(7, plan.getDuration());
+        assertEquals(destinations, plan.getDestinations());
         assertEquals("Family vacation", plan.getNotes());
+        assertEquals(collaborators, plan.getCollaborators());
+        assertEquals("owner123", plan.getOwner());
     }
+
 
     @Test
     public void testTravelLog() {
@@ -434,6 +449,85 @@ public class SimpleTests {
         assertEquals(endDate, vacationEntry.getEndDate());
         assertEquals(5, vacationEntry.getDuration());
     }
+
+    @Test
+    public void testPlanNoteUpdate() {
+        // Adjusted to match the existing constructor in the Plan class
+        Plan plan = new Plan(
+                7,                    // duration
+                new ArrayList<>(),    // destinations
+                "Relaxing vacation",  // notes
+                new ArrayList<>(),    // collaborators
+                "owner123"            // owner
+        );
+        plan.setNotes("Updated to include adventure activities");
+        assertEquals("Updated to include adventure activities", plan.getNotes());
+    }
+
+    @Test
+    public void testDiningReservationRatingUpdate() {
+        // Use the existing constructor for DiningReservation
+        DiningReservation reservation = new DiningReservation(
+                "Res123",                 // ID
+                "User123",                // User ID
+                "Fancy Restaurant",       // Restaurant Name
+                new Date(),               // Reservation Date
+                4,                        // Number of Guests
+                "Birthday Dinner",        // Notes
+                "www.fancyrestaurant.com", // Website
+                3.5f                      // Rating
+        );
+        reservation.setRating(5.0f);
+        assertEquals(5.0f, reservation.getRating(), 0.0f);
+    }
+
+
+    @Test
+    public void testPlanCollaboratorsUpdate() {
+        // Adjusted to match the existing constructor in the Plan class
+        Plan plan = new Plan(
+                7,                    // duration
+                new ArrayList<>(),    // destinations
+                "Family vacation",    // notes
+                new ArrayList<>(),    // collaborators
+                "owner123"            // owner
+        );
+
+        List<String> newCollaborators = Arrays.asList("Alice", "Bob");
+        plan.setCollaborators(newCollaborators);
+        assertEquals(newCollaborators, plan.getCollaborators());
+    }
+
+
+
+    @Test
+    public void testDiningReservationWebsiteUpdate() {
+        // Use the existing constructor for DiningReservation
+        DiningReservation reservation = new DiningReservation(
+                "Res124",                 // ID
+                "User124",                // User ID
+                "Seafood Place",          // Restaurant Name
+                new Date(),               // Reservation Date
+                5,                        // Number of Guests
+                "Anniversary Dinner",     // Notes
+                "www.oldwebsite.com",     // Website
+                4.5f                      // Rating
+        );
+        reservation.setWebsite("www.newwebsite.com");
+        assertEquals("www.newwebsite.com", reservation.getWebsite());
+    }
+
+
+
+    @Test
+    public void testVacationEntryDuration() {
+        VacationEntry vacationEntry = new VacationEntry(new Date(2023 - 1900, 11,
+                1), new Date(2023 - 1900, 11, 10), 9);
+        assertEquals(9, vacationEntry.getDuration());
+    }
+
+
+
 
 
 }
