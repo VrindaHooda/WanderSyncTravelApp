@@ -64,7 +64,7 @@ The project's real-world application of **Firebase** for authentication and data
 
 ### Team Contributions 🤝
 
-- **Aditi** and **Tanya**: Implementation of the **logistics screen**, vital for features like the visualization of travel days and inviting users to collaborate.
+- **Vrinda** and **Aditi** and **Tanya**: Implementation of the **logistics screen**, vital for features like the visualization of travel days and inviting users to collaborate.
 - **Vrinda**: Development of the **accommodation screen**, adding seamless management of lodging reservations, ensuring a clear and organized interface.
 - **Afsheen**: Creation of the **dining screen**, providing users with a smooth reservation experience.
 - **Sid** and **Nedu**: Delivery of a functional **travel community screen** and providing technical support across other screens.
